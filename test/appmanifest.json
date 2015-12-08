@@ -1,6 +1,6 @@
 ﻿{
-	"name": "New project",
-	"short_name": "New project",
+	"name": "Background",
+	"short_name": "Background",
 	"start_url": "index.html",
 	"display": "fullscreen",
 	"orientation": "any",
