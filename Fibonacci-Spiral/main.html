@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Fibonacci Spiral</title>
+    <script src="Fibonacci.js"></script>
+</head>
+
+<body onload="generateFiboSpiral(11,8)">
+<label>Iterations: </label><input id="iter" type="number" value="11"/>
+    <label>Scale: </label><input id="scale" type="number" value="8" />
+    <button onclick="generateFiboSpiral(document.getElementById('iter').value, document.getElementById('scale').value)">Generate Fibonacci Spiral</button>
+<canvas id="c" width="5000" height="5000"></canvas>
+
+</body>
+</html>
