@@ -11,7 +11,7 @@ article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section {
 display:block;
 }
 
-html, body {background: #181818; font-family: 'Lato', helvetica, arial, sans-serif; font-size: 16px; color: #222;}
+html, body {background: #181818; font-family: 'Roboto', helvetica, arial, sans-serif; font-size: 16px; color: #222;}
 
 .clear {clear: both;}
 
@@ -31,21 +31,21 @@ p {
 
 .mainDetails {
 	padding: 25px 35px;
-	border-bottom: 2px solid #cf8a05;
+	border-bottom: 2px solid #097AC4;
 	background: #ededed;
 }
 
 #name h1 {
 	font-size: 2.5em;
 	font-weight: 700;
-	font-family: 'Rokkitt', Helvetica, Arial, sans-serif;
+	font-family: 'Roboto', Helvetica, Arial, sans-serif;
 	margin-bottom: -6px;
 }
 
 #name h2 {
 	font-size: 2em;
 	margin-left: 2px;
-	font-family: 'Rokkitt', Helvetica, Arial, sans-serif;
+	font-family: 'Roboto', Helvetica, Arial, sans-serif;
 }
 
 #mainArea {
@@ -83,7 +83,9 @@ p {
 	margin-bottom: 3px;
 	color: #444;
 }
-
+a {
+	color: inherit;
+}
 #contactDetails ul li a, a[href^=tel] {
 	color: #444; 
 	text-decoration: none;
@@ -93,9 +95,11 @@ p {
 	-ms-transition: all .3s ease-in;
 	transition: all .3s ease-in;
 }
-
+ a:hover { 
+	color: #097AC4;
+}
 #contactDetails ul li a:hover { 
-	color: #cf8a05;
+	color: #097AC4;
 }
 
 
@@ -123,14 +127,13 @@ section:last-child {
 }
 
 .sectionTitle h1 {
-	font-family: 'Rokkitt', Helvetica, Arial, sans-serif;
-	font-style: italic;
+	font-family: 'Roboto', Helvetica, Arial, sans-serif;
 	font-size: 1.5em;
-	color: #cf8a05;
+	color: #097AC4;
 }
 
 .sectionContent h2 {
-	font-family: 'Rokkitt', Helvetica, Arial, sans-serif;
+	font-family: 'Roboto', Helvetica, Arial, sans-serif;
 	font-size: 1.5em;
 	margin-bottom: -2px;
 }
