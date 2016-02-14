@@ -13,7 +13,7 @@
         var scene = new BABYLON.Scene(engine);
 
         // create a FreeCamera, and set its position to (x:0, y:5, z:-10)
-        var camera = new BABYLON.ArcRotateCamera('camera1', new BABYLON.Vector3(0, 5,-10), scene);
+        var camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 1, 0.8, 10, new BABYLON.Vector3(0, 0, 0), scene);
 
 
 
