@@ -38,12 +38,12 @@
         // return the created scene    
         BABYLON.SceneLoader.ImportMesh("", "./", "HEADSET.babylon", scene, function (newMeshes) {
 
-            var redPlastic = new BABYLON.StandardMaterial("plastic", scene);
-            var blackBox = new BABYLON.StandardMaterial("blackBox", scene);
-            var blackCushion = new BABYLON.StandardMaterial("blackCushion", scene);
-            var chrome = new BABYLON.StandardMaterial("chrome", scene);
-            var blackPlastic = new BABYLON.StandardMaterial("blackPlastic", scene);
-            var blackMetal = new BABYLON.StandardMaterial("blackMetal", scene);
+            var redPlastic = new BABYLON.PBR("plastic", scene);
+            var blackBox = new BABYLON.PBR("blackBox", scene);
+            var blackCushion = new BABYLON.PBR("blackCushion", scene);
+            var chrome = new BABYLON.PBR("chrome", scene);
+            var blackPlastic = new BABYLON.PBR("blackPlastic", scene);
+            var blackMetal = new BABYLON.PBR("blackMetal", scene);
             
             redPlastic.diffuseTexture = new BABYLON.Texture("./redplastic.jpg",scene);        
             blackBox.diffuseTexture = new BABYLON.Texture("./blackbox.jpg",scene);
