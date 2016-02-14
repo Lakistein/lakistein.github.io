@@ -36,7 +36,7 @@
         //var ground = BABYLON.Mesh.CreateGround('ground1', 6, 6, 2, scene);
 
         // return the created scene    
-        BABYLON.SceneLoader.ImportMesh("", "/WebGL Practice/", "HEADSET.babylon", scene, function (newMeshes) {
+        BABYLON.SceneLoader.ImportMesh("", "./WebGL Practice/", "HEADSET.babylon", scene, function (newMeshes) {
 
             var redPlastic = new BABYLON.StandardMaterial("plastic", scene);
             var blackBox = new BABYLON.StandardMaterial("blackBox", scene);
@@ -45,12 +45,12 @@
             var blackPlastic = new BABYLON.StandardMaterial("blackPlastic", scene);
             var blackMetal = new BABYLON.StandardMaterial("blackMetal", scene);
             
-            redPlastic.diffuseTexture = new BABYLON.Texture("/WebGL Practice/redplastic.jpg",scene);        
-            blackBox.diffuseTexture = new BABYLON.Texture("/WebGL Practice/blackbox.jpg",scene);
+            redPlastic.diffuseTexture = new BABYLON.Texture("./WebGL Practice/redplastic.jpg",scene);        
+            blackBox.diffuseTexture = new BABYLON.Texture("./WebGL Practice/blackbox.jpg",scene);
             blackCushion.diffuseTexture = new BABYLON.Texture("/WebGL Practice/blackcushion.jpg",scene);
-            chrome.diffuseTexture = new BABYLON.Texture("/WebGL Practice/chrome.jpg",scene);
+            chrome.diffuseTexture = new BABYLON.Texture("./WebGL Practice/chrome.jpg",scene);
             blackPlastic.diffuseTexture = new BABYLON.Texture("/WebGL Practice/blackplastic.jpg",scene);
-            blackMetal.diffuseTexture = new BABYLON.Texture("/WebGL Practice/blackmetal.jpg",scene);          
+            blackMetal.diffuseTexture = new BABYLON.Texture("./WebGL Practice/blackmetal.jpg",scene);          
               
             newMeshes[0].material = chrome;
             newMeshes[1].material = blackMetal;
