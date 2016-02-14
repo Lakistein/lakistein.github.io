@@ -36,7 +36,7 @@
         //var ground = BABYLON.Mesh.CreateGround('ground1', 6, 6, 2, scene);
 
         // return the created scene    
-        BABYLON.SceneLoader.ImportMesh("", "./WebGL/", "HEADSET.babylon", scene, function (newMeshes) {
+        BABYLON.SceneLoader.ImportMesh("", "./", "HEADSET.babylon", scene, function (newMeshes) {
 
             var redPlastic = new BABYLON.StandardMaterial("plastic", scene);
             var blackBox = new BABYLON.StandardMaterial("blackBox", scene);
