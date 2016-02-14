@@ -45,12 +45,12 @@
             var blackPlastic = new BABYLON.StandardMaterial("blackPlastic", scene);
             var blackMetal = new BABYLON.StandardMaterial("blackMetal", scene);
             
-            redPlastic.diffuseTexture = new BABYLON.Texture("./WebGL/redplastic.jpg",scene);        
-            blackBox.diffuseTexture = new BABYLON.Texture("./WebGL/blackbox.jpg",scene);
-            blackCushion.diffuseTexture = new BABYLON.Texture("./WebGL/blackcushion.jpg",scene);
-            chrome.diffuseTexture = new BABYLON.Texture("./WebGL/chrome.jpg",scene);
-            blackPlastic.diffuseTexture = new BABYLON.Texture("./WebGL/blackplastic.jpg",scene);
-            blackMetal.diffuseTexture = new BABYLON.Texture("./WebGL/blackmetal.jpg",scene);          
+            redPlastic.diffuseTexture = new BABYLON.Texture("./redplastic.jpg",scene);        
+            blackBox.diffuseTexture = new BABYLON.Texture("./blackbox.jpg",scene);
+            blackCushion.diffuseTexture = new BABYLON.Texture("./blackcushion.jpg",scene);
+            chrome.diffuseTexture = new BABYLON.Texture("./chrome.jpg",scene);
+            blackPlastic.diffuseTexture = new BABYLON.Texture("./blackplastic.jpg",scene);
+            blackMetal.diffuseTexture = new BABYLON.Texture("./blackmetal.jpg",scene);          
               
             newMeshes[0].material = chrome;
             newMeshes[1].material = blackMetal;
