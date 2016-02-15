@@ -19,22 +19,25 @@
         light3.intensity = 2;
         light3.range = 10;
         BABYLON.SceneLoader.ImportMesh("", "./", "HEADSET.babylon", scene, function (newMeshes) {
-
-            var redPlastic = new BABYLON.StandardMaterial("plastic", scene);
+            
             var blackBox = new BABYLON.StandardMaterial("blackBox", scene);
+            
+            var redPlastic = new BABYLON.StandardMaterial("plastic", scene);
             var blackCushion = new BABYLON.StandardMaterial("blackCushion", scene);
             var chrome = new BABYLON.StandardMaterial("chrome", scene);
             var blackPlastic = new BABYLON.StandardMaterial("blackPlastic", scene);
             var blackMetal = new BABYLON.StandardMaterial("blackMetal", scene);
             var HeadsetAO = new BABYLON.Texture("./HEADSET_STYLE_1.jpg", scene);
             
-            redPlastic.diffuseTexture = new BABYLON.Texture("./redplastic.jpg",scene);   
-            redPlastic.ambientTexture =  HeadsetAO;
-            //redPlastic.ambientTexture.coordinatesIndex = 1;
-            
             blackBox.diffuseTexture = new BABYLON.Texture("./blackbox.jpg", scene);
             blackBox.ambientTexture = new BABYLON.Texture("./BOX_STYLE_1.jpg", scene);
             blackBox.ambientTexture.coordinatesIndex = 1;
+            
+            redPlastic.diffuseTexture = new BABYLON.Texture("./redplastic.jpg",scene);   
+            redPlastic.ambientTexture =  HeadsetAO;
+            redPlastic.ambientTexture.coordinatesIndex = 1;
+            
+          
             
             blackCushion.diffuseTexture = new BABYLON.Texture("./blackcushion.jpg",scene);
             blackCushion.ambientTexture =  HeadsetAO;
