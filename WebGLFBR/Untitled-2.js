@@ -4,7 +4,7 @@
 
     var canvas = document.getElementById('renderCanvas');
     var engine = new BABYLON.Engine(canvas, true);
-    var getMaterial = function(name, path, albedoTexture, ambientTexture, indexOfRefraction, reflectivityColor, scene)
+    var getMaterial = function(name, albedoTexture, ambientTexture, indexOfRefraction, reflectivityColor, scene)
     {
         var newMaterial = new BABYLON.PBRMaterial(name, scene);
             newMaterial.albedoTexture = new BABYLON.Texture(albedoTexture, scene);
@@ -25,6 +25,7 @@
         camera.attachControl(canvas, false);
         camera.wheelPrecision = 20;
         var light = new BABYLON.PointLight('light', new BABYLON.Vector3(-5.11, -0.42, -0.99), scene);  
+        light.ra
         var light1 = new BABYLON.DirectionalLight('light1', new BABYLON.Vector3(5.19,0,-1.5), scene);  
         var light1 = new BABYLON.DirectionalLight('light1', new BABYLON.Vector3(-0.62,2.45,6.36), scene);  
         light1.intensity = 10;
