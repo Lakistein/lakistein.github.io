@@ -1,6 +1,6 @@
 /// <reference path="babylon.2.3.d.ts" />
 /// <reference path="babylon.objFileLoader.ts" />
-/// <reference path="babylon.pbrMaterial.js" />
+/// <reference path="babylon.pbrMaterial.min.js" />
 /// <reference path="babylon.pbrMaterial.d.ts" />
 // get the canvas DOM element
  // get the canvas DOM element
@@ -40,25 +40,20 @@
         // return the created scene    
         BABYLON.SceneLoader.ImportMesh("", "./", "HEADSET.babylon", scene, function (newMeshes) {
 
-            var redPlastic = new BABYLON.PBRMaterial("plastic", scene);
-            var blackBox = new BABYLON.PBRMaterial("blackBox", scene);
-            var blackCushion = new BABYLON.PBRMaterial("blackCushion", scene);
-            var chrome = new BABYLON.PBRMaterial("chrome", scene);
-            var blackPlastic = new BABYLON.PBRMaterial("blackPlastic", scene);
-            var blackMetal = new BABYLON.PBRMaterial("blackMetal", scene);
+            var redPlastic = new BABYLON.StandardMaterial("plastic", scene);
+            var blackBox = new BABYLON.StandardMaterial("blackBox", scene);
+            var blackCushion = new BABYLON.StandardMaterial("blackCushion", scene);
+            var chrome = new BABYLON.StandardMaterial("chrome", scene);
+            var blackPlastic = new BABYLON.StandardMaterial("blackPlastic", scene);
+            var blackMetal = new BABYLON.StandardMaterial("blackMetal", scene);
             
-            redPlastic.texture = new BABYLON.Texture("./redplastic.jpg",scene);   
-            redPlastic.useMicroSurfaceFromReflectivityMap = true;     
-            blackBox.reflectivityTexture = new BABYLON.Texture("./blackbox.jpg",scene);
-                        blackBox.useMicroSurfaceFromReflectivityMap = true;     
-            blackCushion.reflectivityTexture = new BABYLON.Texture("./blackcushion.jpg",scene);
-                        blackCushion.useMicroSurfaceFromReflectivityMap = true;     
-            chrome.reflectivityTexture = new BABYLON.Texture("./chrome.jpg",scene);
-                        chrome.useMicroSurfaceFromReflectivityMap = true;     
-            blackPlastic.reflectivityTexture = new BABYLON.Texture("./blackplastic.jpg",scene);
-                        blackPlastic.useMicroSurfaceFromReflectivityMap = true;     
-            blackMetal.reflectivityTexture = new BABYLON.Texture("./blackmetal.jpg",scene);          
-                          blackMetal.useMicroSurfaceFromReflectivityMap = true;     
+            redPlastic.diffuseTexture = new BABYLON.Texture("./redplastic.jpg",scene);        
+            blackBox.diffuseTexture = new BABYLON.Texture("./blackbox.jpg",scene);
+            blackCushion.diffuseTexture = new BABYLON.Texture("./blackcushion.jpg",scene);
+            chrome.diffuseTexture = new BABYLON.Texture("./chrome.jpg",scene);
+            blackPlastic.diffuseTexture = new BABYLON.Texture("./blackplastic.jpg",scene);
+            blackMetal.diffuseTexture = new BABYLON.Texture("./blackmetal.jpg",scene);          
+              
             newMeshes[0].material = chrome;
             newMeshes[1].material = blackMetal;
             newMeshes[4].material = blackPlastic;
