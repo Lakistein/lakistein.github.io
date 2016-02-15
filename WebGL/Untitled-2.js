@@ -47,12 +47,12 @@
             var blackPlastic = new BABYLON.PBRMaterial("blackPlastic", scene);
             var blackMetal = new BABYLON.PBRMaterial("blackMetal", scene);
             
-            redPlastic.reflectivityTexture = new BABYLON.Texture("./redplastic.jpg",scene);        
-            blackBox.reflectivityTexture = new BABYLON.Texture("./blackbox.jpg",scene);
-            blackCushion.reflectivityTexture = new BABYLON.Texture("./blackcushion.jpg",scene);
-            chrome.reflectivityTexture = new BABYLON.Texture("./chrome.jpg",scene);
-            blackPlastic.reflectivityTexture = new BABYLON.Texture("./blackplastic.jpg",scene);
-            blackMetal.reflectivityTexture = new BABYLON.Texture("./blackmetal.jpg",scene);          
+            redPlastic.reflectivityTexture = new BABYLON.BaseTexture("./redplastic.jpg",scene);        
+            blackBox.reflectivityTexture = new BABYLON.BaseTexture("./blackbox.jpg",scene);
+            blackCushion.reflectivityTexture = new BABYLON.BaseTexture("./blackcushion.jpg",scene);
+            chrome.reflectivityTexture = new BABYLON.BaseTexture("./chrome.jpg",scene);
+            blackPlastic.reflectivityTexture = new BABYLON.BaseTexture("./blackplastic.jpg",scene);
+            blackMetal.reflectivityTexture = new BABYLON.BaseTexture("./blackmetal.jpg",scene);          
               
             newMeshes[0].material = chrome;
             newMeshes[1].material = blackMetal;
