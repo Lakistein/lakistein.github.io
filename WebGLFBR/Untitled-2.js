@@ -24,8 +24,9 @@
         var camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 1, 0.8, 10, new BABYLON.Vector3(0, 0, 0), scene);
         camera.attachControl(canvas, false);
         camera.wheelPrecision = 20;
-        //var light = new BABYLON.PointLight('light', new BABYLON.Vector3(0,1,-3), scene);  
-        var light1 = new BABYLON.DirectionalLight('light1', new BABYLON.Vector3(-1.5,0,-1.5), scene);  
+        var light = new BABYLON.PointLight('light', new BABYLON.Vector3(-5.11, -0.42, -0.99), scene);  
+        var light1 = new BABYLON.DirectionalLight('light1', new BABYLON.Vector3(5.19,0,-1.5), scene);  
+        var light1 = new BABYLON.DirectionalLight('light1', new BABYLON.Vector3(-0.62,2.45,6.36), scene);  
         light1.intensity = 10;
         //   var light2 = new BABYLON.PointLight('light2', new BABYLON.Vector3(0,4,0), scene);  
         // light2.intensity = 2;
