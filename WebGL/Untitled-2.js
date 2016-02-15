@@ -1,5 +1,7 @@
 /// <reference path="babylon.2.3.d.ts" />
 /// <reference path="babylon.objFileLoader.ts" />
+/// <reference path="babylon.pbrMaterial.min.js" />
+/// <reference path="babylon.pbrMaterial.d.ts" />
 // get the canvas DOM element
  // get the canvas DOM element
     var canvas = document.getElementById('renderCanvas');
