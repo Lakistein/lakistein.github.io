@@ -11,9 +11,13 @@
         camera.attachControl(canvas, false);
         camera.wheelPrecision = 20;
         //var light = new BABYLON.PointLight('light', new BABYLON.Vector3(0,1,-3), scene);  
-        var light1 = new BABYLON.PointLight('light1', new BABYLON.Vector3(0,3,-3), scene);  
+        var light1 = new BABYLON.PointLight('light1', new BABYLON.Vector3(-1.5,0,-1.5), scene);  
         light1.intensity = 2;
-        
+          var light2 = new BABYLON.PointLight('light2', new BABYLON.Vector3(0,4,0), scene);  
+        light2.intensity = 2;
+          var light3 = new BABYLON.PointLight('light3', new BABYLON.Vector3(1.5,1,-3), scene);  
+        light3.intensity = 2;
+        light3.range = 10;
         BABYLON.SceneLoader.ImportMesh("", "./", "HEADSET.babylon", scene, function (newMeshes) {
 
             var redPlastic = new BABYLON.StandardMaterial("plastic", scene);
