@@ -4,57 +4,63 @@
 
     var canvas = document.getElementById('renderCanvas');
     var engine = new BABYLON.Engine(canvas, true);
+    var getMaterial = function(name, ambientTexture, albedoTexture, indexOfRefraction, reflectivityColor, scene)
+    {
 
+        var newMaterial = new BABYLON.PBRMaterial(name, scene);
+            newMaterial.albedoTexture = new BABYLON.Texture(albedoTexture, scene);
+
+            newMaterial.ambientTexture = new BABYLON.Texture(ambientTexture, scene);
+            newMaterial.ambientTexture.coordinatesIndex = 1;
+            newMaterial.overloadedReflectionIntensity = 0.1;
+            newMaterial.directIntensity = 1;
+            newMaterial.linkRefractionWithTransparency = false;
+            newMaterial.indexOfRefraction = indexOfRefraction;
+            if(ambientTexture === "./redplastic.jpg"){
+                newMaterial.overloadedShadeIntensity = 0.8;
+                newMaterial.environmentIntensity = 0.8;
+                newMaterial.cameraExposure = 0.8;
+                newMaterial.cameraContrast = 1.6;
+                newMaterial.reflectivityColor.r = 0.05;
+                newMaterial.reflectivityColor.g = 0.05;
+                newMaterial.reflectivityColor.b = 0.05;
+                newMaterial.albedoColor.r = 1;
+                newMaterial.albedoColor.g = 1;
+                newMaterial.albedoColor.b = 1;
+                newMaterial.overloadedAlbedoIntensity = 1;
+            }
+	       newMaterial.reflectivityColor = reflectivityColor;
+	       newMaterial.microSurface = 0.86;
+           
+           return newMaterial;
+    }
+    
     var createScene = function(){
         var scene = new BABYLON.Scene(engine);
         var camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 1, 0.8, 10, new BABYLON.Vector3(0, 0, 0), scene);
         camera.attachControl(canvas, false);
         camera.wheelPrecision = 20;
-        //var light = new BABYLON.PointLight('light', new BABYLON.Vector3(0,1,-3), scene);  
-        var light1 = new BABYLON.PointLight('light1', new BABYLON.Vector3(-1.5,0,-1.5), scene);  
-        light1.intensity = 2;
-          var light2 = new BABYLON.PointLight('light2', new BABYLON.Vector3(0,4,0), scene);  
-        light2.intensity = 2;
-          var light3 = new BABYLON.PointLight('light3', new BABYLON.Vector3(1.5,1,-3), scene);  
-        light3.intensity = 2;
-        light3.range = 10;
+        var light = new BABYLON.PointLight('light', new BABYLON.Vector3(-5.11, -0.42, -0.99), scene);  
+    
+        var light1 = new BABYLON.DirectionalLight('light1', new BABYLON.Vector3(5.19,0,-1.5), scene);  
+        var light2 = new BABYLON.DirectionalLight('light1', new BABYLON.Vector3(-0.62,2.45,6.36), scene);  
+        light1.intensity = 10;
+        //   var light2 = new BABYLON.PointLight('light2', new BABYLON.Vector3(0,4,0), scene);  
+        // light2.intensity = 2;
+        //   var light3 = new BABYLON.PointLight('light3', new BABYLON.Vector3(1.5,1,-3), scene);  
+        // light3.intensity = 2;
+        // light3.range = 10;
         BABYLON.SceneLoader.ImportMesh("", "./", "HEADSET.babylon", scene, function (newMeshes) {
             
-            var blackBox = new BABYLON.StandardMaterial("blackBox", scene);
+            var blackBox = getMaterial("blackBox", "./BOX_STYLE_1.jpg", "./blackbox.jpg", 0.3, new BABYLON.Color3(0.3, 0.3, 0.3), scene);
             
-            var redPlastic = new BABYLON.StandardMaterial("plastic", scene);
-            var blackCushion = new BABYLON.StandardMaterial("blackCushion", scene);
-            var chrome = new BABYLON.StandardMaterial("chrome", scene);
-            var blackPlastic = new BABYLON.StandardMaterial("blackPlastic", scene);
-            var blackMetal = new BABYLON.StandardMaterial("blackMetal", scene);
-            var HeadsetAO = new BABYLON.Texture("./HEADSET_STYLE_1.jpg", scene);
-            
-            blackBox.diffuseTexture = new BABYLON.Texture("./blackbox.jpg", scene);
-            blackBox.ambientTexture = new BABYLON.Texture("./BOX_STYLE_1.jpg", scene);
-            blackBox.ambientTexture.coordinatesIndex = 1;
-            
-            redPlastic.diffuseTexture = new BABYLON.Texture("./redplastic.jpg",scene);   
-            redPlastic.ambientTexture =  HeadsetAO;
-            redPlastic.ambientTexture.coordinatesIndex = 1;
-            
-          
-            
-            blackCushion.diffuseTexture = new BABYLON.Texture("./blackcushion.jpg",scene);
-            blackCushion.ambientTexture =  HeadsetAO;
-            blackCushion.ambientTexture.coordinatesIndex = 1;
-                        
-            chrome.diffuseTexture = new BABYLON.Texture("./chrome.jpg",scene);
-            chrome.ambientTexture =  HeadsetAO;
-            chrome.ambientTexture.coordinatesIndex = 1;
-                                    
-            blackPlastic.diffuseTexture = new BABYLON.Texture("./blackplastic.jpg",scene);
-            blackPlastic.ambientTexture =  HeadsetAO;
-            blackPlastic.ambientTexture.coordinatesIndex = 1;
-                                    
-            blackMetal.diffuseTexture = new BABYLON.Texture("./blackmetal.jpg",scene);          
-            blackMetal.ambientTexture =  HeadsetAO;
-            blackMetal.ambientTexture.coordinatesIndex = 1;
-                                    
+            var redPlastic = getMaterial("redPlastic", "./HEADSET_STYLE_1.jpg", "./redplastic.jpg", 0.3, new BABYLON.Color3(0.3, 0.3, 0.3), scene);
+            var blackCushion = getMaterial("blackCushions", "./HEADSET_STYLE_1.jpg", "./blackcushion.jpg", 0.1, new BABYLON.Color3(0.3, 0.3, 0.3), scene);
+            var chrome = getMaterial("chrome", "./HEADSET_STYLE_1.jpg", "./chrome.jpg", 0.3, new BABYLON.Color3(0.3, 0.3, 0.3), scene);
+            var blackPlastic = getMaterial("blackplastic", "./HEADSET_STYLE_1.jpg", "./blackplastic.jpg", 0.3, new BABYLON.Color3(0.3, 0.3, 0.3), scene);
+            var blackMetal = getMaterial("blackMetal", "./HEADSET_STYLE_1.jpg", "./blackmetal.jpg", 0.3, new BABYLON.Color3(0.3, 0.3, 0.3), scene);
+            //var HeadsetAO = new BABYLON.Texture("./HEADSET_STYLE_1.jpg", scene);
+
             for (var i = 0; i < newMeshes.length; i++) {
                 switch (newMeshes[i].name) {
                     case "BOX_STYLE_1": newMeshes[i].material = blackBox;  break;
@@ -66,15 +72,12 @@
                     default: break;
                 }                
             }
-
-            camera.target = newMeshes[0];
-
     	});
         return scene;
     }
 
     var scene = createScene();
-
+     
     engine.runRenderLoop(function(){
         scene.render();
     });
