@@ -4,7 +4,6 @@ window.addEventListener('DOMContentLoaded', function () {
 
     var canvas = document.getElementById('renderCanvas');
     var gui = new dat.GUI();
-    var gui1 = new dat.GUI();
     var engine = new BABYLON.Engine(canvas, true);
 
     function disp(materialBP, materialRP, materialChrome, materialMetalArch) {
