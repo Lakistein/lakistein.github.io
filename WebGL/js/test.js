@@ -1,3 +1,4 @@
+/* global camera */
 /// <reference path="babylon.2.3.d.ts" />
 /// <reference path="babylon.pbrMaterial.d.ts" />
 
@@ -7,7 +8,7 @@ window.addEventListener('DOMContentLoaded', function () {
     var gui = new dat.GUI();
     var engine = new BABYLON.Engine(canvas, true);
 
-    function disp(materialBB, materialBP, materialRP, materialChrome, materialMetalArch) {
+    function disp(materialBB, materialBP, materialRP, materialChrome, materialMetalArch, materialBC) {
         var folderBlackPlastic = gui.addFolder("Black Plastic");
         folderBlackPlastic.add(materialBP, "indexOfRefraction", 0, 2);
         folderBlackPlastic.add(materialBP, "alpha", 0, 1);
@@ -71,7 +72,7 @@ window.addEventListener('DOMContentLoaded', function () {
         folderArch.add(materialMetalArch.reflectivityColor, "r", 0, 1);
         folderArch.add(materialMetalArch.reflectivityColor, "g", 0, 1);
         folderArch.add(materialMetalArch.reflectivityColor, "b", 0, 1);
-        
+
         var folderBlackBox = gui.addFolder("Black Box");
         folderBlackBox.add(materialBB, "indexOfRefraction", 0, 2);
         folderBlackBox.add(materialBB, "alpha", 0, 1);
@@ -87,6 +88,22 @@ window.addEventListener('DOMContentLoaded', function () {
         folderBlackBox.add(materialBB.reflectivityColor, "r", 0, 1);
         folderBlackBox.add(materialBB.reflectivityColor, "g", 0, 1);
         folderBlackBox.add(materialBB.reflectivityColor, "b", 0, 1);
+
+        var folderBlackCushions = gui.addFolder("Black Cushions");
+        folderBlackCushions.add(materialBC, "indexOfRefraction", 0, 2);
+        folderBlackCushions.add(materialBC, "alpha", 0, 1);
+        folderBlackCushions.add(materialBC, "directIntensity", 0, 2);
+        folderBlackCushions.add(materialBC, "emissiveIntensity", 0, 2);
+        folderBlackCushions.add(materialBC, "environmentIntensity", 0, 2);
+        folderBlackCushions.add(materialBC, "specularIntensity", 0, 2);
+        folderBlackCushions.add(materialBC, "overloadedShadowIntensity", 0, 2);
+        folderBlackCushions.add(materialBC, "overloadedShadeIntensity", 0, 2);
+        folderBlackCushions.add(materialBC, "cameraExposure", 0, 2);
+        folderBlackCushions.add(materialBC, "cameraContrast", 0, 2);
+        folderBlackCushions.add(materialBC, "microSurface", 0, 1);
+        folderBlackCushions.add(materialBC.reflectivityColor, "r", 0, 1);
+        folderBlackCushions.add(materialBC.reflectivityColor, "g", 0, 1);
+        folderBlackCushions.add(materialBC.reflectivityColor, "b", 0, 1);
     };
     function setMaterialValues(material, indexOfRefraction, alpha, directIntensity, emissiveIntensity,
         environmentIntensity, specularIntensity, overloadedShadowIntensity, overloadedShadeIntensity,
@@ -102,21 +119,25 @@ window.addEventListener('DOMContentLoaded', function () {
         material.cameraContrast = cameraContrast;
         material.microSurface = microSurface;
     }
+
     var createScene = function () {
 
         var scene = new BABYLON.Scene(engine);
         scene.ambientColor = new BABYLON.Color3(1, 1, 1);
-        var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 4, Math.PI / 2.5, 10, new BABYLON.Vector3(-0.5, .5, 0), scene);
+        camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 4, Math.PI / 2.5, 6, new BABYLON.Vector3(0, .5, 0), scene);
+        camera.lowerRadiusLimit = 2.5;
+        camera.upperRadiusLimit = 6;
+        camera.upperBetaLimit = 1.6;
         camera.attachControl(canvas, true);
-        camera.wheelPrecision = 20;
-
+        camera.wheelPrecision = 50;
+        scene.activeCamera = camera;
         var spotLight = new BABYLON.SpotLight("spot", new BABYLON.Vector3(-0.06, 3.66, -3), new BABYLON.Vector3(-0.1, -0.8, 0.6), 0.6, 1, scene);
-
+        
         spotLight.range = 8;
         spotLight.intensity = 500;
         spotLight.diffuse = new BABYLON.Color3(0, 0, 0);
         spotLight.specular = new BABYLON.Color3(1, 1, 1);
-
+        //var ambLi = new BABYLON.HemisphericLight("l", BABYLON.Vector3.Up(), scene);
         var reflectionTexture = new BABYLON.CubeTexture("./textures/skybox", scene);
 
         var skybox = BABYLON.Mesh.CreateBox("skyBox", 100.0, scene);
@@ -136,10 +157,10 @@ window.addEventListener('DOMContentLoaded', function () {
             var chrome = new BABYLON.PBRMaterial("ch", scene);
             var blackMetal = new BABYLON.PBRMaterial("bm", scene);
             var blackBox = new BABYLON.PBRMaterial("bb", scene);
+            var blackCushion = new BABYLON.PBRMaterial("bc", scene);
             for (var i = 0; i < newMeshes.length; i++) {
                 switch (newMeshes[i].name) {
                     case "BOX_STYLE_1":
-
                         blackBox.albedoTexture = new BABYLON.Texture("./textures/blackbox.jpg", scene);
                         blackBox.ambientTexture = new BABYLON.Texture("./textures/BOX_STYLE_1.jpg", scene);
                         blackBox.reflectivityColor = new BABYLON.Color3(0, 0, 0);
@@ -236,7 +257,7 @@ window.addEventListener('DOMContentLoaded', function () {
                         newMeshes[i].material = redPlastic;
                         break;
                     case "HEADSETCUSHION_STYLE_1":
-                        var blackCushion = new BABYLON.PBRMaterial("bc", scene);
+
                         blackCushion.albedoTexture = new BABYLON.Texture("./textures/blackcushion.jpg", scene);
                         blackCushion.reflectivityColor = new BABYLON.Color3(0.05, 0.05, 0.05);
                         blackCushion.ambientTexture = new BABYLON.Texture("./textures/HEADSET_STYLE_1.jpg", scene);
@@ -253,14 +274,24 @@ window.addEventListener('DOMContentLoaded', function () {
                     default: break;
                 }
             }
-            disp(blackBox, blackPlastic, redPlastic, chrome, blackMetal);
+            disp(blackBox, blackPlastic, redPlastic, chrome, blackMetal, blackCushion);
         });
         return scene;
     };
 
     var scene = createScene();
+    var b = null;
 
-    engine.runRenderLoop(function () {
+    engine.runRenderLoop(function () 
+    {
+        if (b == null)
+            b = scene.meshes.find(x => x.name === "background");
+ 
+        if(b != null && camera != null)
+        {
+            b.rotation.y = -camera.alpha + -Math.PI / 2;
+        }
+
         scene.render();
     });
 
