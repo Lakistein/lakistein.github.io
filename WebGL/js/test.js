@@ -132,7 +132,7 @@ window.addEventListener('DOMContentLoaded', function () {
         camera.wheelPrecision = 50;
         scene.activeCamera = camera;
         var spotLight = new BABYLON.SpotLight("spot", new BABYLON.Vector3(-0.06, 3.66, -3), new BABYLON.Vector3(-0.1, -0.8, 0.6), 0.6, 1, scene);
-        
+
         spotLight.range = 8;
         spotLight.intensity = 500;
         spotLight.diffuse = new BABYLON.Color3(0, 0, 0);
@@ -166,12 +166,13 @@ window.addEventListener('DOMContentLoaded', function () {
                         blackBox.reflectivityColor = new BABYLON.Color3(0, 0, 0);
                         blackBox.reflectionTexture = reflectionTexture;
                         blackBox.indexOfRefraction = 2;
-                        blackBox.directIntensity = 1;
-                        blackBox.environmentIntensity = 0.2;
-                        blackBox.overloadedShadeIntensity = 0.8;
-                        blackBox.cameraExposure = 0.8;
-                        blackBox.cameraContrast = 1.6;
-                        blackBox.microSurface = 0.1;
+                        blackBox.directIntensity = 1.7;
+                        blackBox.environmentIntensity = 0.09;
+                        blackBox.overloadedShadowIntensity = 0.6;
+                        blackBox.overloadedShadeIntensity = 0.22;
+                        blackBox.cameraExposure = 1.1;
+                        blackBox.cameraContrast = 2;
+                        blackBox.microSurface = 0.46;
                         newMeshes[i].material = blackBox;
                         break;
                     case "background":
@@ -203,12 +204,12 @@ window.addEventListener('DOMContentLoaded', function () {
                         blackMetal.reflectionTexture = reflectionTexture;
                         blackMetal.indexOfRefraction = 2;
                         blackMetal.directIntensity = 0.2;
-                        blackMetal.environmentIntensity = 0.93;
+                        blackMetal.environmentIntensity = 0.24;
                         blackMetal.specularIntensity = 0.7;
                         blackMetal.overloadedShadeIntensity = 0.8;
                         blackMetal.cameraExposure = 0.8;
                         blackMetal.cameraContrast = 1.6;
-                        blackMetal.microSurface = 0.5;
+                        blackMetal.microSurface = 0.61;
                         newMeshes[i].material = blackMetal;
                         break;
                     case "HEADSETBLACKPLASTIC_STYLE_1":
@@ -221,10 +222,11 @@ window.addEventListener('DOMContentLoaded', function () {
                         blackPlastic.indexOfRefraction = 0.52;
                         blackPlastic.directIntensity = 1;
                         blackPlastic.environmentIntensity = 0.05;
+                        blackPlastic.overloadedShadowIntensity = 0.8;
                         blackPlastic.overloadedShadeIntensity = 0.8;
                         blackPlastic.cameraExposure = 0.8;
                         blackPlastic.cameraContrast = 1.6;
-                        blackPlastic.microSurface = 0.32;
+                        blackPlastic.microSurface = 0.31;
                         newMeshes[i].material = blackPlastic;
                         break;
                     case "HEADSETCHROME_STYLE_1":
@@ -235,10 +237,10 @@ window.addEventListener('DOMContentLoaded', function () {
                         chrome.reflectivityColor = new BABYLON.Color3(.9, .9, .9);
                         chrome.directIntensity = 0.3;
                         chrome.specularIntensity = 1.5;
-                        chrome.environmentIntensity = 1;
-                        chrome.cameraExposure = .55;
-                        chrome.cameraContrast = 1.5;
-                        chrome.microSurface = 0.99;
+                        chrome.environmentIntensity = 0.6;
+                        chrome.cameraExposure = .23;
+                        chrome.cameraContrast = 1.9;
+                        chrome.microSurface = 0.21;
                         newMeshes[i].material = chrome;
                         break;
                     case "HEADSETCOLOREDPLASTIC_STYLE_1":
@@ -249,26 +251,27 @@ window.addEventListener('DOMContentLoaded', function () {
                         redPlastic.reflectivityColor = new BABYLON.Color3(0.2, 0.2, 0.2);
                         redPlastic.indexOfRefraction = .52;
                         redPlastic.directIntensity = 1;
-                        redPlastic.environmentIntensity = 0;
-                        redPlastic.overloadedShadeIntensity = 0.8;
+                        redPlastic.environmentIntensity = 0.5;
+                        redPlastic.specularIntensity = 0.3;
+                        redPlastic.overloadedShadowIntensity = 1.3;
+                        redPlastic.overloadedShadeIntensity = 0.68;
                         redPlastic.cameraExposure = 0.8;
-                        redPlastic.cameraContrast = 1.5;
-                        redPlastic.microSurface = 0.68;
+                        redPlastic.cameraContrast = 2;
+                        redPlastic.microSurface = 0.34;
                         newMeshes[i].material = redPlastic;
                         break;
                     case "HEADSETCUSHION_STYLE_1":
-
                         blackCushion.albedoTexture = new BABYLON.Texture("./textures/blackcushion.jpg", scene);
                         blackCushion.reflectivityColor = new BABYLON.Color3(0.05, 0.05, 0.05);
                         blackCushion.ambientTexture = new BABYLON.Texture("./textures/HEADSET_STYLE_1.jpg", scene);
                         blackCushion.ambientTexture.coordinatesIndex = 1;
                         blackCushion.indexOfRefraction = .52;
-                        blackCushion.directIntensity = 1;
+                        blackCushion.directIntensity = 2;
                         blackCushion.environmentIntensity = 0;
-                        blackCushion.overloadedShadeIntensity = 0.8;
-                        blackCushion.cameraExposure = 0.5;
-                        blackCushion.cameraContrast = 1.5;
-                        blackCushion.microSurface = 0;
+                        blackCushion.overloadedShadeIntensity = 0.81;
+                        blackCushion.cameraExposure = 2;
+                        blackCushion.cameraContrast = 2;
+                        blackCushion.microSurface = 0.4;
                         newMeshes[i].material = blackCushion;
                         break;
                     default: break;
