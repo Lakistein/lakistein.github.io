@@ -8,7 +8,7 @@ window.addEventListener('DOMContentLoaded', function () {
     var gui = new dat.GUI();
     var engine = new BABYLON.Engine(canvas, true);
 
-    function disp(materialBB, materialBP, materialRP, materialChrome, materialMetalArch, materialBC) {
+    function disp(materialBB, materialBP, materialRP, materialChrome, materialMetalArch, materialBC, materialB) {
         var folderBlackPlastic = gui.addFolder("Black Plastic");
         folderBlackPlastic.add(materialBP, "indexOfRefraction", 0, 2);
         folderBlackPlastic.add(materialBP, "alpha", 0, 1);
@@ -104,26 +104,31 @@ window.addEventListener('DOMContentLoaded', function () {
         folderBlackCushions.add(materialBC.reflectivityColor, "r", 0, 1);
         folderBlackCushions.add(materialBC.reflectivityColor, "g", 0, 1);
         folderBlackCushions.add(materialBC.reflectivityColor, "b", 0, 1);
+        
+        var folderBackground = gui.addFolder("Background");
+        folderBackground.add(materialB, "indexOfRefraction", 0, 2);
+        folderBackground.add(materialB, "alpha", 0, 1);
+        folderBackground.add(materialB, "directIntensity", 0, 2);
+        folderBackground.add(materialB, "emissiveIntensity", 0, 2);
+        folderBackground.add(materialB, "environmentIntensity", 0, 2);
+        folderBackground.add(materialB, "specularIntensity", 0, 2);
+        folderBackground.add(materialB, "overloadedShadowIntensity", 0, 2);
+        folderBackground.add(materialB, "overloadedShadeIntensity", 0, 2);
+        folderBackground.add(materialB, "cameraExposure", 0, 2);
+        folderBackground.add(materialB, "cameraContrast", 0, 2);
+        folderBackground.add(materialB, "microSurface", 0, 1);
+        folderBackground.add(materialB.reflectivityColor, "r", 0, 1);
+        folderBackground.add(materialB.reflectivityColor, "g", 0, 1);
+        folderBackground.add(materialB.reflectivityColor, "b", 0, 1);
     };
-    function setMaterialValues(material, indexOfRefraction, alpha, directIntensity, emissiveIntensity,
-        environmentIntensity, specularIntensity, overloadedShadowIntensity, overloadedShadeIntensity,
-        cameraExposure, cameraContrast, microSurface, reflectionTexture, reflectivityColor) {
-        material.reflectivityColor = reflectivityColor;
-        material.reflectivityColor = reflectivityColor;
-        material.reflectionTexture = reflectionTexture;
-        material.indexOfRefraction = indexOfRefraction;
-        material.directIntensity = directIntensity;
-        material.environmentIntensity = environmentIntensity;
-        material.overloadedShadeIntensity = overloadedShadeIntensity;
-        material.cameraExposure = cameraExposure;
-        material.cameraContrast = cameraContrast;
-        material.microSurface = microSurface;
-    }
-
     var createScene = function () {
 
         var scene = new BABYLON.Scene(engine);
-        scene.ambientColor = new BABYLON.Color3(1, 1, 1);
+        // scene.ambientColor = new BABYLON.Color3(.5, .5, .5);
+        // gui.add(scene.ambientColor, "r",0,1);
+        // gui.add(scene.ambientColor, "g",0,1);
+        // gui.add(scene.ambientColor, "b",0,1);
+        
         camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 4, Math.PI / 2.5, 6, new BABYLON.Vector3(0, .5, 0), scene);
         camera.lowerRadiusLimit = 2.5;
         camera.upperRadiusLimit = 6;
@@ -137,7 +142,9 @@ window.addEventListener('DOMContentLoaded', function () {
         spotLight.intensity = 500;
         spotLight.diffuse = new BABYLON.Color3(0, 0, 0);
         spotLight.specular = new BABYLON.Color3(1, 1, 1);
-        //var ambLi = new BABYLON.HemisphericLight("l", BABYLON.Vector3.Up(), scene);
+        // var ambLi = new BABYLON.HemisphericLight("l", new BABYLON.Vector3(-0.1, -0.8, 0.6), scene);
+        // ambLi.diffuse = new BABYLON.Color3(1,1,1);
+        // ambLi.intensity =1;
         var reflectionTexture = new BABYLON.CubeTexture("./textures/skybox", scene);
 
         var skybox = BABYLON.Mesh.CreateBox("skyBox", 100.0, scene);
@@ -158,6 +165,7 @@ window.addEventListener('DOMContentLoaded', function () {
             var blackMetal = new BABYLON.PBRMaterial("bm", scene);
             var blackBox = new BABYLON.PBRMaterial("bb", scene);
             var blackCushion = new BABYLON.PBRMaterial("bc", scene);
+                                    var background = new BABYLON.PBRMaterial("bg", scene);
             for (var i = 0; i < newMeshes.length; i++) {
                 switch (newMeshes[i].name) {
                     case "BOX_STYLE_1":
@@ -176,17 +184,16 @@ window.addEventListener('DOMContentLoaded', function () {
                         newMeshes[i].material = blackBox;
                         break;
                     case "background":
-                        var background = new BABYLON.PBRMaterial("bg", scene);
                         background.ambientTexture = new BABYLON.Texture("./textures/BACKGROUND_STYLE_1.jpg", scene);
-                        background.albedoColor = BABYLON.Color3.Gray();
+                        //background.albedoColor = BABYLON.Color3.Gray();
                         background.reflectivityColor = new BABYLON.Color3(0, 0, 0);
                         //background.reflectionTexture = reflectionTexture;
                         background.indexOfRefraction = 2;
-                        background.directIntensity = 1;
-                        background.environmentIntensity = 0.4;
+                        background.directIntensity = 1.6;
+                        background.environmentIntensity = 0.05;
                         background.overloadedShadeIntensity = 0.8;
-                        background.cameraExposure = 0.8;
-                        background.cameraContrast = 1.6;
+                        background.cameraExposure = 0.68;
+                        background.cameraContrast = 1.8;
                         background.microSurface = 0;
                         newMeshes[i].material = background;
                         break;
@@ -277,7 +284,7 @@ window.addEventListener('DOMContentLoaded', function () {
                     default: break;
                 }
             }
-            disp(blackBox, blackPlastic, redPlastic, chrome, blackMetal, blackCushion);
+            disp(blackBox, blackPlastic, redPlastic, chrome, blackMetal, blackCushion, background);
         });
         return scene;
     };
