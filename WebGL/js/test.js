@@ -304,12 +304,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
     var flare1 = new BABYLON.LensFlare(.2, -0.85, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
-    var flare2 = new BABYLON.LensFlare(.2, -0.3, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/Band_2.png", hexaLensFlareSystem);
+    var flare2 = new BABYLON.LensFlare(.1, -0.3, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/Band_2.png", hexaLensFlareSystem);
     var flare3 = new BABYLON.LensFlare(.1, 0, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
     var flare4 = new BABYLON.LensFlare(.05, 0.2, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
     var flare5 = new BABYLON.LensFlare(.05, 0.8, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/Band_2.png", hexaLensFlareSystem);
-    var flare6 = new BABYLON.LensFlare(.1, 0.5, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/Band_1.png", hexaLensFlareSystem);
-    var flare7 = new BABYLON.LensFlare(.1, 0.7, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
+    var flare6 = new BABYLON.LensFlare(.05, 0.5, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/Band_1.png", hexaLensFlareSystem);
+    var flare7 = new BABYLON.LensFlare(.05, 0.7, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
     //var flare4 = new BABYLON.LensFlare(.02, -0.3, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
     var flareSizes = [];
     for (var i = 0; i < hexaLensFlareSystem.lensFlares.length; i++) {
@@ -338,8 +338,9 @@ window.addEventListener('DOMContentLoaded', function () {
             var acos = Math.acos(dot);
 
             var angle = acos * 180 / Math.PI;
-
-            flare.color = new BABYLON.Color3(angle / 180, angle / 180, angle / 180);
+            var brightness = 1 - angle /  100;
+            console.log(brightness);
+            flare.color = new BABYLON.Color3(brightness,brightness,brightness);
 
             // camera.lowerRadiusLimit = 3;
             // camera.upperRadiusLimit = 6;
