@@ -127,7 +127,7 @@ window.addEventListener('DOMContentLoaded', function () {
         scene.collisionsEnabled = true;
         camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 4, Math.PI / 2.5, 6, new BABYLON.Vector3(0, 100, 0), scene);
         camera.target = new BABYLON.Vector3(0, 0.5, 0);
-        camera.lowerRadiusLimit = 2.5;
+        camera.lowerRadiusLimit = 3;
         camera.upperRadiusLimit = 6;
         camera.upperBetaLimit = 1.6;
         camera.attachControl(canvas, true);
@@ -302,15 +302,19 @@ window.addEventListener('DOMContentLoaded', function () {
  
     //lensFlare.borderLimit = 1000;
 
-    var flare1 = new BABYLON.LensFlare(.1, 0.9, new BABYLON.Color3(.1, .1, .1), "./textures/flare.png", hexaLensFlareSystem);
-    var flare2 = new BABYLON.LensFlare(.01, 0.7, new BABYLON.Color3(.1, .1, .1), "./textures/flare.png", hexaLensFlareSystem);
-    var flare3 = new BABYLON.LensFlare(.01, 0.5, new BABYLON.Color3(.1, .1, .1), "./textures/flare.png", hexaLensFlareSystem);
-    //var flar4 = new BABYLON.LensFlare(.3, 0.6, new BABYLON.Color3(.1, .1, .1), "./textures/flare.png", hexaLensFlareSystem);
-    var flare5 = new BABYLON.LensFlare(.1, -1, new BABYLON.Color3(.1, .1, .1), "./textures/flare.png", hexaLensFlareSystem);
-    var flare6 = new BABYLON.LensFlare(.2, -0.9, new BABYLON.Color3(.1, .1, .1), "./textures/flare.png", hexaLensFlareSystem);
-    var flare7 = new BABYLON.LensFlare(.1, -0.6, new BABYLON.Color3(.1, .1, .1), "./textures/flare.png", hexaLensFlareSystem);
-    var flare8 = new BABYLON.LensFlare(.1, -0.4, new BABYLON.Color3(.1, .1, .1), "./textures/flare.png", hexaLensFlareSystem);
-    //var flar9 = new BABYLON.LensFlare(.4, -0.3, new BABYLON.Color3(.1, .1, .1), "./textures/flare.png", hexaLensFlareSystem);
+
+    var flare1 = new BABYLON.LensFlare(.2, -0.85, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
+    var flare2 = new BABYLON.LensFlare(.2, -0.3, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/Band_2.png", hexaLensFlareSystem);
+    var flare3 = new BABYLON.LensFlare(.1, 0, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
+    var flare4 = new BABYLON.LensFlare(.05, 0.2, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
+    var flare5 = new BABYLON.LensFlare(.05, 0.8, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/Band_2.png", hexaLensFlareSystem);
+    var flare6 = new BABYLON.LensFlare(.1, 0.5, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/Band_1.png", hexaLensFlareSystem);
+    var flare7 = new BABYLON.LensFlare(.1, 0.7, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
+    //var flare4 = new BABYLON.LensFlare(.02, -0.3, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
+    var flareSizes = [];
+    for (var i = 0; i < hexaLensFlareSystem.lensFlares.length; i++) {
+        flareSizes.push(hexaLensFlareSystem.lensFlares[i].size);
+    }
 
     scene.registerBeforeRender(function () {
         var rayPick = BABYLON.Ray.CreateNewFromTo(camera.position, new BABYLON.Vector3(0.027, 0.601, -1.225));
@@ -323,19 +327,30 @@ window.addEventListener('DOMContentLoaded', function () {
         }
         else {
 
-                     hexaLensFlareSystem.isEnabled = true;
+            hexaLensFlareSystem.isEnabled = true;
             var vec1 = hexaLensLight.position;
             var vec2 = camera.position;
-            //  //Get the dot product
+
             var dot = BABYLON.Vector3.Dot(vec1, vec2);
-            //  // Divide the dot by the product of the magnitudes of the vectors
+
             dot = dot / (Math.sqrt(vec1.x * vec1.x + vec1.y * vec1.y + vec1.z * vec1.z) * Math.sqrt(vec2.x * vec2.x + vec2.y * vec2.y + vec2.z * vec2.z));
-            //  //Get the arc cosin of the angle, you now have your angle in radians 
+
             var acos = Math.acos(dot);
-            //  //Multiply by 180/Mathf.PI to convert to degrees
+
             var angle = acos * 180 / Math.PI;
-            //  //Congrats, you made it really hard on yourself.
-               flare.color = new BABYLON.Color3(angle/360,angle/360,angle/360);
+
+            flare.color = new BABYLON.Color3(angle / 180, angle / 180, angle / 180);
+
+            // camera.lowerRadiusLimit = 3;
+            // camera.upperRadiusLimit = 6;
+            // .1, c = 6 / 6 = 1 f = .1, 
+            //     c = 3 / 6 = .5 f = .6
+            //     c = 4 / 6 = .66 f = .6
+            //     c = 5 / 6 = .83 f = .6
+            // debugger;
+            for (var i = 0; i < hexaLensFlareSystem.lensFlares.length; i++) {
+                hexaLensFlareSystem.lensFlares[i].size = flareSizes[i] + (1 - camera.radius / 6)/6;
+            }
         }
         if (b == null)
             b = scene.meshes.find(x => x.name === "background");
