@@ -7,7 +7,7 @@ window.addEventListener('DOMContentLoaded', function () {
     var canvas = document.getElementById('renderCanvas');
     var gui = new dat.GUI();
     var engine = new BABYLON.Engine(canvas, true);
-
+    //var ray = new BABYLON.
     function disp(materialBB, materialBP, materialRP, materialChrome, materialMetalArch, materialBC, materialB) {
         var folderBlackPlastic = gui.addFolder("Black Plastic");
         folderBlackPlastic.add(materialBP, "indexOfRefraction", 0, 2);
@@ -104,7 +104,7 @@ window.addEventListener('DOMContentLoaded', function () {
         folderBlackCushions.add(materialBC.reflectivityColor, "r", 0, 1);
         folderBlackCushions.add(materialBC.reflectivityColor, "g", 0, 1);
         folderBlackCushions.add(materialBC.reflectivityColor, "b", 0, 1);
-        
+
         var folderBackground = gui.addFolder("Background");
         folderBackground.add(materialB, "indexOfRefraction", 0, 2);
         folderBackground.add(materialB, "alpha", 0, 1);
@@ -124,39 +124,22 @@ window.addEventListener('DOMContentLoaded', function () {
     var createScene = function () {
 
         var scene = new BABYLON.Scene(engine);
-        // scene.ambientColor = new BABYLON.Color3(.5, .5, .5);
-        // gui.add(scene.ambientColor, "r",0,1);
-        // gui.add(scene.ambientColor, "g",0,1);
-        // gui.add(scene.ambientColor, "b",0,1);
-        
-        camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 4, Math.PI / 2.5, 6, new BABYLON.Vector3(0, .5, 0), scene);
+        scene.collisionsEnabled = true;
+        camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 4, Math.PI / 2.5, 6, new BABYLON.Vector3(0, 100, 0), scene);
+        camera.target = new BABYLON.Vector3(0, 0.5, 0);
         camera.lowerRadiusLimit = 2.5;
         camera.upperRadiusLimit = 6;
         camera.upperBetaLimit = 1.6;
         camera.attachControl(canvas, true);
         camera.wheelPrecision = 50;
         scene.activeCamera = camera;
-        var spotLight = new BABYLON.SpotLight("spot", new BABYLON.Vector3(-0.06, 3.66, -3), new BABYLON.Vector3(-0.1, -0.8, 0.6), 0.6, 1, scene);
+        var spotLight = new BABYLON.SpotLight("spot", new BABYLON.Vector3(-0.06, 3.66, -2.63), new BABYLON.Vector3(-0.1, -0.8, 0.6), 0.6, 1, scene);
 
         spotLight.range = 8;
         spotLight.intensity = 500;
         spotLight.diffuse = new BABYLON.Color3(0, 0, 0);
         spotLight.specular = new BABYLON.Color3(1, 1, 1);
-        // var ambLi = new BABYLON.HemisphericLight("l", new BABYLON.Vector3(-0.1, -0.8, 0.6), scene);
-        // ambLi.diffuse = new BABYLON.Color3(1,1,1);
-        // ambLi.intensity =1;
         var reflectionTexture = new BABYLON.CubeTexture("./textures/skybox", scene);
-
-        var skybox = BABYLON.Mesh.CreateBox("skyBox", 100.0, scene);
-        var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
-        skyboxMaterial.backFaceCulling = false;
-        skybox.material = skyboxMaterial;
-        skybox.infiniteDistance = true;
-        skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
-        skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
-        skyboxMaterial.reflectionTexture = reflectionTexture;
-        skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-        skybox.renderingGroupId = 0;
 
         BABYLON.SceneLoader.ImportMesh("", "./", "HEADSET.babylon", scene, function (newMeshes) {
             var blackPlastic = new BABYLON.PBRMaterial("bp", scene);
@@ -165,8 +148,9 @@ window.addEventListener('DOMContentLoaded', function () {
             var blackMetal = new BABYLON.PBRMaterial("bm", scene);
             var blackBox = new BABYLON.PBRMaterial("bb", scene);
             var blackCushion = new BABYLON.PBRMaterial("bc", scene);
-                                    var background = new BABYLON.PBRMaterial("bg", scene);
+            var background = new BABYLON.PBRMaterial("bg", scene);
             for (var i = 0; i < newMeshes.length; i++) {
+                newMeshes[i].checkCollisions = true;
                 switch (newMeshes[i].name) {
                     case "BOX_STYLE_1":
                         blackBox.albedoTexture = new BABYLON.Texture("./textures/blackbox.jpg", scene);
@@ -182,6 +166,7 @@ window.addEventListener('DOMContentLoaded', function () {
                         blackBox.cameraContrast = 2;
                         blackBox.microSurface = 0.46;
                         newMeshes[i].material = blackBox;
+                        newMeshes[i].checkCollisions = true;
                         break;
                     case "background":
                         background.ambientTexture = new BABYLON.Texture("./textures/BACKGROUND_STYLE_1.jpg", scene);
@@ -266,6 +251,7 @@ window.addEventListener('DOMContentLoaded', function () {
                         redPlastic.cameraContrast = 2;
                         redPlastic.microSurface = 0.34;
                         newMeshes[i].material = redPlastic;
+                        newMeshes[i].checkCollisions = true;
                         break;
                     case "HEADSETCUSHION_STYLE_1":
                         blackCushion.albedoTexture = new BABYLON.Texture("./textures/blackcushion.jpg", scene);
@@ -292,16 +278,53 @@ window.addEventListener('DOMContentLoaded', function () {
     var scene = createScene();
     var b = null;
 
-    engine.runRenderLoop(function () 
-    {
+
+    var ray = BABYLON.Ray.CreateNewFromTo(new BABYLON.Vector3(5.26, 2.91, 1.75), new BABYLON.Vector3(5.26, 2.91, 1.75));
+
+    var mainLensLight = new BABYLON.PointLight("lensLight", new BABYLON.Vector3(0.027, 0.601, -1.225), scene);
+    mainLensLight.intensity = 0;
+    var MainLensFlareSystem = new BABYLON.LensFlareSystem("mainLensFlareSystem", mainLensLight, scene);
+    var flare = new BABYLON.LensFlare(.3, 1, new BABYLON.Color3(.5, .5, .5), "./textures/Main Flare.png", MainLensFlareSystem);
+
+    var hexaLensLight = new BABYLON.SpotLight("hexaLensLight", new BABYLON.Vector3(-13, 3, 20), new BABYLON.Vector3(0.2, 0, -1), 10, 0.01, scene);
+    hexaLensLight.intensity = 0;
+    var hexaLensFlareSystem = new BABYLON.LensFlareSystem("hexaLensFlareSystem", hexaLensLight, scene);
+    var flare1 = new BABYLON.LensFlare(.3, -0.85, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
+    var flare2 = new BABYLON.LensFlare(.1, -0.45, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
+    var flare3 = new BABYLON.LensFlare(.05, -0.4, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
+    var flare4 = new BABYLON.LensFlare(.02, -0.3, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
+    //var flare4 = new BABYLON.LensFlare(.02, 1, new BABYLON.Color3(0.1, 1, 0.05), "./textures/flare.png", hexaLensFlareSystem);
+    var folderFlare = gui.addFolder("Flares");
+    folderFlare.add(hexaLensLight.getAbsolutePosition(), "x", -200, 200);
+    folderFlare.add(hexaLensLight.getAbsolutePosition(), "y", -200, 200);
+    folderFlare.add(hexaLensLight.getAbsolutePosition(), "z", -200, 200);
+    
+ 
+    //lensFlare.borderLimit = 1000;
+
+    
+    
+    scene.registerBeforeRender(function () {
+        var rayPick = BABYLON.Ray.CreateNewFromTo(camera.position, new BABYLON.Vector3(0.027, 0.601, -1.225));
+        var meshFound = scene.pickWithRay(rayPick);
+
+
+        if (meshFound != null && meshFound.pickedPoint != null) {
+            flare.color = BABYLON.Color3.Black();
+        }
+        else {
+
+            flare.color = BABYLON.Color3.White();
+        }
         if (b == null)
             b = scene.meshes.find(x => x.name === "background");
- 
-        if(b != null && camera != null)
-        {
+
+        if (b != null && camera != null) {
             b.rotation.y = -camera.alpha + -Math.PI / 2;
         }
 
+    });
+    engine.runRenderLoop(function () {
         scene.render();
     });
 
