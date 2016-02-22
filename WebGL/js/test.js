@@ -140,7 +140,10 @@ window.addEventListener('DOMContentLoaded', function () {
         spotLight.diffuse = new BABYLON.Color3(0, 0, 0);
         spotLight.specular = new BABYLON.Color3(1, 1, 1);
         var reflectionTexture = new BABYLON.CubeTexture("./textures/skybox", scene);
-
+        var mng = new BABYLON.SpriteManager("logo", "./textures/logo.png", 1,1,scene);
+        var logo = new BABYLON.Sprite("log", mng);
+        logo.position = new BABYLON.Vector3(1,1,1);
+        
         BABYLON.SceneLoader.ImportMesh("", "./", "HEADSET.babylon", scene, function (newMeshes) {
             var blackPlastic = new BABYLON.PBRMaterial("bp", scene);
             var redPlastic = new BABYLON.PBRMaterial("rp", scene);
@@ -340,7 +343,7 @@ window.addEventListener('DOMContentLoaded', function () {
             var angle = acos * 180 / Math.PI;
             var brightness = 1 - angle / 120;
             var bb = 0.06 - angle / 1000;
-                        console.log(bb);
+
             if(bb > 0.1) bb = 0.1;
 
             for (var i = 0; i < hexaLensFlareSystem.lensFlares.length; i++) {
