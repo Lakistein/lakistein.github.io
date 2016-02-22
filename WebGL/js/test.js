@@ -292,7 +292,7 @@ window.addEventListener('DOMContentLoaded', function () {
     folderFlare.add(hexaLensLight.getAbsolutePosition(), "x", -200, 200);
     folderFlare.add(hexaLensLight.getAbsolutePosition(), "y", -200, 200);
     folderFlare.add(hexaLensLight.getAbsolutePosition(), "z", -200, 200);
-    
+
     var flare1 = new BABYLON.LensFlare(.2, -2.85, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
     var flare2 = new BABYLON.LensFlare(.1, -2.3, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/Band_2.png", hexaLensFlareSystem);
     var flare3 = new BABYLON.LensFlare(.1, -0.5, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
@@ -342,7 +342,9 @@ window.addEventListener('DOMContentLoaded', function () {
         }
 
         if (b == null)
-            b = scene.meshes.find(x => x.name === "background");
+            b = scene.meshes.find(function (x) {
+                return x.name === "background";
+            });
 
         if (b != null && camera != null) {
             b.rotation.y = -camera.alpha + -Math.PI / 2;
