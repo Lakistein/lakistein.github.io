@@ -7,7 +7,7 @@ window.addEventListener('DOMContentLoaded', function () {
     var canvas = document.getElementById('renderCanvas');
     var gui = new dat.GUI();
     var engine = new BABYLON.Engine(canvas, true);
-    //var ray = new BABYLON.
+
     function disp(materialBB, materialBP, materialRP, materialChrome, materialMetalArch, materialBC, materialB) {
         var folderBlackPlastic = gui.addFolder("Black Plastic");
         folderBlackPlastic.add(materialBP, "indexOfRefraction", 0, 2);
@@ -126,6 +126,7 @@ window.addEventListener('DOMContentLoaded', function () {
         var scene = new BABYLON.Scene(engine);
         scene.collisionsEnabled = true;
         camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 4, Math.PI / 2.5, 6, new BABYLON.Vector3(0, .5, 0), scene);
+        camera.target = new BABYLON.Vector3(0, .5, 0);
         camera.lowerRadiusLimit = 3;
         camera.upperRadiusLimit = 6;
         camera.upperBetaLimit = 1.6;
