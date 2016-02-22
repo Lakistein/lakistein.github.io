@@ -284,7 +284,7 @@ window.addEventListener('DOMContentLoaded', function () {
     var mainLensLight = new BABYLON.PointLight("lensLight", new BABYLON.Vector3(0.027, 0.601, -1.225), scene);
     mainLensLight.intensity = 0;
     var MainLensFlareSystem = new BABYLON.LensFlareSystem("mainLensFlareSystem", mainLensLight, scene);
-    var flare = new BABYLON.LensFlare(.4, 1, new BABYLON.Color3(.5, .5, .5), "./textures/Main Flare.png", MainLensFlareSystem);
+    var flare = new BABYLON.LensFlare(.4, 1, new BABYLON.Color3(1, 1, 1), "./textures/Main Flare.png", MainLensFlareSystem);
 
     var hexaLensLight = new BABYLON.SpotLight("hexaLensLight", new BABYLON.Vector3(0.027, 0.601, -1.225), new BABYLON.Vector3(0.2, 0, -1), 10, 0.01, scene);
     hexaLensLight.intensity = 0;
@@ -303,13 +303,13 @@ window.addEventListener('DOMContentLoaded', function () {
     //lensFlare.borderLimit = 1000;
 
 
-    var flare1 = new BABYLON.LensFlare(.2, -0.85, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
-    var flare2 = new BABYLON.LensFlare(.1, -0.3, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/Band_2.png", hexaLensFlareSystem);
-    var flare3 = new BABYLON.LensFlare(.1, 0, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
-    var flare4 = new BABYLON.LensFlare(.05, 0.2, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
-    var flare5 = new BABYLON.LensFlare(.05, 0.8, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/Band_2.png", hexaLensFlareSystem);
-    var flare6 = new BABYLON.LensFlare(.05, 0.5, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/Band_1.png", hexaLensFlareSystem);
-    var flare7 = new BABYLON.LensFlare(.05, 0.7, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
+    var flare1 = new BABYLON.LensFlare(.2, -2.85, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
+    var flare2 = new BABYLON.LensFlare(.1, -2.3, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/Band_2.png", hexaLensFlareSystem);
+    var flare3 = new BABYLON.LensFlare(.1, -0.5, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
+    var flare4 = new BABYLON.LensFlare(.05, 0, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
+    var flare5 = new BABYLON.LensFlare(.05, 0.4, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/Band_2.png", hexaLensFlareSystem);
+    var flare6 = new BABYLON.LensFlare(.05, 0.2, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/Band_1.png", hexaLensFlareSystem);
+    var flare7 = new BABYLON.LensFlare(.05, 0.5, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
     //var flare4 = new BABYLON.LensFlare(.02, -0.3, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
     var flareSizes = [];
     for (var i = 0; i < hexaLensFlareSystem.lensFlares.length; i++) {
@@ -324,10 +324,10 @@ window.addEventListener('DOMContentLoaded', function () {
         if (meshFound != null && meshFound.pickedPoint != null) {
             flare.color = BABYLON.Color3.Black();
             hexaLensFlareSystem.isEnabled = false;
-        }
-        else {
-
+        } else {
+            flare.color = BABYLON.Color3.White();
             hexaLensFlareSystem.isEnabled = true;
+
             var vec1 = hexaLensLight.position;
             var vec2 = camera.position;
 
@@ -338,21 +338,24 @@ window.addEventListener('DOMContentLoaded', function () {
             var acos = Math.acos(dot);
 
             var angle = acos * 180 / Math.PI;
-            var brightness = 1 - angle /  100;
-            console.log(brightness);
-            flare.color = new BABYLON.Color3(brightness,brightness,brightness);
+            var brightness = 1 - angle / 120;
+            var bb = 0.06 - angle / 1000;
+                        console.log(bb);
+            if(bb > 0.1) bb = 0.1;
 
-            // camera.lowerRadiusLimit = 3;
-            // camera.upperRadiusLimit = 6;
-            // .1, c = 6 / 6 = 1 f = .1, 
-            //     c = 3 / 6 = .5 f = .6
-            //     c = 4 / 6 = .66 f = .6
-            //     c = 5 / 6 = .83 f = .6
-            // debugger;
             for (var i = 0; i < hexaLensFlareSystem.lensFlares.length; i++) {
-                hexaLensFlareSystem.lensFlares[i].size = flareSizes[i] + (1 - camera.radius / 6)/6;
+                hexaLensFlareSystem.lensFlares[i].size = flareSizes[i] + (1 - camera.radius / 6) / 6;
+                if (angle < 45) {
+                    // 45 = 0
+                    // 0 = 1
+                    hexaLensFlareSystem.lensFlares[i].color = new BABYLON.Color3(bb,bb,bb);
+
+                } else {
+                    hexaLensFlareSystem.isEnabled = false;
+                }
             }
         }
+        
         if (b == null)
             b = scene.meshes.find(x => x.name === "background");
 
