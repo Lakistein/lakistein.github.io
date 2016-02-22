@@ -132,6 +132,7 @@ window.addEventListener('DOMContentLoaded', function () {
         camera.upperBetaLimit = 1.6;
         camera.attachControl(canvas, true);
         camera.wheelPrecision = 50;
+        camera.target = new BABYLON.Vector3(0,0.5,0);
         camera.setPosition(new BABYLON.Vector3(0.004510142482902708, 0.7674630808337399, -2.9880500596552437));
         scene.activeCamera = camera;
         var spotLight = new BABYLON.SpotLight("spot", new BABYLON.Vector3(-0.06, 3.66, -2.63), new BABYLON.Vector3(-0.1, -0.8, 0.6), 0.9, 1, scene);
