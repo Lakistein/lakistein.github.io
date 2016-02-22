@@ -125,13 +125,14 @@ window.addEventListener('DOMContentLoaded', function () {
 
         var scene = new BABYLON.Scene(engine);
         scene.collisionsEnabled = true;
-        camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 4, Math.PI / 2.5, 6, new BABYLON.Vector3(0, 100, 0), scene);
-        camera.target = new BABYLON.Vector3(0, 0.5, 0);
+        camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 4, Math.PI / 2.5, 6, new BABYLON.Vector3(0, .5, 0), scene);
+        //camera.target = new BABYLON.Vector3(0, 0.5, 0);
         camera.lowerRadiusLimit = 3;
         camera.upperRadiusLimit = 6;
         camera.upperBetaLimit = 1.6;
         camera.attachControl(canvas, true);
         camera.wheelPrecision = 50;
+        camera.setPosition(new BABYLON.Vector3(0.004510142482902708, 0.7674630808337399, -2.9880500596552437));
         scene.activeCamera = camera;
         var spotLight = new BABYLON.SpotLight("spot", new BABYLON.Vector3(-0.06, 3.66, -2.63), new BABYLON.Vector3(-0.1, -0.8, 0.6), 0.9, 1, scene);
 
@@ -162,7 +163,7 @@ window.addEventListener('DOMContentLoaded', function () {
                         blackBox.environmentIntensity = 0.09;
                         blackBox.overloadedShadowIntensity = 0.6;
                         blackBox.overloadedShadeIntensity = 0.22;
-                        blackBox.cameraExposure = 1.1;
+                        blackBox.cameraExposure = 1.5;
                         blackBox.cameraContrast = 2;
                         blackBox.microSurface = 0.46;
                         newMeshes[i].material = blackBox;
@@ -177,7 +178,7 @@ window.addEventListener('DOMContentLoaded', function () {
                         background.directIntensity = 1.6;
                         background.environmentIntensity = 0.05;
                         background.overloadedShadeIntensity = 0.8;
-                        background.cameraExposure = 0.68;
+                        background.cameraExposure = 1.15;
                         background.cameraContrast = 1.8;
                         background.microSurface = 0;
                         newMeshes[i].material = background;
@@ -199,8 +200,8 @@ window.addEventListener('DOMContentLoaded', function () {
                         blackMetal.environmentIntensity = 0.24;
                         blackMetal.specularIntensity = 0.7;
                         blackMetal.overloadedShadeIntensity = 0.8;
-                        blackMetal.cameraExposure = 0.8;
-                        blackMetal.cameraContrast = 1.6;
+                        blackMetal.cameraExposure = 1.99;
+                        blackMetal.cameraContrast = 1;
                         blackMetal.microSurface = 0.61;
                         newMeshes[i].material = blackMetal;
                         break;
@@ -216,7 +217,7 @@ window.addEventListener('DOMContentLoaded', function () {
                         blackPlastic.environmentIntensity = 0.05;
                         blackPlastic.overloadedShadowIntensity = 0.8;
                         blackPlastic.overloadedShadeIntensity = 0.8;
-                        blackPlastic.cameraExposure = 0.8;
+                        blackPlastic.cameraExposure = 1.26;
                         blackPlastic.cameraContrast = 1.6;
                         blackPlastic.microSurface = 0.31;
                         newMeshes[i].material = blackPlastic;
@@ -285,7 +286,7 @@ window.addEventListener('DOMContentLoaded', function () {
     mainLensLight.intensity = 0;
     var MainLensFlareSystem = new BABYLON.LensFlareSystem("mainLensFlareSystem", mainLensLight, scene);
     var flare = new BABYLON.LensFlare(.4, 1, new BABYLON.Color3(1, 1, 1), "./textures/Main Flare.png", MainLensFlareSystem);
-
+    flare.texture.hasAlpha = true;
     var hexaLensLight = new BABYLON.SpotLight("hexaLensLight", new BABYLON.Vector3(0.027, 0.601, -1.225), new BABYLON.Vector3(0.2, 0, -1), 10, 0.01, scene);
     hexaLensLight.intensity = 0;
     var hexaLensFlareSystem = new BABYLON.LensFlareSystem("hexaLensFlareSystem", hexaLensLight, scene);
@@ -320,7 +321,7 @@ window.addEventListener('DOMContentLoaded', function () {
         var rayPick = BABYLON.Ray.CreateNewFromTo(camera.position, new BABYLON.Vector3(0.027, 0.601, -1.225));
         var meshFound = scene.pickWithRay(rayPick);
 
-
+        console.log(camera.position);
         if (meshFound != null && meshFound.pickedPoint != null) {
             flare.color = BABYLON.Color3.Black();
             hexaLensFlareSystem.isEnabled = false;
