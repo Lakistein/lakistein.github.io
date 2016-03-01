@@ -188,29 +188,29 @@ window.addEventListener('DOMContentLoaded', function() {
                         newMeshes[i].material = blackCushion;
                     default: break;
                     case "groundPlane":
-                        // var groundPlaneMaterial = new BABYLON.PBRMaterial("groundPlaneMaterial", sceneMain);
-                        // groundPlaneMaterial.albedoTexture = new BABYLON.Texture("./textures/blue.png", scene);
-                        // groundPlaneMaterial.opacityTexture = new BABYLON.Texture("./textures/blue.png", scene);
-                        // groundPlaneMaterial.albedoTexture.hasAlpha = true;
-                        // groundPlaneMaterial.reflectivityColor = new BABYLON.Color3(0, 0, 0);
-                        // groundPlaneMaterial.directIntensity = 2;
-                        // groundPlaneMaterial.environmentIntensity = 0;
-                        // groundPlaneMaterial.overloadedShadeIntensity = 0;
-                        // groundPlaneMaterial.cameraExposure = 2;
-                        // groundPlaneMaterial.cameraContrast = 2;
-                        // groundPlaneMaterial.microSurface = 0;
-                        // groundPlaneMaterial.alpha = 1;
-                        // newMeshes[i].material = groundPlaneMaterial;
+                        var groundPlaneMaterial = new BABYLON.PBRMaterial("groundPlaneMaterial", sceneMain);
+                        groundPlaneMaterial.albedoTexture = new BABYLON.Texture("./textures/blue.png", scene);
+                        groundPlaneMaterial.opacityTexture = new BABYLON.Texture("./textures/blue.png", scene);
+                        groundPlaneMaterial.albedoTexture.hasAlpha = true;
+                        groundPlaneMaterial.reflectivityColor = new BABYLON.Color3(0, 0, 0);
+                        groundPlaneMaterial.directIntensity = 2;
+                        groundPlaneMaterial.environmentIntensity = 0;
+                        groundPlaneMaterial.overloadedShadeIntensity = 0;
+                        groundPlaneMaterial.cameraExposure = 2;
+                        groundPlaneMaterial.cameraContrast = 2;
+                        groundPlaneMaterial.microSurface = 0;
+                        groundPlaneMaterial.alpha = 1;
+                        newMeshes[i].material = groundPlaneMaterial;
 
-                        var mirrorMaterial = new BABYLON.StandardMaterial("texture4", scene);
-                        mirrorMaterial.diffuseColor = new BABYLON.Color3(0.4, 0.4, 0.4);
-                        var mirrorTexture = new BABYLON.MirrorTexture("mirror", 512, scene, true); //Create a mirror texture
-            
-                        mirrorMaterial.reflectionTexture = mirrorTexture;
-                        mirrorTexture.mirrorPlane = new BABYLON.Plane(0, -1.0, 0, -10.0);
-                        mirrorTexture.renderList = newMeshes;
-                        mirrorMaterial.reflectionTexture.level = 0.6;//Select the level (0.0 > 1.0) of the reflection
-                        newMeshes[i].material = mirrorMaterial;
+            //             var mirrorMaterial = new BABYLON.StandardMaterial("texture4", scene);
+            //             mirrorMaterial.diffuseColor = new BABYLON.Color3(0.4, 0.4, 0.4);
+            //             var mirrorTexture = new BABYLON.MirrorTexture("mirror", 512, scene, true); //Create a mirror texture
+            // 
+            //             mirrorMaterial.reflectionTexture = mirrorTexture;
+            //             mirrorTexture.mirrorPlane = new BABYLON.Plane(0, -1.0, 0, -10.0);
+            //             mirrorTexture.renderList = newMeshes;
+            //             mirrorMaterial.reflectionTexture.level = 0.6;//Select the level (0.0 > 1.0) of the reflection
+            //             newMeshes[i].material = mirrorMaterial;
 
                         gui.add(newMeshes[i].scaling, "x");
                         gui.add(newMeshes[i].scaling, "y");
