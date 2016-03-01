@@ -60,13 +60,26 @@
 
 <body>
     <img id="logo" width="35%" src="./textures/Logo.png" alt="logo">
+    <div id="fps" style=" position: absolute;"></div>
     <ul id="envs">
         <li><img id="3" class="environment" src="./textures/chrome.jpg" alt=""></li>
         <li><img id="2" class="environment" src="./textures/red.png" alt=""></li>
         <li><img id="1" class="environment" src="./textures/green.png" alt=""></li>
         <li><img id="0" class="environment" src="./textures/blue.png" alt=""></li>
         <li>
-            <input id="groundImg" type="file" accept="image/*" onchange="env.updateGroundTexture(sceneMain);">
+            <input id="groundImg" type="file" accept="image/*" onchange="envUI.environmentManager.updateGroundTexture(sceneMain);">
+        </li>
+        <li>
+            <input id="background" type="checkbox" checked onchange="envUI.turnBackgrounOffOn();">
+            <label>Background</label>
+        </li>
+        <li>
+            <input id="shadows" type="checkbox" checked onchange="envUI.turnShadowOffOn();">
+            <label>Shadow</label>
+        </li>
+        <li>
+            <input id="reflective" type="checkbox" onchange="envUI.turnReflectionOffOn();">
+            <label>Reflective</label>
         </li>
     </ul>
     <canvas id="renderCanvas"></canvas>

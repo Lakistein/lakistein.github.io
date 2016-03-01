@@ -9,12 +9,14 @@ class Environment {
     rotateBackground: boolean;
     reflectionTexture: BABYLON.Texture;
     groundTexture: BABYLON.Texture;
+    groundShadow: BABYLON.Mesh;
 
     constructor(json: any, scene: BABYLON.Scene) {
         if (!json) return;
 
         this.id = json.id;
         this.groundTexture = null;
+        this.groundShadow = <BABYLON.Mesh>scene.getMeshByName("GROUNDPLANE_STYLE_1");
         this.backgroundMesh = <BABYLON.Mesh>scene.getMeshByName("background");
         this.backgroundColor = (<BABYLON.PBRMaterial>this.backgroundMesh.material).albedoColor = new BABYLON.Color3(json.backgroundColor.r, json.backgroundColor.g, json.backgroundColor.b);
         this.rotateBackground = true;

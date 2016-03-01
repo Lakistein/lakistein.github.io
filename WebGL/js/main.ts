@@ -1,11 +1,11 @@
 /// <reference path="babylon.d.ts" />
 /// <reference path="babylon.pbrMaterial.d.ts" />
 /// <reference path="PBRConverter.ts" />
-/// <reference path="Environment.ts" />
-/// <reference path="EnvironmentManager.ts" />
+/// <reference path="EnvironmentUI.ts" />
 
-var env: EnvironmentManager;
+
 var sceneMain: BABYLON.Scene;
+var envUI: EnvironmentUI;
 window.addEventListener('DOMContentLoaded', function() {
     var canvas = <HTMLCanvasElement>document.getElementById('renderCanvas');
     var gui = new dat.GUI();
@@ -29,7 +29,7 @@ window.addEventListener('DOMContentLoaded', function() {
         var color = folder.addColor(material, "albedoColor");
         color.onChange(function(value) {
             material.albedoColor = BABYLON.Color3.FromInts(value.r, value.g, value.b);
-            env.setReflection(sceneMain, material.albedoColor);
+            envUI.environmentManager.setReflection(sceneMain, material.albedoColor);
 
         });
         folder.add(material.reflectivityColor, "r", 0, 1);
@@ -47,7 +47,16 @@ window.addEventListener('DOMContentLoaded', function() {
         camera.setPosition(new BABYLON.Vector3(0.004510142482902708, 0.7674630808337399, -2.9880500596552437));
         scene.activeCamera = camera;
 
-        var reflectionTexture = new BABYLON.CubeTexture("./textures/skybox", scene);
+        var reflectionTexture = new BABYLON.CubeTexture("./textures/skybox/skybox", scene);
+        var skybox = BABYLON.Mesh.CreateBox("skyBox", 1000.0, scene);
+        var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+        skyboxMaterial.backFaceCulling = false;
+        skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./textures/Skybox/skybox", scene);
+        skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+        skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+        skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+        skybox.infiniteDistance = true;
+        skybox.material = skyboxMaterial;
         BABYLON.SceneLoader.ImportMesh("", "./", "HEADSET.babylon", scene, function(newMeshes) {
             var blackPlastic = new BABYLON.PBRMaterial("Black Plastic", scene);
             var redPlastic = new BABYLON.PBRMaterial("Red Plastic", scene);
@@ -56,6 +65,8 @@ window.addEventListener('DOMContentLoaded', function() {
             var blackBox = new BABYLON.PBRMaterial("Black Box", scene);
             var blackCushion = new BABYLON.PBRMaterial("Black Cushion", scene);
             var background = new BABYLON.PBRMaterial("Background", scene);
+
+
             for (var i = 0; i < newMeshes.length; i++) {
                 switch (newMeshes[i].name) {
                     case "BOX_STYLE_1":
@@ -74,6 +85,7 @@ window.addEventListener('DOMContentLoaded', function() {
                         break;
                     case "background":
                         background.ambientTexture = new BABYLON.Texture("./textures/BACKGROUND_STYLE_1.jpg", scene);
+                        background.alpha = 1;
                         background.albedoColor = BABYLON.Color3.Black();
                         background.reflectivityColor = new BABYLON.Color3(0, 0, 0);
                         background.indexOfRefraction = 2;
@@ -83,6 +95,7 @@ window.addEventListener('DOMContentLoaded', function() {
                         background.cameraExposure = 1.5;
                         background.cameraContrast = 1.8;
                         background.microSurface = 0;
+                        newMeshes[i].position.y = -0.1;
                         newMeshes[i].material = background;
                         break;
                     case "GROUNDPLANE_STYLE_1":
@@ -97,6 +110,7 @@ window.addEventListener('DOMContentLoaded', function() {
                         ground.cameraExposure = 2;
                         ground.cameraContrast = 2;
                         ground.microSurface = 0;
+                        newMeshes[i].position.y = 0.01;
                         newMeshes[i].material = ground;
                         break;
                     case "HEADSETARCH_STYLE_1":
@@ -173,13 +187,32 @@ window.addEventListener('DOMContentLoaded', function() {
                         blackCushion.microSurface = 0.4;
                         newMeshes[i].material = blackCushion;
                     default: break;
+                    case "groundPlane":
+                        var groundPlaneMaterial = new BABYLON.PBRMaterial("groundPlaneMaterial", sceneMain);
+                        groundPlaneMaterial.albedoTexture = new BABYLON.Texture("./textures/blue.png", scene);
+                        groundPlaneMaterial.opacityTexture = new BABYLON.Texture("./textures/blue.png", scene);
+                        groundPlaneMaterial.albedoTexture.hasAlpha = true;
+                        groundPlaneMaterial.reflectivityColor = new BABYLON.Color3(0, 0, 0);
+                        groundPlaneMaterial.directIntensity = 2;
+                        groundPlaneMaterial.environmentIntensity = 0;
+                        groundPlaneMaterial.overloadedShadeIntensity = 0;
+                        groundPlaneMaterial.cameraExposure = 2;
+                        groundPlaneMaterial.cameraContrast = 2;
+                        groundPlaneMaterial.microSurface = 0;
+                        gui.add(newMeshes[i].scaling, "x");
+                        gui.add(newMeshes[i].scaling, "y");
+                        gui.add(newMeshes[i].scaling, "z");
+                        newMeshes[i].material = groundPlaneMaterial;
+                        break;
                 }
+
                 if (newMeshes[i].name == "background")
                     displayMaterialValues(newMeshes[i].material);
             }
             var str = '[{"id":0,"backgroundColor":{"r":0,"g":0,"b":1},"lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":50000,"range":8.0}]},{"id":1,"backgroundColor":{"r":0,"g":1,"b":0},"lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":500,"range":8.0}]},{"id":2,"backgroundColor":{"r":1,"g":0,"b":0},"lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":0,"range":8.0}]},{"id":3,"backgroundColor":{"r":0.7,"g":0.7,"b":0.7},"lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":500,"range":8.0}]}]';
 
-            env = new EnvironmentManager(str, scene);
+            envUI = new EnvironmentUI(str, sceneMain);
+
         });
         return scene;
     }
@@ -208,12 +241,6 @@ window.addEventListener('DOMContentLoaded', function() {
         flareSizes.push(hexaLensFlareSystem.lensFlares[i].size);
     }
 
-    var environments = document.getElementsByClassName('environment');
-    for (var i = 0; i < environments.length; i++) {
-        environments.item(i).addEventListener('click', function() {
-            env.setEnvironment(this.getAttribute("id"), sceneMain);
-        });
-    }
 
     sceneMain.registerBeforeRender(function() {
         var rayPick = BABYLON.Ray.CreateNewFromTo(camera.position, new BABYLON.Vector3(0.027, 0.601, -1.225));
@@ -245,8 +272,10 @@ window.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+    var fps = document.getElementById("fps");
     engine.runRenderLoop(function() {
         sceneMain.render();
+        fps.innerText = engine.getFps().toString();
     });
     window.addEventListener('resize', function() {
         engine.resize();

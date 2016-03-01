@@ -46,6 +46,14 @@ class EnvironmentManager {
         this.setReflection(scene);
     }
 
+    turnBackgroundOnOff(value: boolean) {
+        this.environments[this.currentEnvironment].backgroundMesh.setEnabled(value);
+    }
+
+    turnShadowOffOn(value: boolean) {
+        this.environments[this.currentEnvironment].groundShadow.setEnabled(value);
+    }
+
     removeLights(scene: BABYLON.Scene) {
         for (var i = scene.lights.length - 1; i >= 0; --i) {
             if (scene.lights[i].name === "spot" || scene.lights[i].name === "point" || scene.lights[i].name === "hemi") {
@@ -81,7 +89,7 @@ class EnvironmentManager {
             this.environments[this.currentEnvironment].groundTexture = null;
         }
         reader.onloadend = () => {
-            var mesh = scene.getMeshByName("GROUNDPLANE_STYLE_1");
+            var mesh = scene.getMeshByName("groundPlane");
             if ((<BABYLON.PBRMaterial>mesh.material).albedoTexture)
                 (<BABYLON.PBRMaterial>mesh.material).albedoTexture.dispose();
             if ((<BABYLON.PBRMaterial>mesh.material).opacityTexture)
