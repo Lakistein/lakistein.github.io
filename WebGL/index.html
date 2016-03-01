@@ -32,27 +32,65 @@
             -ms-user-select: none;
         }
         
-        #envs {
+        #Environment {
             position: absolute;
+            width: 400px;
+            height: 70%;
+            left: 5px;
             bottom: 0;
+            border-radius: 25px;
+        }
+        
+        #TitleBar {
+            background-color: black;
+            color: white;
+            font-size: 30px;
+            border-top-left-radius: 25px;
+            border-top-right-radius: 25px;
+            height: 65px;
+            padding-top: 10px;
+            text-align: center;
+        }
+        
+        #EnvBody {
+            background-color: rgba(0, 0, 0, 0.5);
+            bottom: 0;
+        }
+        
+        #envs {
             list-style-type: none;
-            margin: 0;
-            padding: 0;
+            overflow: auto;
+            padding: 5px 5px 10px 0px;
+            white-space: nowrap;
+        }
+        
+        ul {
+            -webkit-padding-start: 0px;
+        }
+        
+        #envs li {
+            display: inline-block;
             overflow: hidden;
-        }
-        
-        #envs li {
-            float: left;
-        }
-        
-        #envs li {
-            display: block;
             padding: 8px;
         }
         
+        #envs li img {
+            border-radius: 5px;
+        }
+        
         .environment {
-            width: 64px;
-            height: 64px;
+            width: 80px;
+            height: 80px;
+        }
+        
+        #EnvBody input,
+        label {
+            font-size: 25px;
+            color: white;
+        }
+        
+        .input {
+            padding: 15px;
         }
     </style>
 
@@ -61,29 +99,61 @@
 <body>
     <img id="logo" width="35%" src="./textures/Logo.png" alt="logo">
     <div id="fps" style=" position: absolute;"></div>
-    <ul id="envs">
-        <li><img id="3" class="environment" src="./textures/chrome.jpg" alt=""></li>
-        <li><img id="2" class="environment" src="./textures/red.png" alt=""></li>
-        <li><img id="1" class="environment" src="./textures/green.png" alt=""></li>
-        <li><img id="0" class="environment" src="./textures/blue.png" alt=""></li>
-        <li>
-            <input id="groundImg" type="file" accept="image/*" onchange="envUI.environmentManager.updateGroundTexture(sceneMain);">
-        </li>
-        <li>
-            <input id="background" type="checkbox" checked onchange="envUI.turnBackgrounOffOn();">
-            <label>Background</label>
-        </li>
-        <li>
-            <input id="shadows" type="checkbox" checked onchange="envUI.turnShadowOffOn();">
-            <label>Shadow</label>
-        </li>
-        <li>
-            <input id="reflective" type="checkbox" onchange="envUI.turnReflectionOffOn();">
-            <label>Reflective</label>
-        </li>
-    </ul>
+
+    <div id="Environment">
+        <div id="TitleBar">
+            <span>
+                <img width="40px" src="./textures/env_globe.png" alt="Earth Icon">
+                </span>
+            <span style="margin: 0px 50px 0px 50px;">Environment</span>
+            <span>
+                <img id="arrowIcon" width="30px" src="./textures/expand_arrow.png" alt="Arrow Icon">
+            </span>
+        </div>
+
+
+
+        <div id="EnvBody">
+            <div id="envs">
+                <ul>
+                    <li><img id="3" class="environment" src="./textures/chrome.jpg" alt=""></li>
+                    <li><img id="2" class="environment" src="./textures/red.png" alt=""></li>
+                    <li><img id="1" class="environment" src="./textures/green.png" alt=""></li>
+                    <li><img id="0" class="environment" src="./textures/blue.png" alt=""></li>
+                    <li><img id="0" class="environment" src="./textures/blue.png" alt=""></li>
+                </ul>
+            </div>
+
+            <div class="input">
+                <input id="groundImg" type="file" accept="image/*" value="Ground Plane" onchange="envUI.environmentManager.updateGroundTexture(sceneMain);">
+            </div>
+
+            </br>
+
+            <div class="input">
+                <input id="background" type="checkbox" checked onchange="envUI.turnBackgrounOffOn();">
+                <label>Background</label>
+                <br>
+            </div>
+
+            <div class="input">
+                <input id="shadows" type="checkbox" checked onchange="envUI.turnShadowOffOn();">
+                <label>Shadow</label>
+                <br>
+            </div>
+
+            <div class="input">
+                <input id="reflective" type="checkbox" onchange="envUI.turnReflectionOffOn();">
+                <label>Reflective</label>
+            </div>
+        </div>
+
+    </div>
+
+
     <canvas id="renderCanvas"></canvas>
     <script src="./js/app.js"></script>
 </body>
+
 
 </html>

@@ -188,27 +188,40 @@ window.addEventListener('DOMContentLoaded', function() {
                         newMeshes[i].material = blackCushion;
                     default: break;
                     case "groundPlane":
-                        var groundPlaneMaterial = new BABYLON.PBRMaterial("groundPlaneMaterial", sceneMain);
-                        groundPlaneMaterial.albedoTexture = new BABYLON.Texture("./textures/blue.png", scene);
-                        groundPlaneMaterial.opacityTexture = new BABYLON.Texture("./textures/blue.png", scene);
-                        groundPlaneMaterial.albedoTexture.hasAlpha = true;
-                        groundPlaneMaterial.reflectivityColor = new BABYLON.Color3(0, 0, 0);
-                        groundPlaneMaterial.directIntensity = 2;
-                        groundPlaneMaterial.environmentIntensity = 0;
-                        groundPlaneMaterial.overloadedShadeIntensity = 0;
-                        groundPlaneMaterial.cameraExposure = 2;
-                        groundPlaneMaterial.cameraContrast = 2;
-                        groundPlaneMaterial.microSurface = 0;
+                        // var groundPlaneMaterial = new BABYLON.PBRMaterial("groundPlaneMaterial", sceneMain);
+                        // groundPlaneMaterial.albedoTexture = new BABYLON.Texture("./textures/blue.png", scene);
+                        // groundPlaneMaterial.opacityTexture = new BABYLON.Texture("./textures/blue.png", scene);
+                        // groundPlaneMaterial.albedoTexture.hasAlpha = true;
+                        // groundPlaneMaterial.reflectivityColor = new BABYLON.Color3(0, 0, 0);
+                        // groundPlaneMaterial.directIntensity = 2;
+                        // groundPlaneMaterial.environmentIntensity = 0;
+                        // groundPlaneMaterial.overloadedShadeIntensity = 0;
+                        // groundPlaneMaterial.cameraExposure = 2;
+                        // groundPlaneMaterial.cameraContrast = 2;
+                        // groundPlaneMaterial.microSurface = 0;
+                        // groundPlaneMaterial.alpha = 1;
+                        // newMeshes[i].material = groundPlaneMaterial;
+
+                        var mirrorMaterial = new BABYLON.StandardMaterial("texture4", scene);
+                        mirrorMaterial.diffuseColor = new BABYLON.Color3(0.4, 0.4, 0.4);
+                        var mirrorTexture = new BABYLON.MirrorTexture("mirror", 512, scene, true); //Create a mirror texture
+            
+                        mirrorMaterial.reflectionTexture = mirrorTexture;
+                        mirrorTexture.mirrorPlane = new BABYLON.Plane(0, -1.0, 0, -10.0);
+                        mirrorTexture.renderList = newMeshes;
+                        mirrorMaterial.reflectionTexture.level = 0.6;//Select the level (0.0 > 1.0) of the reflection
+                        newMeshes[i].material = mirrorMaterial;
+
                         gui.add(newMeshes[i].scaling, "x");
                         gui.add(newMeshes[i].scaling, "y");
                         gui.add(newMeshes[i].scaling, "z");
-                        newMeshes[i].material = groundPlaneMaterial;
                         break;
                 }
 
                 if (newMeshes[i].name == "background")
                     displayMaterialValues(newMeshes[i].material);
             }
+
             var str = '[{"id":0,"backgroundColor":{"r":0,"g":0,"b":1},"lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":50000,"range":8.0}]},{"id":1,"backgroundColor":{"r":0,"g":1,"b":0},"lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":500,"range":8.0}]},{"id":2,"backgroundColor":{"r":1,"g":0,"b":0},"lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":0,"range":8.0}]},{"id":3,"backgroundColor":{"r":0.7,"g":0.7,"b":0.7},"lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":500,"range":8.0}]}]';
 
             envUI = new EnvironmentUI(str, sceneMain);

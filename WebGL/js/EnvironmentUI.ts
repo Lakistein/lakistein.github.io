@@ -20,9 +20,23 @@ class EnvironmentUI {
         document.getElementById("background").onchange = () => {
             this.environmentManager.turnBackgroundOnOff((document.getElementById('background')).checked);
         };
-        
+
         document.getElementById("shadows").onchange = () => {
             this.environmentManager.turnShadowOffOn((document.getElementById('shadows')).checked);
         };
+
+        var k = 0;
+        document.getElementById("arrowIcon").addEventListener('click', function() {
+            if (document.getElementById("Environment").style.height == "70%") {
+                document.getElementById("Environment").style.height = "7%";
+                document.getElementById("arrowIcon").style.transform = "rotatex(" + k + "deg)";
+                k += 180;
+            }
+            else {
+                document.getElementById("Environment").style.height = "70%";
+                document.getElementById("arrowIcon").style.transform = "rotatex(" + k + "deg)";
+                k += 180;
+            }
+        });
     }
 }
