@@ -18,11 +18,19 @@ class EnvironmentUI {
         }
 
         document.getElementById("background").onchange = () => {
-            this.environmentManager.turnBackgroundOnOff((document.getElementById('background')).checked);
+            this.environmentManager.turnBackgroundOnOff(document.getElementById('background').checked);
         };
 
         document.getElementById("shadows").onchange = () => {
-            this.environmentManager.turnShadowOffOn((document.getElementById('shadows')).checked);
+            this.environmentManager.turnShadowOffOn(document.getElementById('shadows').checked);
+        };
+
+        document.getElementById("groundPlaneCheckbox").onchange = () => {
+            this.environmentManager.turnGroundPlaneOffOn(document.getElementById('groundPlaneCheckbox').checked);
+        };
+
+        document.getElementById("groundPlaneSize").onchange = () => {
+            this.environmentManager.changeGroundPlaneSize(document.getElementById('groundPlaneSize').value);
         };
 
         var k = 0;

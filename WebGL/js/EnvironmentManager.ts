@@ -6,12 +6,24 @@ class EnvironmentManager {
     currentEnvironment: number;
     environments: Environment[] = [];
 
+
+
     constructor(json: string, scene: BABYLON.Scene) {
         var jsonEnv = JSON.parse(json);
 
         for (var i = 0; i < jsonEnv.length; i++) {
             this.environments.push(new Environment(jsonEnv[i], scene));
         }
+
+        var skybox = BABYLON.Mesh.CreateBox("skybox", 1000.0, scene);
+        var skyboxMaterial = new BABYLON.StandardMaterial("skyboxMaterial", scene);
+        skyboxMaterial.backFaceCulling = false;
+        skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("", scene);
+        skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+        skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+        skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+        skybox.infiniteDistance = true;
+        skybox.material = skyboxMaterial;
 
         this.setEnvironment(this.environments[2].id, scene);
     }
@@ -42,7 +54,8 @@ class EnvironmentManager {
             scene.lights.push(this.environments[this.currentEnvironment].lights[i]);
         }
 
-        this.setBackgroundColor(<BABYLON.Mesh>scene.getMeshByName("background"), this.environments[this.currentEnvironment].backgroundColor, this.currentEnvironment);
+        //this.setBackgroundColor(<BABYLON.Mesh>scene.getMeshByName("background"), this.environments[this.currentEnvironment].backgroundColor, this.currentEnvironment);
+        this.setSkybox(<BABYLON.Mesh>scene.getMeshByName("skybox"));
         this.setReflection(scene);
     }
 
@@ -66,9 +79,14 @@ class EnvironmentManager {
         (<BABYLON.PBRMaterial>mesh.material).albedoColor = this.environments[environmentIndex].backgroundColor;
     }
 
+    setSkybox(skybox: BABYLON.Mesh) {
+        (<BABYLON.StandardMaterial>skybox.material).reflectionTexture = this.environments[this.currentEnvironment].skyboxTexture;
+        (<BABYLON.StandardMaterial>skybox.material).reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+    }
+
     setReflection(scene: BABYLON.Scene, color?: BABYLON.Color3) {
         for (var i = 0; i < scene.meshes.length; i++) {
-            if (<BABYLON.PBRMaterial>scene.meshes[i].material instanceof BABYLON.PBRMaterial && scene.meshes[i].name != "GROUNDPLANE_STYLE_1") {
+            if (<BABYLON.PBRMaterial>scene.meshes[i].material instanceof BABYLON.PBRMaterial && scene.meshes[i].name != "GROUNDPLANE_STYLE_1" && scene.meshes[i].name != "skybox") {
                 if (this.environments[this.currentEnvironment].reflectionTexture) {
                     (<BABYLON.PBRMaterial>scene.meshes[i].material).reflectionTexture = this.environments[this.currentEnvironment].reflectionTexture;
                 }
@@ -99,5 +117,13 @@ class EnvironmentManager {
             (<BABYLON.PBRMaterial>mesh.material).opacityTexture = this.environments[this.currentEnvironment].groundTexture;
             (<BABYLON.PBRMaterial>mesh.material).albedoTexture.hasAlpha = true;
         };
+    }
+    
+    turnGroundPlaneOffOn(value: boolean){
+        this.environments[this.currentEnvironment].groundMesh.setEnabled(value);   
+    }
+    
+    changeGroundPlaneSize(scale: number) {
+        this.environments[this.currentEnvironment].groundMesh.scaling = new BABYLON.Vector3(scale, scale, scale);
     }
 }
