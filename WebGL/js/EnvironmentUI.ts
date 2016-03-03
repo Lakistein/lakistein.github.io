@@ -1,7 +1,6 @@
 /// <reference path="Environment.ts" />
 /// <reference path="EnvironmentManager.ts" />
 
-
 class EnvironmentUI {
 
     environment: Environment;
@@ -32,7 +31,7 @@ class EnvironmentUI {
         document.getElementById("groundPlaneSize").onchange = () => {
             this.environmentManager.changeGroundPlaneSize(document.getElementById('groundPlaneSize').value);
         };
-        
+
         document.getElementById("gradientTop").onchange = () => {
             this.environmentManager.changeTopGradient(document.getElementById('gradientTop').value);
         };
@@ -42,7 +41,10 @@ class EnvironmentUI {
         document.getElementById("gradientOffset").onchange = () => {
             this.environmentManager.changeGradientOffset(document.getElementById('gradientOffset').value);
         };
-        
+
+        document.getElementById("reflective").onchange = () => {
+            this.environmentManager.turnReflectivePlaneOffOn(document.getElementById('reflective').checked);
+        };
         var k = 0;
         document.getElementById("arrowIcon").addEventListener('click', function() {
             if (document.getElementById("Environment").style.height == "70%") {

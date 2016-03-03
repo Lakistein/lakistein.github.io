@@ -196,23 +196,28 @@ window.addEventListener('DOMContentLoaded', function() {
                         groundPlaneMaterial.microSurface = 0;
                         groundPlaneMaterial.alpha = 1;
                         newMeshes[i].material = groundPlaneMaterial;
-                    
-                        //             var mirrorMaterial = new BABYLON.StandardMaterial("texture4", scene);
-                        //             mirrorMaterial.diffuseColor = new BABYLON.Color3(0.4, 0.4, 0.4);
-                        //             var mirrorTexture = new BABYLON.MirrorTexture("mirror", 512, scene, true); //Create a mirror texture
-                        // 
-                        //             mirrorMaterial.reflectionTexture = mirrorTexture;
-                        //             mirrorTexture.mirrorPlane = new BABYLON.Plane(0, -1.0, 0, -10.0);
-                        //             mirrorTexture.renderList = newMeshes;
-                        //             mirrorMaterial.reflectionTexture.level = 0.6;//Select the level (0.0 > 1.0) of the reflection
-                        //             newMeshes[i].material = mirrorMaterial;
+                        break;
+                    case "reflectionPlane":
+                        var mirrorMaterial = new BABYLON.StandardMaterial("mirror", scene);
+                        mirrorMaterial.reflectionTexture = new BABYLON.MirrorTexture("mirror", 1024, scene, false);
+                        mirrorMaterial.reflectionTexture.mirrorPlane = new BABYLON.Plane(0, -1, 0, 0);
+                        //var postProcess = new BABYLON.BlurPostProcess("Horizontal blur", new BABYLON.Vector2(1.0, 0), 10, 0.25, camera, null, engine, true);
+
+                        mirrorMaterial.specularColor = BABYLON.Color3.Black();
+                        mirrorMaterial.reflectionTexture.level = 0.5;
+                        newMeshes[i].material = mirrorMaterial;
+
                         break;
                 }
-                //                 // 
-                //                 //                 if (newMeshes[i].name == "background")
-                //                 //                     displayMaterialValues(newMeshes[i].material);
+
                 if (newMeshes[i].name != "background")
                     hemilight.excludedMeshes.push(newMeshes[i]);
+            }
+            
+            var refl = scene.getMeshByName("reflectionPlane").material.reflectionTexture;
+            for (var i = 0; i < newMeshes.length; i++) {
+                if (newMeshes[i].name != "reflectionPlane")
+                    refl.renderList.push(newMeshes[i]);
             }
 
             var str = '[{"id":1,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./textures/skybox/env-1/","lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":500,"range":8.0}]},{"id":2,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./textures/skybox/env-2/","lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":500,"range":8.0}]},{"id":3,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./textures/skybox/env-3/","lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":500,"range":8.0}]},{"id":4,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./textures/skybox/env-4/","lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":500,"range":8.0}]}]';

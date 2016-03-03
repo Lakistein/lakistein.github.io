@@ -14,7 +14,9 @@ class Environment {
     groundMesh: BABYLON.Mesh;
     groundTexture: BABYLON.Texture;
     groundShadow: BABYLON.Mesh;
-
+    
+    reflectiveMesh: BABYLON.Mesh;
+    
     constructor(json: any, scene: BABYLON.Scene) {
         if (!json) return;
 
@@ -25,6 +27,7 @@ class Environment {
         this.skyboxTexture = new BABYLON.CubeTexture(json.skyboxURL + "cubemap/skybox", scene);
         this.groundShadow = <BABYLON.Mesh>scene.getMeshByName("GROUNDPLANE_STYLE_1");
         this.backgroundMesh = <BABYLON.Mesh>scene.getMeshByName("background");
+        this.reflectiveMesh = <BABYLON.Mesh>scene.getMeshByName("reflectionPlane");
         this.rotateBackground = true;
         for (var i = 0; i < json.lights.length; i++) {
             switch (json.lights[i].type) {
