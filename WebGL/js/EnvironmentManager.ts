@@ -54,7 +54,6 @@ class EnvironmentManager {
             scene.lights.push(this.environments[this.currentEnvironment].lights[i]);
         }
 
-        //this.setBackgroundColor(<BABYLON.Mesh>scene.getMeshByName("background"), this.environments[this.currentEnvironment].backgroundColor, this.currentEnvironment);
         this.setSkybox(<BABYLON.Mesh>scene.getMeshByName("skybox"));
         this.setReflection(scene);
     }
@@ -75,10 +74,6 @@ class EnvironmentManager {
         }
     }
 
-    setBackgroundColor(mesh: BABYLON.Mesh, color: BABYLON.Color3, environmentIndex: number) {
-        (<BABYLON.PBRMaterial>mesh.material).albedoColor = this.environments[environmentIndex].backgroundColor;
-    }
-
     setSkybox(skybox: BABYLON.Mesh) {
         (<BABYLON.StandardMaterial>skybox.material).reflectionTexture = this.environments[this.currentEnvironment].skyboxTexture;
         (<BABYLON.StandardMaterial>skybox.material).reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
@@ -97,6 +92,18 @@ class EnvironmentManager {
         }
     }
 
+    changeTopGradient(value: string) {
+        (<BABYLON.GradientMaterial>this.environments[this.currentEnvironment].backgroundMesh.material).topColor = BABYLON.Color3.FromHexString(value);
+    }
+
+    changeBottomGradient(value: string) {
+        (<BABYLON.GradientMaterial>this.environments[this.currentEnvironment].backgroundMesh.material).bottomColor = BABYLON.Color3.FromHexString(value);
+    }
+
+    changeGradientOffset(value: number) {
+        (<BABYLON.GradientMaterial>this.environments[this.currentEnvironment].backgroundMesh.material).offset = value;
+    }
+    
     updateGroundTexture(scene: BABYLON.Scene) {
         var file = (<File>document.querySelector('#groundImg').files[0]);
         var reader = new FileReader();
@@ -118,11 +125,11 @@ class EnvironmentManager {
             (<BABYLON.PBRMaterial>mesh.material).albedoTexture.hasAlpha = true;
         };
     }
-    
-    turnGroundPlaneOffOn(value: boolean){
-        this.environments[this.currentEnvironment].groundMesh.setEnabled(value);   
+
+    turnGroundPlaneOffOn(value: boolean) {
+        this.environments[this.currentEnvironment].groundMesh.setEnabled(value);
     }
-    
+
     changeGroundPlaneSize(scale: number) {
         this.environments[this.currentEnvironment].groundMesh.scaling = new BABYLON.Vector3(scale, scale, scale);
     }

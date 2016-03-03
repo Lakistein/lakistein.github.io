@@ -32,7 +32,17 @@ class EnvironmentUI {
         document.getElementById("groundPlaneSize").onchange = () => {
             this.environmentManager.changeGroundPlaneSize(document.getElementById('groundPlaneSize').value);
         };
-
+        
+        document.getElementById("gradientTop").onchange = () => {
+            this.environmentManager.changeTopGradient(document.getElementById('gradientTop').value);
+        };
+        document.getElementById("gradientBottom").onchange = () => {
+            this.environmentManager.changeBottomGradient(document.getElementById('gradientBottom').value);
+        };
+        document.getElementById("gradientOffset").onchange = () => {
+            this.environmentManager.changeGradientOffset(document.getElementById('gradientOffset').value);
+        };
+        
         var k = 0;
         document.getElementById("arrowIcon").addEventListener('click', function() {
             if (document.getElementById("Environment").style.height == "70%") {

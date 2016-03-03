@@ -25,7 +25,6 @@ class Environment {
         this.skyboxTexture = new BABYLON.CubeTexture(json.skyboxURL + "cubemap/skybox", scene);
         this.groundShadow = <BABYLON.Mesh>scene.getMeshByName("GROUNDPLANE_STYLE_1");
         this.backgroundMesh = <BABYLON.Mesh>scene.getMeshByName("background");
-        this.backgroundColor = (<BABYLON.PBRMaterial>this.backgroundMesh.material).albedoColor = new BABYLON.Color3(json.backgroundColor.r, json.backgroundColor.g, json.backgroundColor.b);
         this.rotateBackground = true;
         for (var i = 0; i < json.lights.length; i++) {
             switch (json.lights[i].type) {
@@ -42,6 +41,7 @@ class Environment {
                 //     light = new BABYLON.DirectionalLight("hemi", new BABYLON.Vector3(json.lights[i].position.x, json.lights[i].position.y, json.lights[i].position.z), scene);
                 //     break;
             }
+            this.lights[i].excludedMeshes.push(this.backgroundMesh);
             this.lights[i].intensity = json.lights[i].intensity;
             this.lights[i].range = json.lights[i].range;
             this.lights[i].diffuse = new BABYLON.Color3(json.lights[i].diffuse.r, json.lights[i].diffuse.g, json.lights[i].diffuse.b);
@@ -61,7 +61,7 @@ class Environment {
     }
 
     public toJSON(): string {
-        var json = '{"backgroundColor": ' + JSON.stringify(this.backgroundColor) + ',"lights": [';
+        var json = '"lights": [';
         for (var i = 0; i < this.lights.length; i++) {
             if (this.lights[i].name !== "spot" && this.lights[i].name !== "point" && this.lights[i].name !== "hemi")
                 continue;

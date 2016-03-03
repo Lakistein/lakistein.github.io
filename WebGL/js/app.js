@@ -43,7 +43,6 @@ var Environment = (function () {
         this.skyboxTexture = new BABYLON.CubeTexture(json.skyboxURL + "cubemap/skybox", scene);
         this.groundShadow = scene.getMeshByName("GROUNDPLANE_STYLE_1");
         this.backgroundMesh = scene.getMeshByName("background");
-        this.backgroundColor = this.backgroundMesh.material.albedoColor = new BABYLON.Color3(json.backgroundColor.r, json.backgroundColor.g, json.backgroundColor.b);
         this.rotateBackground = true;
         for (var i = 0; i < json.lights.length; i++) {
             switch (json.lights[i].type) {
@@ -57,6 +56,7 @@ var Environment = (function () {
                     this.lights.push(new BABYLON.HemisphericLight("hemi", new BABYLON.Vector3(json.lights[i].position.x, json.lights[i].position.y, json.lights[i].position.z), scene));
                     break;
             }
+            this.lights[i].excludedMeshes.push(this.backgroundMesh);
             this.lights[i].intensity = json.lights[i].intensity;
             this.lights[i].range = json.lights[i].range;
             this.lights[i].diffuse = new BABYLON.Color3(json.lights[i].diffuse.r, json.lights[i].diffuse.g, json.lights[i].diffuse.b);
@@ -71,7 +71,7 @@ var Environment = (function () {
         });
     }
     Environment.prototype.toJSON = function () {
-        var json = '{"backgroundColor": ' + JSON.stringify(this.backgroundColor) + ',"lights": [';
+        var json = '"lights": [';
         for (var i = 0; i < this.lights.length; i++) {
             if (this.lights[i].name !== "spot" && this.lights[i].name !== "point" && this.lights[i].name !== "hemi")
                 continue;
@@ -151,7 +151,6 @@ var EnvironmentManager = (function () {
         for (var i = 0; i < this.environments[this.currentEnvironment].lights.length; i++) {
             scene.lights.push(this.environments[this.currentEnvironment].lights[i]);
         }
-        //this.setBackgroundColor(<BABYLON.Mesh>scene.getMeshByName("background"), this.environments[this.currentEnvironment].backgroundColor, this.currentEnvironment);
         this.setSkybox(scene.getMeshByName("skybox"));
         this.setReflection(scene);
     };
@@ -168,9 +167,6 @@ var EnvironmentManager = (function () {
             }
         }
     };
-    EnvironmentManager.prototype.setBackgroundColor = function (mesh, color, environmentIndex) {
-        mesh.material.albedoColor = this.environments[environmentIndex].backgroundColor;
-    };
     EnvironmentManager.prototype.setSkybox = function (skybox) {
         skybox.material.reflectionTexture = this.environments[this.currentEnvironment].skyboxTexture;
         skybox.material.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
@@ -186,6 +182,15 @@ var EnvironmentManager = (function () {
                 }
             }
         }
+    };
+    EnvironmentManager.prototype.changeTopGradient = function (value) {
+        this.environments[this.currentEnvironment].backgroundMesh.material.topColor = BABYLON.Color3.FromHexString(value);
+    };
+    EnvironmentManager.prototype.changeBottomGradient = function (value) {
+        this.environments[this.currentEnvironment].backgroundMesh.material.bottomColor = BABYLON.Color3.FromHexString(value);
+    };
+    EnvironmentManager.prototype.changeGradientOffset = function (value) {
+        this.environments[this.currentEnvironment].backgroundMesh.material.offset = value;
     };
     EnvironmentManager.prototype.updateGroundTexture = function (scene) {
         var _this = this;
@@ -242,6 +247,15 @@ var EnvironmentUI = (function () {
         document.getElementById("groundPlaneSize").onchange = function () {
             _this.environmentManager.changeGroundPlaneSize(document.getElementById('groundPlaneSize').value);
         };
+        document.getElementById("gradientTop").onchange = function () {
+            _this.environmentManager.changeTopGradient(document.getElementById('gradientTop').value);
+        };
+        document.getElementById("gradientBottom").onchange = function () {
+            _this.environmentManager.changeBottomGradient(document.getElementById('gradientBottom').value);
+        };
+        document.getElementById("gradientOffset").onchange = function () {
+            _this.environmentManager.changeGradientOffset(document.getElementById('gradientOffset').value);
+        };
         var k = 0;
         document.getElementById("arrowIcon").addEventListener('click', function () {
             if (document.getElementById("Environment").style.height == "70%") {
@@ -262,6 +276,7 @@ var EnvironmentUI = (function () {
 /// <reference path="babylon.pbrMaterial.d.ts" />
 /// <reference path="PBRConverter.ts" />
 /// <reference path="EnvironmentUI.ts" />
+/// <reference path="babylon.gradientMaterial.d.ts" />
 // things to download: 
 // Skyboxes with reflections
 // Materials
@@ -305,6 +320,12 @@ window.addEventListener('DOMContentLoaded', function () {
         camera.wheelPrecision = 50;
         camera.setPosition(new BABYLON.Vector3(0.004510142482902708, 0.7674630808337399, -2.9880500596552437));
         scene.activeCamera = camera;
+        // var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 3, scene);
+        // var gradientMaterial = new BABYLON.GradientMaterial("grad", scene);
+        // gradientMaterial.topColor = BABYLON.Color3.Red(); // Set the gradient top color
+        // gradientMaterial.bottomColor = BABYLON.Color3.Blue(); // Set the gradient bottom color
+        // gradientMaterial.offset = 0.25;
+        // sphere.material = gradientMaterial;
         BABYLON.SceneLoader.ImportMesh("", "./", "HEADSET.babylon", scene, function (newMeshes) {
             var blackPlastic = new BABYLON.PBRMaterial("Black Plastic", scene);
             var redPlastic = new BABYLON.PBRMaterial("Red Plastic", scene);
@@ -312,7 +333,11 @@ window.addEventListener('DOMContentLoaded', function () {
             var blackMetal = new BABYLON.PBRMaterial("Black Metal", scene);
             var blackBox = new BABYLON.PBRMaterial("Black Box", scene);
             var blackCushion = new BABYLON.PBRMaterial("Black Cushion", scene);
-            var background = new BABYLON.PBRMaterial("Background", scene);
+            // var background = new BABYLON.GradientMaterial("Background", scene);
+            var hemilight = new BABYLON.HemisphericLight("hemilight1", new BABYLON.Vector3(0, 1, 0), sceneMain);
+            hemilight.range = 0.1;
+            // Default intensity is 1. Let's dim the light a small amount
+            hemilight.intensity = 0.7;
             for (var i = 0; i < newMeshes.length; i++) {
                 switch (newMeshes[i].name) {
                     case "BOX_STYLE_1":
@@ -330,19 +355,11 @@ window.addEventListener('DOMContentLoaded', function () {
                         newMeshes[i].material = blackBox;
                         break;
                     case "background":
-                        background.ambientTexture = new BABYLON.Texture("./textures/BACKGROUND_STYLE_1.jpg", scene);
-                        background.alpha = 1;
-                        background.albedoColor = BABYLON.Color3.Black();
-                        background.reflectivityColor = new BABYLON.Color3(0, 0, 0);
-                        background.indexOfRefraction = 2;
-                        background.directIntensity = 1.6;
-                        background.environmentIntensity = 0.05;
-                        background.overloadedShadeIntensity = 0.8;
-                        background.cameraExposure = 1.5;
-                        background.cameraContrast = 1.8;
-                        background.microSurface = 0;
+                        var gradientMaterial = new BABYLON.GradientMaterial("grad", scene);
+                        gradientMaterial.topColor = BABYLON.Color3.Red();
+                        gradientMaterial.bottomColor = BABYLON.Color3.Blue();
                         newMeshes[i].position.y = -0.1;
-                        newMeshes[i].material = background;
+                        newMeshes[i].material = gradientMaterial;
                         break;
                     case "GROUNDPLANE_STYLE_1":
                         var ground = new BABYLON.PBRMaterial("g", scene);
@@ -435,8 +452,8 @@ window.addEventListener('DOMContentLoaded', function () {
                     default: break;
                     case "groundPlane":
                         var groundPlaneMaterial = new BABYLON.PBRMaterial("groundPlaneMaterial", sceneMain);
-                        groundPlaneMaterial.albedoTexture = new BABYLON.Texture("./textures/blue.png", scene);
-                        groundPlaneMaterial.opacityTexture = new BABYLON.Texture("./textures/blue.png", scene);
+                        groundPlaneMaterial.albedoTexture = new BABYLON.Texture("./textures/flare.png", scene);
+                        groundPlaneMaterial.opacityTexture = new BABYLON.Texture("./textures/flare.png", scene);
                         groundPlaneMaterial.albedoTexture.hasAlpha = true;
                         groundPlaneMaterial.reflectivityColor = new BABYLON.Color3(0, 0, 0);
                         groundPlaneMaterial.directIntensity = 2;
@@ -458,6 +475,11 @@ window.addEventListener('DOMContentLoaded', function () {
                         //             newMeshes[i].material = mirrorMaterial;
                         break;
                 }
+                //                 // 
+                //                 //                 if (newMeshes[i].name == "background")
+                //                 //                     displayMaterialValues(newMeshes[i].material);
+                if (newMeshes[i].name != "background")
+                    hemilight.excludedMeshes.push(newMeshes[i]);
             }
             var str = '[{"id":1,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./textures/skybox/env-1/","lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":500,"range":8.0}]},{"id":2,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./textures/skybox/env-2/","lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":500,"range":8.0}]},{"id":3,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./textures/skybox/env-3/","lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":500,"range":8.0}]},{"id":4,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./textures/skybox/env-4/","lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":500,"range":8.0}]}]';
             envUI = new EnvironmentUI(str, sceneMain);
@@ -467,14 +489,14 @@ window.addEventListener('DOMContentLoaded', function () {
     sceneMain = createScene();
     // code bellow is for falres milestone
     var ray = BABYLON.Ray.CreateNewFromTo(new BABYLON.Vector3(5.26, 2.91, 1.75), new BABYLON.Vector3(5.26, 2.91, 1.75));
-    var mainLensLight = new BABYLON.PointLight("lensLight", new BABYLON.Vector3(0.027, 0.601, -1.225), sceneMain);
-    mainLensLight.intensity = 0;
-    var MainLensFlareSystem = new BABYLON.LensFlareSystem("mainLensFlareSystem", mainLensLight, sceneMain);
+    var mainLensEmitter = new BABYLON.Mesh("lensEmitter", sceneMain);
+    mainLensEmitter.position = new BABYLON.Vector3(0.027, 0.601, -1.225);
+    var MainLensFlareSystem = new BABYLON.LensFlareSystem("mainLensFlareSystem", mainLensEmitter, sceneMain);
     var flare = new BABYLON.LensFlare(.4, 1, new BABYLON.Color3(1, 1, 1), "./textures/Main Flare.png", MainLensFlareSystem);
     flare.texture.hasAlpha = true;
-    var hexaLensLight = new BABYLON.SpotLight("hexaLensLight", new BABYLON.Vector3(0.027, 0.601, -1.225), new BABYLON.Vector3(0.2, 0, -1), 10, 0.01, sceneMain);
-    hexaLensLight.intensity = 0;
-    var hexaLensFlareSystem = new BABYLON.LensFlareSystem("hexaLensFlareSystem", hexaLensLight, sceneMain);
+    var hexaLensEmitter = new BABYLON.Mesh("hexaLensEmitter", sceneMain);
+    hexaLensEmitter.position = new BABYLON.Vector3(0.027, 0.601, -1.225);
+    var hexaLensFlareSystem = new BABYLON.LensFlareSystem("hexaLensFlareSystem", hexaLensEmitter, sceneMain);
     var flare1 = new BABYLON.LensFlare(.2, -2.85, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
     var flare2 = new BABYLON.LensFlare(.1, -2.3, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/Band_2.png", hexaLensFlareSystem);
     var flare3 = new BABYLON.LensFlare(.1, -0.5, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
@@ -496,7 +518,7 @@ window.addEventListener('DOMContentLoaded', function () {
         else {
             flare.color = BABYLON.Color3.White();
             hexaLensFlareSystem.isEnabled = true;
-            var vec1 = hexaLensLight.position;
+            var vec1 = hexaLensEmitter.position;
             var vec2 = camera.position;
             var dot = BABYLON.Vector3.Dot(vec1, vec2);
             dot = dot / (Math.sqrt(vec1.x * vec1.x + vec1.y * vec1.y + vec1.z * vec1.z) * Math.sqrt(vec2.x * vec2.x + vec2.y * vec2.y + vec2.z * vec2.z));
@@ -516,6 +538,7 @@ window.addEventListener('DOMContentLoaded', function () {
             }
         }
     });
+    var v = false;
     var fps = document.getElementById("fps");
     engine.runRenderLoop(function () {
         sceneMain.render();
