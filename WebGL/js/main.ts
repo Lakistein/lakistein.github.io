@@ -202,9 +202,11 @@ window.addEventListener('DOMContentLoaded', function() {
                         mirrorMaterial.reflectionTexture = new BABYLON.MirrorTexture("mirror", 1024, scene, false);
                         mirrorMaterial.reflectionTexture.mirrorPlane = new BABYLON.Plane(0, -1, 0, 0);
                         //var postProcess = new BABYLON.BlurPostProcess("Horizontal blur", new BABYLON.Vector2(1.0, 0), 10, 0.25, camera, null, engine, true);
+                        mirrorMaterial.alpha = 0.1;
 
-                        mirrorMaterial.specularColor = BABYLON.Color3.Black();
-                        mirrorMaterial.reflectionTexture.level = 0.5;
+                        mirrorMaterial.diffuseColor = new BABYLON.Color3(0.0, 0.0, 0.0);
+                        mirrorMaterial.specularColor = new BABYLON.Color3(0.0, 0.0, 0.0);
+                        mirrorMaterial.reflectionTexture.level = 1;
                         newMeshes[i].material = mirrorMaterial;
 
                         break;
@@ -213,7 +215,7 @@ window.addEventListener('DOMContentLoaded', function() {
                 if (newMeshes[i].name != "background")
                     hemilight.excludedMeshes.push(newMeshes[i]);
             }
-            
+
             var refl = scene.getMeshByName("reflectionPlane").material.reflectionTexture;
             for (var i = 0; i < newMeshes.length; i++) {
                 if (newMeshes[i].name != "reflectionPlane")
