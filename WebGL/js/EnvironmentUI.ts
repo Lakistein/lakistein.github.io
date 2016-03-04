@@ -45,15 +45,19 @@ class EnvironmentUI {
         document.getElementById("reflective").onchange = () => {
             this.environmentManager.turnReflectivePlaneOffOn(document.getElementById('reflective').checked);
         };
+             document.getElementById("reflectionAmount").onchange = () => {
+            this.environmentManager.changeReflectionAmount(document.getElementById('reflectionAmount').value);
+        };
+        
         var k = 0;
         document.getElementById("arrowIcon").addEventListener('click', function() {
-            if (document.getElementById("Environment").style.height == "70%") {
+            if (document.getElementById("Environment").style.height == "75%") {
                 document.getElementById("Environment").style.height = "7%";
                 document.getElementById("arrowIcon").style.transform = "rotatex(" + k + "deg)";
                 k += 180;
             }
             else {
-                document.getElementById("Environment").style.height = "70%";
+                document.getElementById("Environment").style.height = "75%";
                 document.getElementById("arrowIcon").style.transform = "rotatex(" + k + "deg)";
                 k += 180;
             }

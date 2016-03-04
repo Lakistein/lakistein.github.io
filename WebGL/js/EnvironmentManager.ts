@@ -81,7 +81,7 @@ class EnvironmentManager {
 
     setReflection(scene: BABYLON.Scene, color?: BABYLON.Color3) {
         for (var i = 0; i < scene.meshes.length; i++) {
-            if (<BABYLON.PBRMaterial>scene.meshes[i].material instanceof BABYLON.PBRMaterial && scene.meshes[i].name != "GROUNDPLANE_STYLE_1" && scene.meshes[i].name != "skybox"  && scene.meshes[i].name != "reflectionPlane") {
+            if (<BABYLON.PBRMaterial>scene.meshes[i].material instanceof BABYLON.PBRMaterial && scene.meshes[i].name != "GROUNDPLANE_STYLE_1" && scene.meshes[i].name != "skybox" && scene.meshes[i].name != "reflectionPlane") {
                 if (this.environments[this.currentEnvironment].reflectionTexture) {
                     (<BABYLON.PBRMaterial>scene.meshes[i].material).reflectionTexture = this.environments[this.currentEnvironment].reflectionTexture;
                 }
@@ -136,5 +136,9 @@ class EnvironmentManager {
 
     turnReflectivePlaneOffOn(value: boolean) {
         this.environments[this.currentEnvironment].reflectiveMesh.setEnabled(value);
+    }
+
+    changeReflectionAmount(value: number) {
+        this.environments[this.currentEnvironment].reflectiveMesh.material.reflectionTexture.level = value;
     }
 }
