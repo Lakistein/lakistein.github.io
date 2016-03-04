@@ -203,12 +203,11 @@ window.addEventListener('DOMContentLoaded', function() {
                         mirrorMaterial.reflectionTexture.mirrorPlane = new BABYLON.Plane(0, -1, 0, 0);
                         //var postProcess = new BABYLON.BlurPostProcess("Horizontal blur", new BABYLON.Vector2(1.0, 0), 10, 0.25, camera, null, engine, true);
                         mirrorMaterial.alpha = 0.1;
-
                         mirrorMaterial.diffuseColor = new BABYLON.Color3(0.0, 0.0, 0.0);
                         mirrorMaterial.specularColor = new BABYLON.Color3(0.0, 0.0, 0.0);
                         mirrorMaterial.reflectionTexture.level = 1;
                         newMeshes[i].material = mirrorMaterial;
-
+                        newMeshes[i].scaling = new BABYLON.Vector3(1010,1010,1010);
                         break;
                 }
 
@@ -221,10 +220,11 @@ window.addEventListener('DOMContentLoaded', function() {
                 if (newMeshes[i].name != "reflectionPlane")
                     refl.renderList.push(newMeshes[i]);
             }
-
+            
             var str = '[{"id":1,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./textures/skybox/env-1/","lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":500,"range":8.0}]},{"id":2,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./textures/skybox/env-2/","lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":500,"range":8.0}]},{"id":3,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./textures/skybox/env-3/","lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":500,"range":8.0}]},{"id":4,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./textures/skybox/env-4/","lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":500,"range":8.0}]}]';
 
             envUI = new EnvironmentUI(str, sceneMain);
+            refl.renderList.push(scene.getMeshByName("skybox"));
         });
         return scene;
     }
