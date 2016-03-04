@@ -225,7 +225,7 @@ var EnvironmentManager = (function () {
         this.environments[this.currentEnvironment].reflectiveMesh.setEnabled(value);
     };
     EnvironmentManager.prototype.changeReflectionAmount = function (value) {
-        this.environments[this.currentEnvironment].reflectiveMesh.material.reflectionTexture.level = value;
+        this.environments[this.currentEnvironment].reflectiveMesh.material.alpha = value;
     };
     return EnvironmentManager;
 })();

@@ -139,6 +139,6 @@ class EnvironmentManager {
     }
 
     changeReflectionAmount(value: number) {
-        this.environments[this.currentEnvironment].reflectiveMesh.material.reflectionTexture.level = value;
+        this.environments[this.currentEnvironment].reflectiveMesh.material.alpha = value;
     }
-}
+} 
