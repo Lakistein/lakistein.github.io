@@ -118,10 +118,8 @@ class TextCanvas {
     }
 
     updateWidth(value: number) {
-        this.titleMesh = this.createTextMesh(this.titleMesh.name, this.titleText, value, this.height, 2, this.titleMesh.position, 'rgba(0, 0, 0, 0.5)', this.scene);
-        this.titleMesh.renderingGroupId = 2;
-        // this.titleMesh.scaling = new BABYLON.Vector3(value, this.titleMesh.scaling.y, this.titleMesh.scaling.z)
-        // this.width = value;
+        this.titleMesh.scaling = new BABYLON.Vector3(value, this.titleMesh.scaling.y, this.titleMesh.scaling.z)
+        this.width = value;
         // this.updateTitleText(this.titleText);
         // var height = 0.25//= document.getElementById('textCanvasHeight').value;
         // var indices = [];
