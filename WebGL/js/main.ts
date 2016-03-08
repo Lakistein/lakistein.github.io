@@ -3,6 +3,7 @@
 /// <reference path="PBRConverter.ts" />
 /// <reference path="EnvironmentUI.ts" />
 /// <reference path="babylon.gradientMaterial.d.ts" />
+/// <reference path="TextCanvasManager.ts" />
 
 // things to download: 
 // Skyboxes with reflections
@@ -10,6 +11,7 @@
 
 var sceneMain: BABYLON.Scene;
 var envUI: EnvironmentUI;
+
 window.addEventListener('DOMContentLoaded', function() {
     var canvas = <HTMLCanvasElement>document.getElementById('renderCanvas');
     //var gui = new dat.GUI();
@@ -40,6 +42,7 @@ window.addEventListener('DOMContentLoaded', function() {
     //         folder.add(material.reflectivityColor, "g", 0, 1);
     //         folder.add(material.reflectivityColor, "b", 0, 1);
     //     }
+  
     function createScene() {
         var scene = new BABYLON.Scene(engine);
         camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 6, new BABYLON.Vector3(0, .5, 0), scene);
@@ -64,11 +67,9 @@ window.addEventListener('DOMContentLoaded', function() {
             var blackMetal = new BABYLON.PBRMaterial("Black Metal", scene);
             var blackBox = new BABYLON.PBRMaterial("Black Box", scene);
             var blackCushion = new BABYLON.PBRMaterial("Black Cushion", scene);
-            // var background = new BABYLON.GradientMaterial("Background", scene);
+
             var hemilight = new BABYLON.HemisphericLight("hemilight1", new BABYLON.Vector3(0, 1, 0), sceneMain);
             hemilight.range = 0.1;
-
-            // Default intensity is 1. Let's dim the light a small amount
             hemilight.intensity = 0.7;
             for (var i = 0; i < newMeshes.length; i++) {
                 switch (newMeshes[i].name) {
@@ -92,6 +93,7 @@ window.addEventListener('DOMContentLoaded', function() {
                         gradientMaterial.bottomColor = BABYLON.Color3.Blue();
                         newMeshes[i].position.y = -0.1;
                         newMeshes[i].material = gradientMaterial;
+                        newMeshes[i].isPickable = false;
                         break;
                     case "GROUNDPLANE_STYLE_1":
                         var ground = new BABYLON.PBRMaterial("g", scene);
@@ -107,6 +109,7 @@ window.addEventListener('DOMContentLoaded', function() {
                         ground.microSurface = 0;
                         newMeshes[i].position.y = 0.01;
                         newMeshes[i].material = ground;
+                        newMeshes[i].isPickable = false;
                         break;
                     case "HEADSETARCH_STYLE_1":
                         blackMetal.albedoTexture = new BABYLON.Texture("./textures/models-textures/blackmetal.jpg", scene);
@@ -196,21 +199,22 @@ window.addEventListener('DOMContentLoaded', function() {
                         groundPlaneMaterial.microSurface = 0;
                         groundPlaneMaterial.alpha = 1;
                         newMeshes[i].material = groundPlaneMaterial;
+                        newMeshes[i].isPickable = false;
                         break;
                     case "reflectionPlane":
                         var mirrorMaterial = new BABYLON.StandardMaterial("mirror", scene);
                         mirrorMaterial.reflectionTexture = new BABYLON.MirrorTexture("mirror", 1024, scene, false);
                         mirrorMaterial.reflectionTexture.mirrorPlane = new BABYLON.Plane(0, -1, 0, 0);
-                        //var postProcess = new BABYLON.BlurPostProcess("Horizontal blur", new BABYLON.Vector2(1.0, 0), 10, 0.25, camera, null, engine, true);
                         mirrorMaterial.alpha = 0.1;
                         mirrorMaterial.diffuseColor = new BABYLON.Color3(0.0, 0.0, 0.0);
                         mirrorMaterial.specularColor = new BABYLON.Color3(0.0, 0.0, 0.0);
                         mirrorMaterial.reflectionTexture.level = 1;
                         newMeshes[i].material = mirrorMaterial;
-                        newMeshes[i].scaling = new BABYLON.Vector3(1010,1010,1010);
+                        newMeshes[i].scaling = new BABYLON.Vector3(1010, 1010, 1010);
+                        newMeshes[i].isPickable = false;
                         break;
                 }
-
+                newMeshes[i].isPickable = false;
                 if (newMeshes[i].name != "background")
                     hemilight.excludedMeshes.push(newMeshes[i]);
             }
@@ -220,11 +224,14 @@ window.addEventListener('DOMContentLoaded', function() {
                 if (newMeshes[i].name != "reflectionPlane")
                     refl.renderList.push(newMeshes[i]);
             }
-            
+
             var str = '[{"id":1,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./textures/skybox/env-1/","lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":500,"range":8.0}]},{"id":2,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./textures/skybox/env-2/","lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":500,"range":8.0}]},{"id":3,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./textures/skybox/env-3/","lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":500,"range":8.0}]},{"id":4,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./textures/skybox/env-4/","lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":500,"range":8.0}]}]';
 
             envUI = new EnvironmentUI(str, sceneMain);
             refl.renderList.push(scene.getMeshByName("skybox"));
+            var json: string = '[{"text":"Chrome", "description":"Chrom description", "width":0.5,"height":0.25,"position":{"x":2,"y":1,"z":0}},{"text":"Chrome", "description":"Chrom description", "width":0.5,"height":0.25,"position":{"x":-2,"y":1,"z":0}}]';
+
+            var textCanv = new TextCanvasManager(json, scene);
         });
         return scene;
     }
@@ -234,13 +241,18 @@ window.addEventListener('DOMContentLoaded', function() {
     // code bellow is for falres milestone
     var ray = BABYLON.Ray.CreateNewFromTo(new BABYLON.Vector3(5.26, 2.91, 1.75), new BABYLON.Vector3(5.26, 2.91, 1.75));
     var mainLensEmitter = new BABYLON.Mesh("lensEmitter", sceneMain);
-    mainLensEmitter.position = new BABYLON.Vector3(0.027, 0.601, -1.225);
+    mainLensEmitter.position = new BABYLON.Vector3(0.008, 0.601, -1.2);
     var MainLensFlareSystem = new BABYLON.LensFlareSystem("mainLensFlareSystem", mainLensEmitter, sceneMain);
+    mainLensEmitter.isPickable = false;
     var flare = new BABYLON.LensFlare(.4, 1, new BABYLON.Color3(1, 1, 1), "./textures/Main Flare.png", MainLensFlareSystem);
+    
     flare.texture.hasAlpha = true;
+    flare.texture.getAlphaFromRGB = true;
     var hexaLensEmitter = new BABYLON.Mesh("hexaLensEmitter", sceneMain);
+    hexaLensEmitter.isPickable = false;
     hexaLensEmitter.position = new BABYLON.Vector3(0.027, 0.601, -1.225);
     var hexaLensFlareSystem = new BABYLON.LensFlareSystem("hexaLensFlareSystem", hexaLensEmitter, sceneMain);
+    
     var flare1 = new BABYLON.LensFlare(.2, -2.85, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
     var flare2 = new BABYLON.LensFlare(.1, -2.3, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/Band_2.png", hexaLensFlareSystem);
     var flare3 = new BABYLON.LensFlare(.1, -0.5, new BABYLON.Color3(0.1, 0.05, 0.05), "./textures/flare.png", hexaLensFlareSystem);
@@ -255,8 +267,9 @@ window.addEventListener('DOMContentLoaded', function() {
 
 
     sceneMain.registerBeforeRender(function() {
-        var rayPick = BABYLON.Ray.CreateNewFromTo(camera.position, new BABYLON.Vector3(0.027, 0.601, -1.225));
+        var rayPick = BABYLON.Ray.CreateNewFromTo(camera.position, mainLensEmitter.position);
         var meshFound = sceneMain.pickWithRay(rayPick, function(mesh) { return true; });
+        //TODO: pokusaj da pomeris tekst canvas
         if (meshFound != null && meshFound.pickedPoint != null) {
             flare.color = BABYLON.Color3.Black();
             hexaLensFlareSystem.isEnabled = false;

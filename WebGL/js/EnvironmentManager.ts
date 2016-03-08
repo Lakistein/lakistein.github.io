@@ -24,7 +24,7 @@ class EnvironmentManager {
         skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
         skybox.infiniteDistance = true;
         skybox.material = skyboxMaterial;
-
+        skybox.isPickable = false;
         this.setEnvironment(this.environments[2].id, scene);
     }
 
