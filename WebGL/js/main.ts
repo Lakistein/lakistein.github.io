@@ -229,7 +229,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
             envUI = new EnvironmentUI(str, sceneMain);
             refl.renderList.push(scene.getMeshByName("skybox"));
-            var json: string = '[{"text":"Chrome", "description":"Chrom description", "width":0.5,"height":0.25,"position":{"x":2,"y":1,"z":0}},{"text":"Chrome", "description":"Chrom description", "width":0.5,"height":0.25,"position":{"x":-2,"y":1,"z":0}}]';
+            var json: string = '[{"id":0,"text":"Chrome","description":"Chrome description","width":0.5,"height":0.25,"position":{"x":2,"y":1,"z":0}},{"id":1,"text":"Chrome","description":"Chrom description","width":0.5,"height":0.25,"position":{"x":-2,"y":1,"z":0}}]';
 
             var textCanv = new TextCanvasManager(json, scene);
         });

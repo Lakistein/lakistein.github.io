@@ -291,6 +291,7 @@ var TextCanvas = (function () {
     function TextCanvas(jsonCanv, index, scene) {
         if (!jsonCanv)
             return;
+        this.id = jsonCanv.id;
         this.scene = scene;
         this.titleText = jsonCanv.text;
         this.width = jsonCanv.width;
@@ -299,19 +300,17 @@ var TextCanvas = (function () {
         this.descriptionText = jsonCanv.description;
         this.titleMesh = this.createTextMesh(index, this.titleText, this.width, this.height, 2, jsonCanv.position, 'rgba(0, 0, 0, 0.5)', scene);
         this.titleMesh.renderingGroupId = 2;
-        this.descriptionMesh = this.createTextMesh('-text-audio2', this.descriptionText, this.width, this.height, 2, new BABYLON.Vector3(0, -.1, 0), 'rgba(0, 0, 0, 0)', scene);
+        this.descriptionMesh = this.createTextMesh('text-' + index, this.descriptionText, this.width, this.height, 2, new BABYLON.Vector3(0, -.1, 0), 'rgba(0, 0, 0, 0)', scene);
         this.descriptionMesh.isPickable = false;
         this.descriptionMesh.renderingGroupId = 3;
         this.descriptionMesh.parent = this.titleMesh;
     }
     TextCanvas.prototype.createMesh = function (name, width, height, isPickable, scene, updatable) {
-        //if(this.titleMesh) this.titleMesh.dispose();
         var plane = new BABYLON.Mesh(name, scene);
         var indices = [];
         var positions = [];
         var normals = [];
         var uvs = [];
-        // Vertices
         var halfWidth = width / 2.0;
         var halfHeight = height / 2.0;
         positions.push(-halfWidth, -halfHeight, 0);
@@ -326,7 +325,6 @@ var TextCanvas = (function () {
         positions.push(-halfWidth, halfHeight, 0);
         normals.push(0, 0, -1.0);
         uvs.push(0.0, 1.0);
-        // Indices
         indices.push(0);
         indices.push(1);
         indices.push(2);
@@ -342,15 +340,11 @@ var TextCanvas = (function () {
     };
     ;
     TextCanvas.prototype.createText = function (text, backgroundColor, scene) {
-        var dynamicTexture = new BABYLON.DynamicTexture('dynamic texture', 512, scene, true);
-        // dynamicTexture.uScale = 0.7;
-        // dynamicTexture.vScale = 0.054;
-        // dynamicTexture.vOffset = -9;
-        // dynamicTexture.uOffset = 0.25;
+        var dynamicTexture = new BABYLON.DynamicTexture('dynamic texture', 1024, scene, true);
         dynamicTexture.hasAlpha = true;
         var texts = text.split('\n');
         for (var i = 0; i < texts.length; i++) {
-            dynamicTexture.drawText(texts[i], 5, i * 60 + 60, '70px Arial', 'white', backgroundColor);
+            dynamicTexture.drawText(texts[i], 5, i * 100 + 100, this.width * 200 + 'px Arial', 'white', backgroundColor);
         }
         return dynamicTexture;
     };
@@ -370,7 +364,7 @@ var TextCanvas = (function () {
     };
     ;
     TextCanvas.prototype.updateTitleText = function (text) {
-        this.titleMesh.material.diffuseTexture = this.createText(text, 'rgba(0, 0, 0, 0.5)', this.scene);
+        this.titleMesh.material.diffuseTexture = this.createText(text, 'rgba(0, 0, 0, 0.1)', this.scene);
     };
     TextCanvas.prototype.updateDescriptionText = function (text) {
         this.descriptionMesh.material.diffuseTexture = this.createText(text, 'rgba(0, 0, 0, 0)', this.scene);
@@ -429,12 +423,14 @@ var TextCanvasManager = (function () {
         var _this = this;
         this.textCanvases = [];
         this.lines = [];
+        this.alterAnchorPoint = false;
         var jsonCanv = JSON.parse(json);
         for (var i = 0; i < jsonCanv.length; i++) {
             this.textCanvases.push(new TextCanvas(jsonCanv[i], i.toString(), scene));
             var pos = this.textCanvases[i].titleMesh.getVerticesData(BABYLON.VertexBuffer.PositionKind);
             var points = [new BABYLON.Vector3(0.008, 0.601, -1.2), new BABYLON.Vector3(this.textCanvases[i].position.x - this.textCanvases[i].width / 2, this.textCanvases[i].position.y + this.textCanvases[i].height / 2, this.textCanvases[i].position.z)];
             this.lines.push(BABYLON.Mesh.CreateLines("line" + i, points, scene, true));
+            this.lines[i].renderingGroupId = 2;
         }
         var ground = BABYLON.Mesh.CreatePlane("ground", 15, scene, false);
         var groundMaterial = new BABYLON.StandardMaterial("ground", scene);
@@ -443,12 +439,11 @@ var TextCanvasManager = (function () {
         ground.lookAt(scene.activeCamera.position, 0, 0, 0);
         ground.renderingGroupId = 1;
         ground.material.alpha = 0;
-        // Events
+        ground.isPickable = false;
         var canvas = scene.getEngine().getRenderingCanvas();
         var startingPoint;
         var currentMesh;
         var getGroundPosition = function () {
-            // Use a predicate to get position on the ground
             var pickinfo = scene.pick(scene.pointerX, scene.pointerY, function (mesh) { return mesh == ground; });
             if (pickinfo.hit) {
                 return pickinfo.pickedPoint;
@@ -459,7 +454,24 @@ var TextCanvasManager = (function () {
             if (evt.button !== 0) {
                 return;
             }
-            document.getElementById("TextCanvasEditor").style.visibility = 'hidden';
+            if (!_this.alterAnchorPoint)
+                document.getElementById("TextCanvasEditor").style.visibility = 'hidden';
+            if (_this.alterAnchorPoint) {
+                var pickInfo = scene.pick(scene.pointerX, scene.pointerY, function (mesh) {
+                    for (var i = 0; i < _this.textCanvases.length; i++) {
+                        if (_this.textCanvases[i].titleMesh == mesh || _this.textCanvases[i].descriptionMesh == mesh)
+                            return false;
+                    }
+                    return true;
+                });
+                if (pickInfo.hit) {
+                    pointss[currentMesh.name][0] = pickInfo.pickedPoint.x;
+                    pointss[currentMesh.name][1] = pickInfo.pickedPoint.y;
+                    pointss[currentMesh.name][2] = pickInfo.pickedPoint.z;
+                    _this.lines[currentMesh.name].updateVerticesDataDirectly(BABYLON.VertexBuffer.PositionKind, pointss[currentMesh.name]);
+                }
+                return;
+            }
             var pickInfo = scene.pick(scene.pointerX, scene.pointerY, function (mesh) {
                 for (var i = 0; i < _this.textCanvases.length; i++) {
                     if (_this.textCanvases[i].titleMesh == mesh)
@@ -468,7 +480,6 @@ var TextCanvasManager = (function () {
                 return false;
             });
             if (pickInfo.hit) {
-                console.log(pickInfo.pickedMesh.name);
                 currentMesh = null;
                 for (var i = 0; i < _this.textCanvases.length; i++) {
                     if (pickInfo.pickedMesh == _this.textCanvases[i].titleMesh) {
@@ -518,6 +529,14 @@ var TextCanvasManager = (function () {
             canvas.removeEventListener("pointerup", onPointerUp);
             canvas.removeEventListener("pointermove", onPointerMove);
         };
+        var pointss = [];
+        var arr = [];
+        var vertex = [];
+        for (var i = 0; i < this.lines.length; i++) {
+            pointss.push(this.lines[i].getVerticesData(BABYLON.VertexBuffer.PositionKind));
+            arr.push(this.textCanvases[i].titleMesh.getVertexBuffer(BABYLON.VertexBuffer.PositionKind).getData());
+            vertex.push(BABYLON.Vector3.FromArray(arr[i], 0));
+        }
         document.getElementById("titleCanvas").onchange = function () {
             (_this.textCanvases[currentMesh.name]).updateTitleText(document.getElementById('titleCanvas').value);
         };
@@ -530,25 +549,9 @@ var TextCanvasManager = (function () {
         document.getElementById("textCanvasHeight").onchange = function () {
             (_this.textCanvases[currentMesh.name]).updateHeight(document.getElementById('textCanvasHeight').value);
         };
-        // var t = new BABYLON.DynamicTexture("S", null, scene,false);
-        //    line.isPickable = true;
-        //   var data = line.getVerticesData(BABYLON.VertexBuffer.PositionKind);
-        // scene.onPointerDown = function(evt, pickResult) {
-        //     if the click hits the ground object, we change the impact position
-        //     if (evt.button == 0 && pickResult.hit) {
-        //               points[0] = pickResult.pickedPoint;
-        //         points[1] = camera.cameraDirection
-        //           line = BABYLON.Mesh.CreateLines(null, points, null, null, line);
-        //     }
-        // };
-        var pointss = [];
-        var arr = [];
-        var vertex = [];
-        for (var i = 0; i < this.lines.length; i++) {
-            pointss.push(this.lines[i].getVerticesData(BABYLON.VertexBuffer.PositionKind));
-            arr.push(this.textCanvases[i].titleMesh.getVertexBuffer(BABYLON.VertexBuffer.PositionKind).getData());
-            vertex.push(BABYLON.Vector3.FromArray(arr[i], 0));
-        }
+        document.getElementById("anchorPoint").onchange = function () {
+            _this.alterAnchorPoint = document.getElementById('anchorPoint').checked;
+        };
         scene.registerBeforeRender(function () {
             if (scene.activeCamera)
                 for (var i = 0; i < _this.textCanvases.length; i++) {
@@ -785,7 +788,7 @@ window.addEventListener('DOMContentLoaded', function () {
             var str = '[{"id":1,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./textures/skybox/env-1/","lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":500,"range":8.0}]},{"id":2,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./textures/skybox/env-2/","lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":500,"range":8.0}]},{"id":3,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./textures/skybox/env-3/","lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":500,"range":8.0}]},{"id":4,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./textures/skybox/env-4/","lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":500,"range":8.0}]}]';
             envUI = new EnvironmentUI(str, sceneMain);
             refl.renderList.push(scene.getMeshByName("skybox"));
-            var json = '[{"text":"Chrome", "description":"Chrom description", "width":0.5,"height":0.25,"position":{"x":2,"y":1,"z":0}},{"text":"Chrome", "description":"Chrom description", "width":0.5,"height":0.25,"position":{"x":-2,"y":1,"z":0}}]';
+            var json = '[{"id":0,"text":"Chrome","description":"Chrome description","width":0.5,"height":0.25,"position":{"x":2,"y":1,"z":0}},{"id":1,"text":"Chrome","description":"Chrom description","width":0.5,"height":0.25,"position":{"x":-2,"y":1,"z":0}}]';
             var textCanv = new TextCanvasManager(json, scene);
         });
         return scene;

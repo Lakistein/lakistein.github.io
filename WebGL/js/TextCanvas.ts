@@ -1,7 +1,7 @@
 /// <reference path="babylon.d.ts" />
 
-
 class TextCanvas {
+    id: string;
     titleText: string;
     descriptionText: string;
     width: number;
@@ -13,6 +13,8 @@ class TextCanvas {
 
     constructor(jsonCanv: any, index: string, scene: BABYLON.Scene) {
         if (!jsonCanv) return;
+        
+        this.id = jsonCanv.id;
         this.scene = scene;
         this.titleText = jsonCanv.text;
         this.width = jsonCanv.width;
@@ -22,7 +24,7 @@ class TextCanvas {
         this.titleMesh = this.createTextMesh(index, this.titleText, this.width, this.height, 2, jsonCanv.position, 'rgba(0, 0, 0, 0.5)', scene);
         this.titleMesh.renderingGroupId = 2;
 
-        this.descriptionMesh = this.createTextMesh('-text-audio2', this.descriptionText, this.width, this.height, 2, new BABYLON.Vector3(0, -.1, 0), 'rgba(0, 0, 0, 0)', scene);
+        this.descriptionMesh = this.createTextMesh('text-' + index, this.descriptionText, this.width, this.height, 2, new BABYLON.Vector3(0, -.1, 0), 'rgba(0, 0, 0, 0)', scene);
         this.descriptionMesh.isPickable = false;
 
         this.descriptionMesh.renderingGroupId = 3;
@@ -30,8 +32,6 @@ class TextCanvas {
     }
 
     createMesh(name, width, height, isPickable, scene, updatable) {
-                //if(this.titleMesh) this.titleMesh.dispose();
-
         var plane = new BABYLON.Mesh(name, scene);
 
         var indices = [];
@@ -39,7 +39,6 @@ class TextCanvas {
         var normals = [];
         var uvs = [];
 
-        // Vertices
         var halfWidth = width / 2.0;
         var halfHeight = height / 2.0;
 
@@ -59,7 +58,6 @@ class TextCanvas {
         normals.push(0, 0, -1.0);
         uvs.push(0.0, 1.0);
 
-        // Indices
         indices.push(0);
         indices.push(1);
         indices.push(2);
@@ -78,15 +76,11 @@ class TextCanvas {
     };
 
     createText(text: string, backgroundColor, scene) {
-        var dynamicTexture = new BABYLON.DynamicTexture('dynamic texture', 512, scene, true);
-        // dynamicTexture.uScale = 0.7;
-        // dynamicTexture.vScale = 0.054;
-        // dynamicTexture.vOffset = -9;
-        // dynamicTexture.uOffset = 0.25;
+        var dynamicTexture = new BABYLON.DynamicTexture('dynamic texture', 1024, scene, true);
         dynamicTexture.hasAlpha = true;
         var texts = text.split('\n');
         for (var i = 0; i < texts.length; i++) {
-            dynamicTexture.drawText(texts[i], 5, i * 60 + 60, '70px Arial', 'white', backgroundColor);
+            dynamicTexture.drawText(texts[i], 5, i * 100 + 100, this.width * 200 + 'px Arial', 'white', backgroundColor);
         }
 
         return dynamicTexture;
@@ -110,7 +104,7 @@ class TextCanvas {
     };
 
     updateTitleText(text: string) {
-        (<BABYLON.StandardMaterial>this.titleMesh.material).diffuseTexture = this.createText(text, 'rgba(0, 0, 0, 0.5)', this.scene);
+        (<BABYLON.StandardMaterial>this.titleMesh.material).diffuseTexture = this.createText(text, 'rgba(0, 0, 0, 0.1)', this.scene);
     }
 
     updateDescriptionText(text: string) {
