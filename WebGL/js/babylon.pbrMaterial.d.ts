@@ -1,4 +1,3 @@
-/// <reference path="../../../dist/preview release/babylon.d.ts" />
 declare module BABYLON {
     class PBRMaterial extends BABYLON.Material {
         directIntensity: number;

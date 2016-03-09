@@ -105,7 +105,7 @@ class EnvironmentManager {
     }
 
     updateGroundTexture(scene: BABYLON.Scene) {
-        var file = (<File>document.querySelector('#groundImg').files[0]);
+        var file = (<File>(<HTMLInputElement>document.querySelector('#groundImg')).files[0]);
         var reader = new FileReader();
 
         if (file) {

@@ -1,4 +1,3 @@
-/// <reference path="../../../dist/preview release/babylon.d.ts" />
 declare module BABYLON {
     class GradientMaterial extends Material {
         topColor: Color3;

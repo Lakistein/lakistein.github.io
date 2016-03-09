@@ -1,5 +1,4 @@
 /// <reference path="babylon.pbrMaterial.d.ts" />
-/// <reference path="babylon.2.3.d.ts" />
 
 
 class PBRConverter {
