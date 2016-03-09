@@ -32,7 +32,7 @@ class LensFlareSystem {
         scene.registerBeforeRender(function() {
             count++;
 
-            if (count > 10) {
+            if (count > 5) {
                 count = 0;
                 var rayPick = BABYLON.Ray.CreateNewFromTo(scene.activeCamera.position, mainLensEmitter.position);
                 meshFound = scene.pickWithRay(rayPick, function(mesh) {
@@ -46,7 +46,6 @@ class LensFlareSystem {
             if (meshFound.pickedPoint != null) {
                 flare.color = BABYLON.Color3.Black();
                 hexaLensFlareSystem.isEnabled = false;
-                debugger;
             }
             else {
                 flare.color = BABYLON.Color3.White();

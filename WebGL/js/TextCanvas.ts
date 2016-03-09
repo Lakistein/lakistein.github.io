@@ -24,9 +24,9 @@ class TextCanvas {
         this.titleMesh = this.createTextMesh(index, this.titleText, this.width, this.height, 2, jsonCanv.position, 'rgba(255, 255, 255, 1)', scene, 'black');
         this.titleMesh.renderingGroupId = 2;
 
-        this.descriptionMesh = this.createTextMesh('text-' + index, this.descriptionText, this.width, this.height, 2, new BABYLON.Vector3(0, -.1, 0), 'rgba(0, 0, 0, 0)', scene, 'white');
+        this.descriptionMesh = this.createTextMesh('text-' + index, this.descriptionText, this.width, this.height, 2, new BABYLON.Vector3(0, -this.height, 0), 'rgba(0, 0, 0, 0)', scene, 'white');
         this.descriptionMesh.isPickable = false;
-
+        this.descriptionMesh.showBoundingBox = true;
         this.descriptionMesh.renderingGroupId = 3;
         this.descriptionMesh.parent = this.titleMesh;
     }
@@ -80,7 +80,7 @@ class TextCanvas {
         dynamicTexture.hasAlpha = true;
         var texts = text.split("\n");
         for (var i = 0; i < texts.length; i++) {
-            dynamicTexture.drawText(texts[i], 5, i * 50 + 50, '50pt Arial', textColor, backgroundColor);
+            dynamicTexture.drawText(texts[i], 5, i * 30 + 30, '30pt Arial', textColor, backgroundColor);
         }
 
         return dynamicTexture;
@@ -116,7 +116,15 @@ class TextCanvas {
         var temp = this.createTextMesh(this.id, this.titleText, this.width, this.height, 2, this.position, 'rgba(255, 255, 255, 1)', this.scene, 'black');
         this.titleMesh.dispose();
         this.titleMesh = temp;
-        this.titleMesh.renderingGroupId = 2;
+        this.titleMesh.renderingGroupId = 2
+
+        temp = this.createTextMesh(this.id, this.descriptionText, this.width, this.height, 2, new BABYLON.Vector3(0, -this.height, 0), 'rgba(0, 0, 0, 0)', this.scene, 'white');
+        this.descriptionMesh.dispose();
+        this.descriptionMesh = temp;
+        this.descriptionMesh.isPickable = false;
+
+        this.descriptionMesh.renderingGroupId = 3;
+        this.descriptionMesh.parent = this.titleMesh;
         //this.titleMesh.scaling = new BABYLON.Vector3(value, this.titleMesh.scaling.y, this.titleMesh.scaling.z)
         // this.updateTitleText(this.titleText);
         // var height = 0.25//= document.getElementById('textCanvasHeight').value;
@@ -170,6 +178,14 @@ class TextCanvas {
         this.titleMesh.dispose();
         this.titleMesh = temp;
         this.titleMesh.renderingGroupId = 2
+
+        temp = this.createTextMesh(this.id, this.descriptionText, this.width, this.height, 2, new BABYLON.Vector3(0, -this.height, 0), 'rgba(0, 0, 0, 0)', this.scene, 'white');
+        this.descriptionMesh.dispose();
+        this.descriptionMesh = temp;
+        this.descriptionMesh.isPickable = false;
+
+        this.descriptionMesh.renderingGroupId = 3;
+        this.descriptionMesh.parent = this.titleMesh;
     }
 
     //  createTexts(text, width, height, position, scene: BABYLON.Scene) {

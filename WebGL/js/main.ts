@@ -241,7 +241,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
             envUI = new EnvironmentUI(str, sceneMain);
             (<BABYLON.MirrorTexture>refl).renderList.push(scene.getMeshByName("skybox"));
-            var json: string = '[{"id":0,"text":"Red Plastic","description":"Scratch Resistant","width":0.5,"height":0.1,"position":{"x":2,"y":1,"z":0}},{"id":1,"text":"Chrome","description":"Durable Metal","width":0.5,"height":0.1,"position":{"x":-2,"y":1,"z":0}}]';
+            var json: string = '[{"id":0,"text":"Red Plastic","description":"Scratch Resistant","width":0.5,"height":0.06,"position":{"x":2,"y":1,"z":0}},{"id":1,"text":"Chrome","description":"Durable Metal","width":0.5,"height":0.06,"position":{"x":-2,"y":1,"z":0}}]';
 
             var textCanv = new TextCanvasManager(json, scene);
         });

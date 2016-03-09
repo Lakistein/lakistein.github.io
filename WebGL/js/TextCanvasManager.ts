@@ -16,14 +16,14 @@ class TextCanvasManager {
             if (i == 0)
                 var points = [new BABYLON.Vector3(0.008, 0.601, -1.2), new BABYLON.Vector3(this.textCanvases[i].position.x - this.textCanvases[i].width / 2, this.textCanvases[i].position.y + this.textCanvases[i].height / 2, this.textCanvases[i].position.z)];
             if (i == 1)
-                var points = [new BABYLON.Vector3(-1.1153797985955658, 0.761925622796626, -0.22822223502312644), new BABYLON.Vector3(this.textCanvases[i].position.x - this.textCanvases[i].width / 2, this.textCanvases[i].position.y + this.textCanvases[i].height / 2, this.textCanvases[i].position.z)];
+                var points = [new BABYLON.Vector3(-1.1941039015072528, 0.7389552891732385, -0.2917178395064628), new BABYLON.Vector3(this.textCanvases[i].position.x - this.textCanvases[i].width / 2, this.textCanvases[i].position.y + this.textCanvases[i].height / 2, this.textCanvases[i].position.z)];
 
             this.lines.push(BABYLON.Mesh.CreateLines("line" + i, points, scene, true));
             this.lines[i].renderingGroupId = 2;
             if (i == 0)
                 this.rays.push(BABYLON.Ray.CreateNewFromTo(scene.activeCamera.position, new BABYLON.Vector3(0.008, 0.601, -1.2)));
             if (i == 1)
-                this.rays.push(BABYLON.Ray.CreateNewFromTo(scene.activeCamera.position, new BABYLON.Vector3(-1.1153797985955658, 0.761925622796626, -0.22822223502312644)));
+                this.rays.push(BABYLON.Ray.CreateNewFromTo(scene.activeCamera.position, new BABYLON.Vector3(-1.1941039015072528, 0.7389552891732385, -0.2917178395064628)));
         }
         var ground = BABYLON.Mesh.CreatePlane("ground", 15, scene, false);
         var groundMaterial = new BABYLON.StandardMaterial("ground", scene);
@@ -146,7 +146,7 @@ class TextCanvasManager {
         var vertex = [];
         for (var i = 0; i < this.lines.length; i++) {
             pointss.push(this.lines[i].getVerticesData(BABYLON.VertexBuffer.PositionKind));
-            arr.push(this.textCanvases[i].titleMesh.getVertexBuffer(BABYLON.VertexBuffer.PositionKind).getData());
+            arr.push(this.textCanvases[i].descriptionMesh.getVertexBuffer(BABYLON.VertexBuffer.PositionKind).getData());
             vertex.push(BABYLON.Vector3.FromArray(arr[i], 0));
         }
 
@@ -176,12 +176,14 @@ class TextCanvasManager {
                 for (var i = 0; i < this.textCanvases.length; i++) {
                     this.textCanvases[i].titleMesh.lookAt(scene.activeCamera.position, 0, 0, 0);
 
-
-                    var pos = BABYLON.Vector3.TransformCoordinates(vertex[i], this.textCanvases[i].titleMesh.getWorldMatrix());
-                    pointss[i][3] = pos.x;
-                    pointss[i][4] = pos.y;
-                    pointss[i][5] = pos.z;
-                    this.lines[i].updateVerticesDataDirectly(BABYLON.VertexBuffer.PositionKind, pointss[i]);
+                    console.log(pointss[0][3]);
+                    if (count % 3 == 0) {
+                        var pos = BABYLON.Vector3.TransformCoordinates(vertex[i], this.textCanvases[i].descriptionMesh.getWorldMatrix());
+                        pointss[i][3] = pos.x;
+                        pointss[i][4] = pos.y;
+                        pointss[i][5] = pos.z;
+                        this.lines[i].updateVerticesDataDirectly(BABYLON.VertexBuffer.PositionKind, pointss[i]);
+                    }
                 }
             ground.lookAt(scene.activeCamera.position, 0, 0, 0);
             count++;
@@ -196,7 +198,7 @@ class TextCanvasManager {
                 if (i == 0)
                     this.rays[i] = BABYLON.Ray.CreateNewFromTo(scene.activeCamera.position, new BABYLON.Vector3(0.008, 0.601, -1.2));
                 if (i == 1)
-                    this.rays[i] = BABYLON.Ray.CreateNewFromTo(scene.activeCamera.position, new BABYLON.Vector3(-1.1153797985955658, 0.761925622796626, -0.22822223502312644));
+                    this.rays[i] = BABYLON.Ray.CreateNewFromTo(scene.activeCamera.position, new BABYLON.Vector3(-1.1941039015072528, 0.7389552891732385, -0.2917178395064628));
                 var meshFound = scene.pickWithRay(this.rays[i], function(mesh) {
                     for (var i = 0; i < modelMeshes.length; i++) {
                         if (mesh == modelMeshes[i])

@@ -273,8 +273,9 @@ var TextCanvas = (function () {
         this.descriptionText = jsonCanv.description;
         this.titleMesh = this.createTextMesh(index, this.titleText, this.width, this.height, 2, jsonCanv.position, 'rgba(255, 255, 255, 1)', scene, 'black');
         this.titleMesh.renderingGroupId = 2;
-        this.descriptionMesh = this.createTextMesh('text-' + index, this.descriptionText, this.width, this.height, 2, new BABYLON.Vector3(0, -.1, 0), 'rgba(0, 0, 0, 0)', scene, 'white');
+        this.descriptionMesh = this.createTextMesh('text-' + index, this.descriptionText, this.width, this.height, 2, new BABYLON.Vector3(0, -this.height, 0), 'rgba(0, 0, 0, 0)', scene, 'white');
         this.descriptionMesh.isPickable = false;
+        this.descriptionMesh.showBoundingBox = true;
         this.descriptionMesh.renderingGroupId = 3;
         this.descriptionMesh.parent = this.titleMesh;
     }
@@ -317,7 +318,7 @@ var TextCanvas = (function () {
         dynamicTexture.hasAlpha = true;
         var texts = text.split("\n");
         for (var i = 0; i < texts.length; i++) {
-            dynamicTexture.drawText(texts[i], 5, i * 50 + 50, '50pt Arial', textColor, backgroundColor);
+            dynamicTexture.drawText(texts[i], 5, i * 30 + 30, '30pt Arial', textColor, backgroundColor);
         }
         return dynamicTexture;
     };
@@ -348,6 +349,12 @@ var TextCanvas = (function () {
         this.titleMesh.dispose();
         this.titleMesh = temp;
         this.titleMesh.renderingGroupId = 2;
+        temp = this.createTextMesh(this.id, this.descriptionText, this.width, this.height, 2, new BABYLON.Vector3(0, -this.height, 0), 'rgba(0, 0, 0, 0)', this.scene, 'white');
+        this.descriptionMesh.dispose();
+        this.descriptionMesh = temp;
+        this.descriptionMesh.isPickable = false;
+        this.descriptionMesh.renderingGroupId = 3;
+        this.descriptionMesh.parent = this.titleMesh;
     };
     TextCanvas.prototype.updateHeight = function (value) {
         this.height = value;
@@ -355,6 +362,12 @@ var TextCanvas = (function () {
         this.titleMesh.dispose();
         this.titleMesh = temp;
         this.titleMesh.renderingGroupId = 2;
+        temp = this.createTextMesh(this.id, this.descriptionText, this.width, this.height, 2, new BABYLON.Vector3(0, -this.height, 0), 'rgba(0, 0, 0, 0)', this.scene, 'white');
+        this.descriptionMesh.dispose();
+        this.descriptionMesh = temp;
+        this.descriptionMesh.isPickable = false;
+        this.descriptionMesh.renderingGroupId = 3;
+        this.descriptionMesh.parent = this.titleMesh;
     };
     return TextCanvas;
 })();
@@ -372,13 +385,13 @@ var TextCanvasManager = (function () {
             if (i == 0)
                 var points = [new BABYLON.Vector3(0.008, 0.601, -1.2), new BABYLON.Vector3(this.textCanvases[i].position.x - this.textCanvases[i].width / 2, this.textCanvases[i].position.y + this.textCanvases[i].height / 2, this.textCanvases[i].position.z)];
             if (i == 1)
-                var points = [new BABYLON.Vector3(-1.1153797985955658, 0.761925622796626, -0.22822223502312644), new BABYLON.Vector3(this.textCanvases[i].position.x - this.textCanvases[i].width / 2, this.textCanvases[i].position.y + this.textCanvases[i].height / 2, this.textCanvases[i].position.z)];
+                var points = [new BABYLON.Vector3(-1.1941039015072528, 0.7389552891732385, -0.2917178395064628), new BABYLON.Vector3(this.textCanvases[i].position.x - this.textCanvases[i].width / 2, this.textCanvases[i].position.y + this.textCanvases[i].height / 2, this.textCanvases[i].position.z)];
             this.lines.push(BABYLON.Mesh.CreateLines("line" + i, points, scene, true));
             this.lines[i].renderingGroupId = 2;
             if (i == 0)
                 this.rays.push(BABYLON.Ray.CreateNewFromTo(scene.activeCamera.position, new BABYLON.Vector3(0.008, 0.601, -1.2)));
             if (i == 1)
-                this.rays.push(BABYLON.Ray.CreateNewFromTo(scene.activeCamera.position, new BABYLON.Vector3(-1.1153797985955658, 0.761925622796626, -0.22822223502312644)));
+                this.rays.push(BABYLON.Ray.CreateNewFromTo(scene.activeCamera.position, new BABYLON.Vector3(-1.1941039015072528, 0.7389552891732385, -0.2917178395064628)));
         }
         var ground = BABYLON.Mesh.CreatePlane("ground", 15, scene, false);
         var groundMaterial = new BABYLON.StandardMaterial("ground", scene);
@@ -483,7 +496,7 @@ var TextCanvasManager = (function () {
         var vertex = [];
         for (var i = 0; i < this.lines.length; i++) {
             pointss.push(this.lines[i].getVerticesData(BABYLON.VertexBuffer.PositionKind));
-            arr.push(this.textCanvases[i].titleMesh.getVertexBuffer(BABYLON.VertexBuffer.PositionKind).getData());
+            arr.push(this.textCanvases[i].descriptionMesh.getVertexBuffer(BABYLON.VertexBuffer.PositionKind).getData());
             vertex.push(BABYLON.Vector3.FromArray(arr[i], 0));
         }
         document.getElementById("titleCanvas").onchange = function (ev) {
@@ -506,11 +519,14 @@ var TextCanvasManager = (function () {
             if (scene.activeCamera)
                 for (var i = 0; i < _this.textCanvases.length; i++) {
                     _this.textCanvases[i].titleMesh.lookAt(scene.activeCamera.position, 0, 0, 0);
-                    var pos = BABYLON.Vector3.TransformCoordinates(vertex[i], _this.textCanvases[i].titleMesh.getWorldMatrix());
-                    pointss[i][3] = pos.x;
-                    pointss[i][4] = pos.y;
-                    pointss[i][5] = pos.z;
-                    _this.lines[i].updateVerticesDataDirectly(BABYLON.VertexBuffer.PositionKind, pointss[i]);
+                    console.log(pointss[0][3]);
+                    if (count % 3 == 0) {
+                        var pos = BABYLON.Vector3.TransformCoordinates(vertex[i], _this.textCanvases[i].descriptionMesh.getWorldMatrix());
+                        pointss[i][3] = pos.x;
+                        pointss[i][4] = pos.y;
+                        pointss[i][5] = pos.z;
+                        _this.lines[i].updateVerticesDataDirectly(BABYLON.VertexBuffer.PositionKind, pointss[i]);
+                    }
                 }
             ground.lookAt(scene.activeCamera.position, 0, 0, 0);
             count++;
@@ -525,7 +541,7 @@ var TextCanvasManager = (function () {
                 if (i == 0)
                     _this.rays[i] = BABYLON.Ray.CreateNewFromTo(scene.activeCamera.position, new BABYLON.Vector3(0.008, 0.601, -1.2));
                 if (i == 1)
-                    _this.rays[i] = BABYLON.Ray.CreateNewFromTo(scene.activeCamera.position, new BABYLON.Vector3(-1.1153797985955658, 0.761925622796626, -0.22822223502312644));
+                    _this.rays[i] = BABYLON.Ray.CreateNewFromTo(scene.activeCamera.position, new BABYLON.Vector3(-1.1941039015072528, 0.7389552891732385, -0.2917178395064628));
                 var meshFound = scene.pickWithRay(_this.rays[i], function (mesh) {
                     for (var i = 0; i < modelMeshes.length; i++) {
                         if (mesh == modelMeshes[i])
@@ -576,7 +592,7 @@ var LensFlareSystem = (function () {
         var meshFound = new BABYLON.PickingInfo();
         scene.registerBeforeRender(function () {
             count++;
-            if (count > 10) {
+            if (count > 5) {
                 count = 0;
                 var rayPick = BABYLON.Ray.CreateNewFromTo(scene.activeCamera.position, mainLensEmitter.position);
                 meshFound = scene.pickWithRay(rayPick, function (mesh) {
@@ -590,7 +606,6 @@ var LensFlareSystem = (function () {
             if (meshFound.pickedPoint != null) {
                 flare.color = BABYLON.Color3.Black();
                 hexaLensFlareSystem.isEnabled = false;
-                debugger;
             }
             else {
                 flare.color = BABYLON.Color3.White();
@@ -805,7 +820,7 @@ window.addEventListener('DOMContentLoaded', function () {
             var str = '[{"id":1,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./textures/skybox/env-1/","lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":500,"range":8.0}]},{"id":2,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./textures/skybox/env-2/","lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":500,"range":8.0}]},{"id":3,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./textures/skybox/env-3/","lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":500,"range":8.0}]},{"id":4,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./textures/skybox/env-4/","lights":[{"type":"spot","position":{"x":-0.06,"y":3.66,"z":-2.63},"angle":0.9,"direction":{"x":-0.1,"y":-0.8,"z":0.6},"diffuse":{"r":0,"g":0,"b":0},"specular":{"r":1,"g":1,"b":1},"intensity":500,"range":8.0}]}]';
             envUI = new EnvironmentUI(str, sceneMain);
             refl.renderList.push(scene.getMeshByName("skybox"));
-            var json = '[{"id":0,"text":"Red Plastic","description":"Scratch Resistant","width":0.5,"height":0.1,"position":{"x":2,"y":1,"z":0}},{"id":1,"text":"Chrome","description":"Durable Metal","width":0.5,"height":0.1,"position":{"x":-2,"y":1,"z":0}}]';
+            var json = '[{"id":0,"text":"Red Plastic","description":"Scratch Resistant","width":0.5,"height":0.06,"position":{"x":2,"y":1,"z":0}},{"id":1,"text":"Chrome","description":"Durable Metal","width":0.5,"height":0.06,"position":{"x":-2,"y":1,"z":0}}]';
             var textCanv = new TextCanvasManager(json, scene);
         });
         return scene;
