@@ -17,38 +17,39 @@ class EnvironmentUI {
         }
 
         document.getElementById("background").onchange = (ev) => {
-            this.environmentManager.turnBackgroundOnOff((<HTMLInputElement>ev.srcElement).checked);
+            this.environmentManager.turnBackgroundOnOff((<HTMLInputElement>ev.target).checked);
         };
 
         document.getElementById("shadows").onchange = (ev) => {
-            this.environmentManager.turnShadowOffOn((<HTMLInputElement>ev.srcElement).checked);
+            this.environmentManager.turnShadowOffOn((<HTMLInputElement>ev.target).checked);
         };
 
         document.getElementById("groundPlaneCheckbox").onchange = (ev) => {
-            this.environmentManager.turnGroundPlaneOffOn((<HTMLInputElement>ev.srcElement).checked);
+            this.environmentManager.turnGroundPlaneOffOn((<HTMLInputElement>ev.target).checked);
         };
 
-        document.getElementById("groundPlaneSize").onchange = (ev) => {
-            this.environmentManager.changeGroundPlaneSize(parseFloat((<HTMLInputElement>ev.srcElement).value));
+        document.getElementById("groundPlaneSize").oninput = (ev) => {
+            this.environmentManager.changeGroundPlaneSize(parseFloat((<HTMLInputElement>ev.target).value));
         };
 
         document.getElementById("gradientTop").onchange = (ev) => {
-            this.environmentManager.changeTopGradient((<HTMLInputElement>ev.srcElement).value);
+            this.environmentManager.changeTopGradient((<HTMLInputElement>ev.target).value);
         };
         document.getElementById("gradientBottom").onchange = (ev) => {
-            this.environmentManager.changeBottomGradient((<HTMLInputElement>ev.srcElement).value);
+            this.environmentManager.changeBottomGradient((<HTMLInputElement>ev.target).value);
         };
-        document.getElementById("gradientOffset").onchange = (ev) => {
-            this.environmentManager.changeGradientOffset(parseFloat((<HTMLInputElement>ev.srcElement).value));
+        document.getElementById("gradientOffset").oninput = (ev) => {
+            this.environmentManager.changeGradientOffset(parseFloat((<HTMLInputElement>ev.target).value));
         };
 
         document.getElementById("reflective").onchange = (ev) => {
-            this.environmentManager.turnReflectivePlaneOffOn((<HTMLInputElement>ev.srcElement).checked);
-        };
-             document.getElementById("reflectionAmount").onchange = (ev) => {
-            this.environmentManager.changeReflectionAmount(parseFloat((<HTMLInputElement>ev.srcElement).value));
+            this.environmentManager.turnReflectivePlaneOffOn((<HTMLInputElement>ev.target).checked);
         };
         
+        document.getElementById("reflectionAmount").oninput = (ev) => {
+            this.environmentManager.changeReflectionAmount(parseFloat((<HTMLInputElement>ev.target).value));
+        };
+
         var k = 0;
         document.getElementById("arrowIcon").addEventListener('click', function() {
             if (document.getElementById("Environment").style.height == "75%") {

@@ -76,11 +76,11 @@ class TextCanvas {
     };
 
     createText(text: string, backgroundColor, scene, textColor) {
-        var dynamicTexture = new BABYLON.DynamicTexture('dynamic texture', { width: this.width * 2048, height: this.height * 512 }, scene, false);
+        var dynamicTexture = new BABYLON.DynamicTexture('dynamic texture', { width: this.width * 1024, height: this.height * 512 }, scene, false);
         dynamicTexture.hasAlpha = true;
         var texts = text.split("\n");
         for (var i = 0; i < texts.length; i++) {
-            dynamicTexture.drawText(texts[i], 5, i * 30 + 30, '30pt Arial', textColor, backgroundColor);
+            dynamicTexture.drawText(texts[i], 5, i * 25 + 25, '23pt Arial', textColor, backgroundColor);
         }
 
         return dynamicTexture;
@@ -122,7 +122,7 @@ class TextCanvas {
         this.descriptionMesh.dispose();
         this.descriptionMesh = temp;
         this.descriptionMesh.isPickable = false;
-
+        this.descriptionMesh.showBoundingBox = true;
         this.descriptionMesh.renderingGroupId = 3;
         this.descriptionMesh.parent = this.titleMesh;
         //this.titleMesh.scaling = new BABYLON.Vector3(value, this.titleMesh.scaling.y, this.titleMesh.scaling.z)
@@ -182,8 +182,9 @@ class TextCanvas {
         temp = this.createTextMesh(this.id, this.descriptionText, this.width, this.height, 2, new BABYLON.Vector3(0, -this.height, 0), 'rgba(0, 0, 0, 0)', this.scene, 'white');
         this.descriptionMesh.dispose();
         this.descriptionMesh = temp;
+        
         this.descriptionMesh.isPickable = false;
-
+        this.descriptionMesh.showBoundingBox = true;
         this.descriptionMesh.renderingGroupId = 3;
         this.descriptionMesh.parent = this.titleMesh;
     }
