@@ -967,7 +967,7 @@ window.addEventListener('DOMContentLoaded', function () {
     var fps = document.getElementById("fps");
     engine.runRenderLoop(function () {
         sceneMain.render();
-        fps.innerText = engine.getFps().toString();
+        fps.textContent = engine.getFps().toString();
     });
     window.addEventListener('resize', function () {
         engine.resize();
