@@ -182,7 +182,7 @@ class TextCanvas {
         temp = this.createTextMesh(this.id, this.descriptionText, this.width, this.height, 2, new BABYLON.Vector3(0, -this.height, 0), 'rgba(0, 0, 0, 0)', this.scene, 'white');
         this.descriptionMesh.dispose();
         this.descriptionMesh = temp;
-        
+
         this.descriptionMesh.isPickable = false;
         this.descriptionMesh.showBoundingBox = true;
         this.descriptionMesh.renderingGroupId = 3;

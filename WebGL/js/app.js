@@ -447,14 +447,18 @@ var TextCanvasManager = (function () {
         this.rays = [];
         this.alterAnchorPoint = false;
         this.addingNewCanvas = false;
+        this.offset = [];
         var jsonCanv = JSON.parse(json);
         for (var i = 0; i < jsonCanv.length; i++) {
             this.textCanvases.push(new TextCanvas(jsonCanv[i], i.toString(), scene));
-            var pos = this.textCanvases[i].titleMesh.getVerticesData(BABYLON.VertexBuffer.PositionKind);
-            if (i == 0)
+            if (i == 0) {
                 var points = [new BABYLON.Vector3(0.008, 0.601, -1.2), new BABYLON.Vector3(this.textCanvases[i].position.x - this.textCanvases[i].width / 2, this.textCanvases[i].position.y + this.textCanvases[i].height / 2, this.textCanvases[i].position.z)];
-            if (i == 1)
+                this.offset[i] = 0;
+            }
+            if (i == 1) {
                 var points = [new BABYLON.Vector3(-1.192968591606925, 0.7488702600724157, -0.2958653783276284), new BABYLON.Vector3(this.textCanvases[i].position.x - this.textCanvases[i].width / 2, this.textCanvases[i].position.y + this.textCanvases[i].height / 2, this.textCanvases[i].position.z)];
+                this.offset[i] = 3;
+            }
             this.lines.push(BABYLON.Mesh.CreateLines("line" + i, points, scene, true));
             this.lines[i].renderingGroupId = 2;
             if (i == 0)
@@ -466,7 +470,6 @@ var TextCanvasManager = (function () {
         var groundMaterial = new BABYLON.StandardMaterial("ground", scene);
         groundMaterial.specularColor = BABYLON.Color3.Black();
         ground.material = groundMaterial;
-        ground.lookAt(scene.activeCamera.position, 0, 0, 0);
         ground.renderingGroupId = 1;
         ground.material.alpha = 0;
         ground.isPickable = false;
@@ -482,13 +485,11 @@ var TextCanvasManager = (function () {
         };
         var pointss = [];
         var arr = [];
-        var vertex = [];
         var onPointerDown = function (evt) {
             if (evt.button !== 0) {
                 return;
             }
             if (_this.addingNewCanvas) {
-                // debugger;
                 var pickInfo = scene.pick(scene.pointerX, scene.pointerY, function (mesh) {
                     for (var i = 0; i < modelMeshes.length; i++) {
                         if (modelMeshes[i] == mesh)
@@ -499,7 +500,7 @@ var TextCanvasManager = (function () {
                 if (!pickInfo.hit)
                     return;
                 var index = parseFloat(_this.textCanvases[_this.textCanvases.length - 1].titleMesh.name) + 1;
-                _this.textCanvases.push(new TextCanvas(JSON.parse('{"id":-1,"text":"Add Title","description":"Add Description","width":0.25,"height":0.05,"position":{"x":0,"y":2,"z":0}}'), index.toString(), scene));
+                _this.textCanvases.push(new TextCanvas(JSON.parse('{"id":-1,"text":"Add Title","description":"Add Description","width":0.25,"height":0.05,"position":{"x":' + pickInfo.pickedPoint.x + ',"y":' + pickInfo.pickedPoint.y + ',"z":' + pickInfo.pickedPoint.z + '}}'), index.toString(), scene));
                 var points = [new BABYLON.Vector3(pickInfo.pickedPoint.x + pickInfo.getNormal().x / 100, pickInfo.pickedPoint.y + pickInfo.getNormal().y / 100, pickInfo.pickedPoint.z + pickInfo.getNormal().z / 100), new BABYLON.Vector3(_this.textCanvases[index].position.x - _this.textCanvases[index].width / 2, _this.textCanvases[index].position.y + _this.textCanvases[index].height / 2, _this.textCanvases[index].position.z)];
                 _this.lines.push(BABYLON.Mesh.CreateLines("line" + index, points, scene, true));
                 _this.lines[index].renderingGroupId = 2;
@@ -508,7 +509,6 @@ var TextCanvasManager = (function () {
                 console.log(points[0]);
                 pointss.push(_this.lines[index].getVerticesData(BABYLON.VertexBuffer.PositionKind));
                 arr.push(_this.textCanvases[index].descriptionMesh.getVertexBuffer(BABYLON.VertexBuffer.PositionKind).getData());
-                vertex.push(BABYLON.Vector3.FromArray(arr[index], 0));
                 _this.addingNewCanvas = false;
                 document.getElementById("addButton").value = "Add Text Canvas";
                 return;
@@ -544,6 +544,7 @@ var TextCanvasManager = (function () {
                 for (var i = 0; i < _this.textCanvases.length; i++) {
                     if (pickInfo.pickedMesh == _this.textCanvases[i].titleMesh) {
                         currentMesh = pickInfo.pickedMesh;
+                        ground.position = new BABYLON.Vector3(pointss[currentMesh.name][0], pointss[currentMesh.name][1], pointss[currentMesh.name][2]);
                         break;
                     }
                 }
@@ -577,8 +578,8 @@ var TextCanvasManager = (function () {
             if (!current) {
                 return;
             }
-            var diff = current.subtract(startingPoint);
-            currentMesh.position.addInPlace(diff);
+            //var diff = current.subtract(startingPoint);
+            currentMesh.position = current; //.addInPlace(diff);
             startingPoint = current;
         };
         canvas.addEventListener("pointerdown", onPointerDown, false);
@@ -592,7 +593,6 @@ var TextCanvasManager = (function () {
         for (var i = 0; i < this.lines.length; i++) {
             pointss.push(this.lines[i].getVerticesData(BABYLON.VertexBuffer.PositionKind));
             arr.push(this.textCanvases[i].descriptionMesh.getVertexBuffer(BABYLON.VertexBuffer.PositionKind).getData());
-            vertex.push(BABYLON.Vector3.FromArray(arr[i], 0));
         }
         document.getElementById("titleCanvas").oninput = function (ev) {
             (_this.textCanvases[currentMesh.name]).updateTitleText(ev.target.value);
@@ -617,14 +617,22 @@ var TextCanvasManager = (function () {
         scene.registerBeforeRender(function () {
             if (scene.activeCamera)
                 for (var i = 0; i < _this.textCanvases.length; i++) {
-                    _this.textCanvases[i].titleMesh.lookAt(scene.activeCamera.position, 0, 0, 0);
-                    var pos = BABYLON.Vector3.TransformCoordinates(vertex[i], _this.textCanvases[i].descriptionMesh.getWorldMatrix());
+                    _this.lookAtCamera(_this.textCanvases[i].titleMesh, scene);
+                    var pos1 = BABYLON.Vector3.TransformCoordinates(BABYLON.Vector3.FromArray(arr[i], 0), _this.textCanvases[i].descriptionMesh.getWorldMatrix());
+                    var pos2 = BABYLON.Vector3.TransformCoordinates(BABYLON.Vector3.FromArray(arr[i], 3), _this.textCanvases[i].descriptionMesh.getWorldMatrix());
+                    var d1 = BABYLON.Vector3.Distance(pos1, new BABYLON.Vector3(pointss[i][0], pointss[i][1], pointss[i][2]));
+                    var d2 = BABYLON.Vector3.Distance(pos2, new BABYLON.Vector3(pointss[i][0], pointss[i][1], pointss[i][2]));
+                    var pos;
+                    if (d1 < d2)
+                        pos = pos1;
+                    else
+                        pos = pos2;
                     pointss[i][3] = pos.x;
                     pointss[i][4] = pos.y;
                     pointss[i][5] = pos.z;
                     _this.lines[i].updateVerticesDataDirectly(BABYLON.VertexBuffer.PositionKind, pointss[i]);
                 }
-            ground.lookAt(scene.activeCamera.position, 0, 0, 0);
+            _this.lookAtCamera(ground, scene);
             count++;
             var rad = scene.activeCamera.radius / 2;
             for (var i = 0; i < _this.textCanvases.length; i++) {
@@ -655,7 +663,9 @@ var TextCanvasManager = (function () {
             }
         });
     }
-    TextCanvasManager.prototype.addNewTextCanvas = function () {
+    TextCanvasManager.prototype.lookAtCamera = function (mesh, scene) {
+        mesh.rotation.y = -scene.activeCamera.alpha - (Math.PI / 2);
+        mesh.rotation.x = -scene.activeCamera.beta + (Math.PI / 2);
     };
     return TextCanvasManager;
 })();
