@@ -10,6 +10,8 @@ class TextCanvas {
     titleMesh: BABYLON.Mesh;
     descriptionMesh: BABYLON.Mesh;
     scene: BABYLON.Scene;
+    enabled: boolean = true;
+    titleHeight: number;
 
     constructor(jsonCanv: any, index: string, scene: BABYLON.Scene) {
         if (!jsonCanv) return;
@@ -18,17 +20,19 @@ class TextCanvas {
         this.scene = scene;
         this.titleText = jsonCanv.text;
         this.width = jsonCanv.width;
+        this.titleHeight = jsonCanv.height;
         this.height = jsonCanv.height;
         this.position = new BABYLON.Vector3(jsonCanv.position.x, jsonCanv.position.y, jsonCanv.position.z);
         this.descriptionText = jsonCanv.description;
-        this.titleMesh = this.createTextMesh(index, this.titleText, this.width, this.height, 2, jsonCanv.position, 'rgba(255, 255, 255, 1)', scene, 'black');
+        this.titleMesh = this.createTextMesh(index, this.titleText, this.width, this.titleHeight, 2, jsonCanv.position, 'rgba(255, 255, 255, 1)', scene, 'black', this.titleHeight);
         this.titleMesh.renderingGroupId = 2;
-
-        this.descriptionMesh = this.createTextMesh('text-' + index, this.descriptionText, this.width, this.height, 2, new BABYLON.Vector3(0, -this.height, 0), 'rgba(0, 0, 0, 0)', scene, 'white');
+        //this.createTexts(this.descriptionText, this.width + 0.3, this.height + 0.3, new BABYLON.Vector3(0, -this.height, 0), scene);
+        this.descriptionMesh = this.createTextMesh('text-' + index, this.descriptionText, this.width, this.height, 2, new BABYLON.Vector3(0, -this.height, 0), 'rgba(0, 0, 0, 0)', scene, 'white', this.height);
         this.descriptionMesh.isPickable = false;
         this.descriptionMesh.showBoundingBox = true;
         this.descriptionMesh.renderingGroupId = 3;
         this.descriptionMesh.parent = this.titleMesh;
+        this.enabled = true;
     }
 
     createMesh(name, width, height, isPickable, scene, updatable) {
@@ -75,8 +79,8 @@ class TextCanvas {
         return plane;
     };
 
-    createText(text: string, backgroundColor, scene, textColor) {
-        var dynamicTexture = new BABYLON.DynamicTexture('dynamic texture', { width: this.width * 1024, height: this.height * 512 }, scene, false);
+    createText(text: string, backgroundColor, scene, textColor, height) {
+        var dynamicTexture = new BABYLON.DynamicTexture('dynamic texture', { width: this.width * 1024, height: height * 512 }, scene, false);
         dynamicTexture.hasAlpha = true;
         var texts = text.split("\n");
         for (var i = 0; i < texts.length; i++) {
@@ -86,7 +90,7 @@ class TextCanvas {
         return dynamicTexture;
     };
 
-    createTextMesh(name, text, width, height, textureWidth, position, backgroundColor, scene, textColor) {
+    createTextMesh(name, text, width, height, textureWidth, position, backgroundColor, scene, textColor, textHeight) {
         var textMesh = this.createMesh(name, width, height, true, scene, true);
 
         textMesh.position.x = position.x;
@@ -96,100 +100,90 @@ class TextCanvas {
         var textMaterial = new BABYLON.StandardMaterial(name + '-material', scene);
         textMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1);
         textMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
-        textMaterial.diffuseTexture = this.createText(text, backgroundColor, scene, textColor);
+        textMaterial.diffuseTexture = this.createText(text, backgroundColor, scene, textColor, textHeight);
         textMaterial.useAlphaFromDiffuseTexture = true;
 
         textMesh.material = textMaterial;
         return textMesh;
     };
-
+    wrapText(context, text, x, y, maxWidth, lineHeight) {
+        var words = text.split('\n');
+        var line = '';
+        for (var n = 0; n < words.length; n++) {
+            var testLine = line + words[n] + ' ';
+            var metrics = context.measureText(testLine);
+            var testWidth = metrics.width;
+            if (testWidth > maxWidth && n > 0) {
+                context.fillText(line, x, y);
+                line = words[n] + ' ';
+                y += lineHeight;
+            }
+            else {
+                line = testLine;
+            }//napravi ovo kako treba
+        }
+        context.fillText(line, x, y);
+    }
     updateTitleText(text: string) {
-        (<BABYLON.StandardMaterial>this.titleMesh.material).diffuseTexture = this.createText(text, 'rgba(255, 255, 255, 1)', this.scene, 'black');
+        this.titleText = text;
+        var textureContext = (<BABYLON.DynamicTexture>(<BABYLON.StandardMaterial>this.titleMesh.material).diffuseTexture).getContext();
+        //textureContext.font = "bold 40px Calibri";
+        textureContext.save();
+        textureContext.fillStyle = "white";
+        textureContext.textAlign = "left";
+        this.wrapText(textureContext, this.descriptionText, 0, 80, this.width, 25);
+        textureContext.restore();
+        (<BABYLON.DynamicTexture>(<BABYLON.StandardMaterial>this.descriptionMesh.material).diffuseTexture).update();
     }
 
     updateDescriptionText(text: string) {
-        (<BABYLON.StandardMaterial>this.descriptionMesh.material).diffuseTexture = this.createText(text, 'rgba(0, 0, 0, 0)', this.scene, 'white');
+        this.descriptionText = text;
+        (<BABYLON.StandardMaterial>this.descriptionMesh.material).diffuseTexture = this.createText(this.descriptionText, 'rgba(0, 0, 0, 0)', this.scene, 'white', this.height);
+        // var textureContext = (<BABYLON.DynamicTexture>(<BABYLON.StandardMaterial>this.descriptionMesh.material).diffuseTexture).getContext();
+        // //(<BABYLON.DynamicTexture>(<BABYLON.StandardMaterial>this.descriptionMesh.material).diffuseTexture).clear();
+        // //textureContext.font = "bold 40px Calibri";
+        // textureContext.clearRect(0, 0, this.width, this.height);
+        // textureContext.save();
+        // textureContext.fillStyle = "white";
+        // textureContext.textAlign = "left";
+        // this.wrapText(textureContext, this.descriptionText, null, 80, this.width, 25);
+        // textureContext.restore();
+        // (<BABYLON.DynamicTexture>(<BABYLON.StandardMaterial>this.descriptionMesh.material).diffuseTexture).update();
     }
 
     updateWidth(value: number) {
+        var oldW = this.width;
+        var oldPos = this.titleMesh.position.x;
         this.width = value;
-        var temp = this.createTextMesh(this.id, this.titleText, this.width, this.height, 2, this.position, 'rgba(255, 255, 255, 1)', this.scene, 'black');
+        var temp = this.createTextMesh(this.id, this.titleText, this.width, this.titleHeight, 2, this.position, 'rgba(255, 255, 255, 1)', this.scene, 'black', this.titleHeight);
         this.titleMesh.dispose();
         this.titleMesh = temp;
         this.titleMesh.renderingGroupId = 2
-
-        temp = this.createTextMesh(this.id, this.descriptionText, this.width, this.height, 2, new BABYLON.Vector3(0, -this.height, 0), 'rgba(0, 0, 0, 0)', this.scene, 'white');
+        this.titleMesh.position.x = oldPos + value / 2 - oldW / 2;
+        temp = this.createTextMesh(this.id, this.descriptionText, this.width, this.height, 2, new BABYLON.Vector3(0, -this.height, 0), 'rgba(0, 0, 0, 0)', this.scene, 'white', this.height);
         this.descriptionMesh.dispose();
         this.descriptionMesh = temp;
         this.descriptionMesh.isPickable = false;
         this.descriptionMesh.showBoundingBox = true;
         this.descriptionMesh.renderingGroupId = 3;
         this.descriptionMesh.parent = this.titleMesh;
-        //this.titleMesh.scaling = new BABYLON.Vector3(value, this.titleMesh.scaling.y, this.titleMesh.scaling.z)
-        // this.updateTitleText(this.titleText);
-        // var height = 0.25//= document.getElementById('textCanvasHeight').value;
-        // var indices = [];
-        // var positions: Float32Array = this.titleMesh.getVerticesData(BABYLON.VertexBuffer.PositionKind);
-        //  var normals: Float32Array = this.titleMesh.getVerticesData(BABYLON.VertexBuffer.NormalKind);
-        //  var uvs: Float32Array = this.titleMesh.getVerticesData(BABYLON.VertexBuffer.UVKind);
-        // console.log(value);
-        // console.log(height);
-
-        // Vertices
-        // this.width = value;
-        // var halfWidth = value / 2.0;
-        // var halfHeight = height / 2.0;
-        // positions[0] = -halfWidth;
-        // positions[1] = -halfHeight;
-        // positions[2] = 0;
-        //  normals[0] = (0, 0, -1.0);
-        //   uvs[0] = (0.0, 0.0);
-
-        // positions[3] = halfWidth;
-        // positions[4] = -halfHeight;
-        // positions[5] = 0;
-        //  normals[1] = (0, 0, -1.0);
-        //  uvs[1] = (1.0, 0.0);
-
-        // positions[6] = halfWidth;
-        // positions[7] = halfHeight;
-        // positions[8] = 0;
-        //  normals[2] = (0, 0, -1.0);
-        //  uvs[2] = (1.0, 1.0);
-
-        // positions[9] = -halfWidth;
-        // positions[10] = halfHeight;
-        // positions[11] = 0;
-        //  normals[3] = (0, 0, -1.0);
-        //  uvs[3] = (0.0, 1.0);
-
-        // Indices
-
-
-        // this.titleMesh.updateVerticesDataDirectly(BABYLON.VertexBuffer.PositionKind, positions);
-        //   this.titleMesh.updateVerticesDataDirectly(BABYLON.VertexBuffer.NormalKind, normals);
-        //    this.titleMesh.updateVerticesDataDirectly(BABYLON.VertexBuffer.UVKind, uvs);
-        // this.titleMesh.setIndices(indices);
+        this.descriptionMesh.position.y = this.descriptionMesh.position.y + this.height / 2 - this.titleHeight / 2;
     }
 
     updateHeight(value: number) {
         this.height = value;
-        var temp = this.createTextMesh(this.id, this.titleText, this.width, this.height, 2, this.position, 'rgba(255, 255, 255, 1)', this.scene, 'black');
-        this.titleMesh.dispose();
-        this.titleMesh = temp;
-        this.titleMesh.renderingGroupId = 2
 
-        temp = this.createTextMesh(this.id, this.descriptionText, this.width, this.height, 2, new BABYLON.Vector3(0, -this.height, 0), 'rgba(0, 0, 0, 0)', this.scene, 'white');
+        var temp = this.createTextMesh(this.id, this.descriptionText, this.width, this.height, 2, new BABYLON.Vector3(0, -this.height, 0), 'rgba(0, 0, 0, 0)', this.scene, 'white', this.height);
         this.descriptionMesh.dispose();
         this.descriptionMesh = temp;
-
+        this.descriptionMesh.position.y = this.descriptionMesh.position.y + this.height / 2 - this.titleHeight / 2;
         this.descriptionMesh.isPickable = false;
         this.descriptionMesh.showBoundingBox = true;
         this.descriptionMesh.renderingGroupId = 3;
         this.descriptionMesh.parent = this.titleMesh;
     }
 
-    //  createTexts(text, width, height, position, scene: BABYLON.Scene) {
+    // createTexts(text, width, height, position, scene: BABYLON.Scene) {
 
     //     var panel = this.createMesh("", width, height, true, scene, true);
     //     // panel.showBoundingBox = true;
@@ -336,8 +330,8 @@ class TextCanvas {
     //     tobj.textHeight = 5;
     //     tobj.textAlignment = "left";
     //     tobj.textColor = "#fff";
-    //     tobj.fontFamily = "Verdana";
-    //     tobj.backgroundColor = '#000';
+    //     tobj.fontFamily = "Arial";
+    //     tobj.backgroundColor = 'rgba(0, 0, 0, 0)';
     //     tobj.textToWrite = text;
 
     //     drawText(tobj);
