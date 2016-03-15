@@ -18,7 +18,7 @@ window.addEventListener('DOMContentLoaded', function() {
     //var gui = new dat.GUI();
 
     var engine = new BABYLON.Engine(canvas, true);
-   
+
     var camera: BABYLON.ArcRotateCamera;
 
     //     function displayMaterialValues(material) {
@@ -55,6 +55,7 @@ window.addEventListener('DOMContentLoaded', function() {
         camera.wheelPrecision = 50;
         camera.setPosition(new BABYLON.Vector3(0.004510142482902708, 0.7674630808337399, -2.9880500596552437));
         scene.activeCamera = camera;
+        //camera.attachPostProcess(new BABYLON.FxaaPostProcess("fxaa", 1.0, camera, BABYLON.Texture.TRILINEAR_SAMPLINGMODE, engine, false));
 
         // var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 3, scene);
         // var gradientMaterial = new BABYLON.GradientMaterial("grad", scene);
@@ -242,7 +243,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
             envUI = new EnvironmentUI(str, sceneMain);
             (<BABYLON.MirrorTexture>refl).renderList.push(scene.getMeshByName("skybox"));
-            var json: string = '[{"id":0,"text":"Red Plastic","description":"Scratch Resistant","width":0.25,"height":0.05,"position":{"x":2,"y":1,"z":0},"linePosition":{"x":0.008,"y":0.601,"z":-1.2},"offset":0,"anchorTextureURL":"./textures/anchors/Anchor_3.png"},{"id":1,"text":"Chrome","description":"Durable Metal","width":0.25,"height":0.05,"position":{"x":-2,"y":1,"z":0},"linePosition":{"x":-1.192,"y":0.7488,"z":-0.295},"offset":3,"anchorTextureURL":"./textures/anchors/Anchor_3.png"}]';
+            var json: string = '[{"id":0,"text":"Red Plastic","description":"Scratch Resistant","width":0.25,"height":0.05,"position":{"x":2,"y":1,"z":0},"linePosition":{"x":0.008,"y":0.601,"z":-1.2},"offset":0,"anchorTextureURL":"./textures/anchors/Anchor_2.png"},{"id":1,"text":"Chrome","description":"Durable Metal","width":0.25,"height":0.05,"position":{"x":-2,"y":1,"z":0},"linePosition":{"x":-1.192,"y":0.7488,"z":-0.295},"offset":3,"anchorTextureURL":"./textures/anchors/Anchor_4.png"}]';
 
             var textCanv = new TextCanvasManager(json, scene);
         });
