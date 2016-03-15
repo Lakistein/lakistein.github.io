@@ -862,7 +862,7 @@ var TextCanvasManager = (function () {
         scene.registerBeforeRender(function () {
             if (scene.activeCamera) {
                 for (var i = 0; i < _this.textCanvases.length; i++) {
-                    if (!_this.textCanvases[i].enabled || !_this.textCanvases[i].visible)
+                    if (!_this.textCanvases[i].enabled)
                         continue;
                     _this.lookAtCamera(_this.textCanvases[i].titleMesh, scene);
                     _this.lookAtCamera(_this.textCanvases[i].anchors, scene);

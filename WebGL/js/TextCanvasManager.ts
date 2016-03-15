@@ -145,7 +145,7 @@ class TextCanvasManager {
             this.textCanvases[currentMesh.name].updatePosition(current);
             
             startingPoint = current;
-
+            
             for (var i = 0; i < this.textCanvases.length; i++) {
                 if (!this.textCanvases[i].enabled || !this.textCanvases[i].visible) continue;
                 this.lookAtCamera(this.textCanvases[i].titleMesh, scene);
@@ -246,7 +246,7 @@ class TextCanvasManager {
         scene.registerBeforeRender(() => {
             if (scene.activeCamera) {
                 for (var i = 0; i < this.textCanvases.length; i++) {
-                    if (!this.textCanvases[i].enabled || !this.textCanvases[i].visible) continue;
+                    if (!this.textCanvases[i].enabled) continue;
                     this.lookAtCamera(this.textCanvases[i].titleMesh, scene);
                     this.lookAtCamera(this.textCanvases[i].anchors, scene);
 
