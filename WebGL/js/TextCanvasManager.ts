@@ -22,7 +22,7 @@ class TextCanvasManager {
         var groundMaterial = new BABYLON.StandardMaterial("ground", scene);
         groundMaterial.specularColor = BABYLON.Color3.Black();
         ground.material = groundMaterial;
-        ground.renderingGroupId = 1;
+        //ground.renderingGroupId = 1;
         ground.material.alpha = 0;
         ground.isPickable = false;
 
@@ -109,8 +109,8 @@ class TextCanvasManager {
                 document.getElementById("TextCanvasEditor").style.visibility = 'visible';
                 (<HTMLInputElement>document.getElementById("titleCanvas")).value = (this.textCanvases[currentMesh.name]).titleText;
                 (<HTMLInputElement>document.getElementById("descriptionCanvas")).value = (this.textCanvases[currentMesh.name]).descriptionText;
-                (<HTMLInputElement>document.getElementById('textCanvasWidth')).value = (this.textCanvases[currentMesh.name]).width.toString();
-                (<HTMLInputElement>document.getElementById('textCanvasHeight')).value = (this.textCanvases[currentMesh.name]).height.toString();
+                // (<HTMLInputElement>document.getElementById('textCanvasWidth')).value = (this.textCanvases[currentMesh.name]).width.toString();
+                // (<HTMLInputElement>document.getElementById('textCanvasHeight')).value = (this.textCanvases[currentMesh.name]).height.toString();
 
                 startingPoint = getGroundPosition();
 
@@ -145,6 +145,27 @@ class TextCanvasManager {
             this.textCanvases[currentMesh.name].updatePosition(current);
             
             startingPoint = current;
+
+            for (var i = 0; i < this.textCanvases.length; i++) {
+                if (!this.textCanvases[i].enabled || !this.textCanvases[i].visible) continue;
+                this.lookAtCamera(this.textCanvases[i].titleMesh, scene);
+                this.lookAtCamera(this.textCanvases[i].anchors, scene);
+
+                //if (count % 2 != 0) continue; // enable for optimizing
+                //var pos1 = BABYLON.Vector3.TransformCoordinates(BABYLON.Vector3.FromArray(arr[i], 0), this.textCanvases[i].descriptionMesh.getWorldMatrix());
+                var pos = BABYLON.Vector3.TransformCoordinates(BABYLON.Vector3.FromArray(this.arr[i], this.textCanvases[i].offset), this.textCanvases[i].descriptionMesh.getWorldMatrix());
+                // var d1 = BABYLON.Vector3.Distance(pos1, new BABYLON.Vector3(pointss[i][0], pointss[i][1], pointss[i][2]));
+                // var d2 = BABYLON.Vector3.Distance(pos2, new BABYLON.Vector3(pointss[i][0], pointss[i][1], pointss[i][2]));
+
+                // if (d1 < d2)
+                //     pos = pos1;
+                // else
+
+                this.pointss[i][3] = pos.x;
+                this.pointss[i][4] = pos.y;
+                this.pointss[i][5] = pos.z;
+                this.textCanvases[i].line.updateVerticesData(BABYLON.VertexBuffer.PositionKind, this.pointss[i]);
+            }
         }
 
         canvas.addEventListener("pointerdown", onPointerDown, false);
@@ -172,15 +193,36 @@ class TextCanvasManager {
             (this.textCanvases[currentMesh.name]).updateDescriptionText((<HTMLInputElement>ev.target).value);
         };
 
-        document.getElementById("textCanvasWidth").oninput = (ev) => {
-            (this.textCanvases[currentMesh.name]).updateWidth(parseFloat((<HTMLInputElement>ev.target).value));
-            this.arr[currentMesh.name] = this.textCanvases[currentMesh.name].descriptionMesh.getVertexBuffer(BABYLON.VertexBuffer.PositionKind).getData();
-        };
+        // document.getElementById("textCanvasWidth").oninput = (ev) => {
+        //     (this.textCanvases[currentMesh.name]).updateWidth(parseFloat((<HTMLInputElement>ev.target).value));
+        //     this.arr[currentMesh.name] = this.textCanvases[currentMesh.name].descriptionMesh.getVertexBuffer(BABYLON.VertexBuffer.PositionKind).getData();
+        // };
 
-        document.getElementById("textCanvasHeight").oninput = (ev) => {
-            (this.textCanvases[currentMesh.name]).updateHeight(parseFloat((<HTMLInputElement>ev.target).value));
-            this.arr[currentMesh.name] = this.textCanvases[currentMesh.name].descriptionMesh.getVertexBuffer(BABYLON.VertexBuffer.PositionKind).getData();
-        };
+        // document.getElementById("textCanvasHeight").oninput = (ev) => {
+        //     (this.textCanvases[currentMesh.name]).updateHeight(parseFloat((<HTMLInputElement>ev.target).value));
+        //     //this.arr[currentMesh.name] = this.textCanvases[currentMesh.name].descriptionMesh.getVertexBuffer(BABYLON.VertexBuffer.PositionKind).getData();
+        // };
+        var rad = document.getElementsByName("size");
+        var prev = null;
+        for (var i = 0; i < rad.length; i++) {
+            switch ((<HTMLInputElement>rad[i]).id) {
+                case "small":
+                    (<HTMLInputElement>rad[i]).onclick = (ev) => {
+                        this.textCanvases[currentMesh.name].updateWidth(1);
+                    }
+                    break;
+                case "medium": (<HTMLInputElement>rad[i]).onclick = () => {
+                    this.textCanvases[currentMesh.name].updateWidth(1.5);
+                }
+                    break;
+                case "large": (<HTMLInputElement>rad[i]).onclick = () => {
+                    this.textCanvases[currentMesh.name].updateWidth(2);
+                }
+                    break;
+                default:
+                    break;
+            }
+        }
 
         document.getElementById("anchorPoint").onchange = (ev) => {
             this.alterAnchorPoint = (<HTMLInputElement>ev.target).checked;
@@ -200,25 +242,23 @@ class TextCanvasManager {
             document.getElementById("TextCanvasEditor").style.visibility = 'hidden';
         }
 
-        var count = 0;
+        //var count = 0;
         scene.registerBeforeRender(() => {
             if (scene.activeCamera) {
                 for (var i = 0; i < this.textCanvases.length; i++) {
-                    if (!this.textCanvases[i].enabled /*|| !this.textCanvases[i].titleMesh.isEnabled()*/) continue;
+                    if (!this.textCanvases[i].enabled || !this.textCanvases[i].visible) continue;
                     this.lookAtCamera(this.textCanvases[i].titleMesh, scene);
                     this.lookAtCamera(this.textCanvases[i].anchors, scene);
 
                     //if (count % 2 != 0) continue; // enable for optimizing
                     //var pos1 = BABYLON.Vector3.TransformCoordinates(BABYLON.Vector3.FromArray(arr[i], 0), this.textCanvases[i].descriptionMesh.getWorldMatrix());
-                    var pos2 = BABYLON.Vector3.TransformCoordinates(BABYLON.Vector3.FromArray(this.arr[i], this.textCanvases[i].offset), this.textCanvases[i].descriptionMesh.getWorldMatrix());
+                    var pos = BABYLON.Vector3.TransformCoordinates(BABYLON.Vector3.FromArray(this.arr[i], this.textCanvases[i].offset), this.textCanvases[i].descriptionMesh.getWorldMatrix());
                     // var d1 = BABYLON.Vector3.Distance(pos1, new BABYLON.Vector3(pointss[i][0], pointss[i][1], pointss[i][2]));
                     // var d2 = BABYLON.Vector3.Distance(pos2, new BABYLON.Vector3(pointss[i][0], pointss[i][1], pointss[i][2]));
-                    var pos;
 
                     // if (d1 < d2)
                     //     pos = pos1;
                     // else
-                    pos = pos2;
 
                     this.pointss[i][3] = pos.x;
                     this.pointss[i][4] = pos.y;
@@ -228,34 +268,34 @@ class TextCanvasManager {
             }
 
             this.lookAtCamera(ground, scene);
-            count++;
+            //count++;
 
             // scale canvas
             var rad = (<BABYLON.ArcRotateCamera>scene.activeCamera).radius / 2;
             for (var i = 0; i < this.textCanvases.length; i++) {
                 if (!this.textCanvases[i].enabled || !this.textCanvases[i].visible) continue;
-
+                var scale = rad * this.textCanvases[i].scale;
                 if (this.textCanvases[i].isAnimating) {
-                    this.textCanvases[i].titleMesh.scaling.x *= rad;
-                    this.textCanvases[i].titleMesh.scaling.y *= rad;
-                    this.textCanvases[i].titleMesh.scaling.z *= rad;
+                    this.textCanvases[i].titleMesh.scaling.x *= scale;
+                    this.textCanvases[i].titleMesh.scaling.y *= scale;
+                    this.textCanvases[i].titleMesh.scaling.z *= scale;
                     continue;
                 }
 
-                this.textCanvases[i].titleMesh.scaling = new BABYLON.Vector3(rad, rad, rad);
+                this.textCanvases[i].titleMesh.scaling = new BABYLON.Vector3(scale, scale, scale);
             }
 
             // optimizing
-            if (count < 20) return;
-            count = 0;
+            // if (count < 20) return;
+            // count = 0;
 
             // check if anchor point is visible, if not disable canvas
-            for (var i = 0; i < this.rays.length; i++) {
-                if (!this.textCanvases[i].enabled || !this.textCanvases[i].visible) continue;
+            // for (var i = 0; i < this.rays.length; i++) {
+            //     if (!this.textCanvases[i].enabled || !this.textCanvases[i].visible) continue;
 
-                this.rays[i] = BABYLON.Ray.CreateNewFromTo(scene.activeCamera.position, new BABYLON.Vector3(this.pointss[i][0], this.pointss[i][1], this.pointss[i][2]));
-                this.textCanvases[i].setTextCanvasEnabled(!this.checkIfRayColidesWithMesh(this.rays[i], modelMeshes, scene));
-            }
+            //     this.rays[i] = BABYLON.Ray.CreateNewFromTo(scene.activeCamera.position, new BABYLON.Vector3(this.pointss[i][0], this.pointss[i][1], this.pointss[i][2]));
+            //     this.textCanvases[i].setTextCanvasEnabled(!this.checkIfRayColidesWithMesh(this.rays[i], modelMeshes, scene));
+            // }
         });
     }
 

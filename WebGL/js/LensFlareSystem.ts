@@ -27,13 +27,13 @@ class LensFlareSystem {
             flareSizes.push(hexaLensFlareSystem.lensFlares[i].size);
         }
 
-        var count = 0;
+        //var count = 0;
         var meshFound = new BABYLON.PickingInfo();
         scene.registerBeforeRender(function() {
-            count++;
+           // count++;
 
-            if (count > 5) {
-                count = 0;
+           // if (count > 5) {
+            //    count = 0;
                 var rayPick = BABYLON.Ray.CreateNewFromTo(scene.activeCamera.position, mainLensEmitter.position);
                 meshFound = scene.pickWithRay(rayPick, function(mesh) {
                     for (var i = 0; i < modelMeshes.length; i++) {
@@ -42,7 +42,7 @@ class LensFlareSystem {
                     }
                     return false;
                 });
-            }
+         //   }
             if (meshFound.pickedPoint != null) {
                 flare.color = BABYLON.Color3.Black();
                 hexaLensFlareSystem.isEnabled = false;
