@@ -228,7 +228,7 @@ window.addEventListener('DOMContentLoaded', function() {
                         newMeshes[i].isPickable = false;
                         break;
                 }
-                // newMeshes[i].isPickable = false;
+
                 if (newMeshes[i].name != "background")
                     hemilight.excludedMeshes.push(newMeshes[i]);
             }
@@ -256,7 +256,7 @@ window.addEventListener('DOMContentLoaded', function() {
     var fps = document.getElementById("fps");
     engine.runRenderLoop(function() {
         sceneMain.render();
-        fps.textContent = engine.getFps().toString();
+        // fps.textContent = engine.getFps().toString();
     });
     window.addEventListener('resize', function() {
         engine.resize();

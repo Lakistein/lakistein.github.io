@@ -20,9 +20,7 @@ class TextCanvas {
     backgroundPlaneTitle: BABYLON.AbstractMesh;
     backgroundPlaneDescription: BABYLON.AbstractMesh;
     scale: number = 1;
-
-    anchorTextures: BABYLON.Texture[] = [];
-    anchors: BABYLON.AbstractMesh;
+    anchor: BABYLON.AbstractMesh;
 
     constructor(jsonCanv: any, index: string, scene: BABYLON.Scene) {
         if (!jsonCanv) return;
@@ -36,12 +34,12 @@ class TextCanvas {
         this.position = new BABYLON.Vector3(jsonCanv.position.x, jsonCanv.position.y, jsonCanv.position.z);
         this.descriptionText = jsonCanv.description;
         this.titleMesh = this.createTextMesh(index, this.titleText, this.width, this.titleHeight, 2, jsonCanv.position, 'rgba(256, 0, 0, 0)', scene, 'white', this.titleHeight);
-        //this.titleMesh.renderingGroupId = 2;
+        this.titleMesh.renderingGroupId = 2;
         //this.createTexts(this.descriptionText, this.width + 0.3, this.height + 0.3, new BABYLON.Vector3(0, -this.height, 0), scene);
         this.descriptionMesh = this.createTextMesh('text-' + index, this.descriptionText, this.width, this.height, 2, new BABYLON.Vector3(0, -this.titleHeight - 0.02, 0), 'rgba(0, 256, 0, 0)', scene, 'white', this.height);
         this.descriptionMesh.isPickable = true;
         //this.descriptionMesh.showBoundingBox = true;
-        //this.descriptionMesh.renderingGroupId = 3;
+        this.descriptionMesh.renderingGroupId = 3;
         this.descriptionMesh.parent = this.titleMesh;
         this.backgroundPlaneTitle = this.createMesh("", this.width, this.titleHeight, false, scene, true);
         this.backgroundPlaneTitle.material = new BABYLON.StandardMaterial("", scene);
@@ -63,10 +61,11 @@ class TextCanvas {
         this.enabled = true;
 
         var vec = new BABYLON.Vector3(jsonCanv.linePosition.x, jsonCanv.linePosition.y, jsonCanv.linePosition.z);
-        var points = [vec, vec];
+        var points = [vec, vec, vec];
 
         this.line = BABYLON.Mesh.CreateLines("line" + index, points, scene, true);
         this.line.renderingGroupId = 1;
+        this.line.isPickable = false;
         this.offset = jsonCanv.offset;
         this.createAncrhor(jsonCanv.anchorTextureURL, points[0], scene);
         this.setTextCanvasVisible(false);
@@ -91,12 +90,12 @@ class TextCanvas {
     scaleDown = new BABYLON.Animation("scaleDown", "scaling", 30, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
 
     updateAnimations() {
-        var dirVec = this.anchors.position.subtract(this.position).normalize();
+        var dirVec = this.anchor.position.subtract(this.position).normalize();
 
         var keys = [];
         keys.push({
             frame: 0,
-            value: this.anchors.position
+            value: this.anchor.position
         });
 
         keys.push({
@@ -128,7 +127,7 @@ class TextCanvas {
 
         keysDown.push({
             frame: 10,
-            value: this.anchors.position
+            value: this.anchor.position
         });
 
         this.popDown.setKeys(keysDown);
@@ -136,8 +135,8 @@ class TextCanvas {
     }
 
     createAnimations(scene: BABYLON.Scene) {
-        this.anchors.actionManager = new BABYLON.ActionManager(scene);;
-        var dirVec = this.anchors.position.subtract(this.position).normalize();
+        this.anchor.actionManager = new BABYLON.ActionManager(scene);;
+        var dirVec = this.anchor.position.subtract(this.position).normalize();
         var keysScale = [];
         keysScale.push({
             frame: 0,
@@ -151,7 +150,7 @@ class TextCanvas {
         var keys = [];
         keys.push({
             frame: 0,
-            value: this.anchors.position
+            value: this.anchor.position
         });
 
         keys.push({
@@ -195,13 +194,13 @@ class TextCanvas {
 
         keysDown.push({
             frame: 10,
-            value: this.anchors.position
+            value: this.anchor.position
         });
 
         this.popDown.setKeys(keysDown);
         this.scaleDown.setKeys(keysScaleDown);
 
-        this.anchors.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickUpTrigger, (evt) => {
+        this.anchor.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickUpTrigger, (evt) => {
             if (this.isAnimating) return;
 
             this.titleMesh.animations = [];
@@ -229,7 +228,7 @@ class TextCanvas {
         this.line.setEnabled(value);
         this.titleMesh.setEnabled(value);
         this.descriptionMesh.setEnabled(value);
-        this.anchors.setEnabled(value);
+        this.anchor.setEnabled(value);
     }
 
     setTextCanvasVisible(value: boolean) {
@@ -312,19 +311,21 @@ class TextCanvas {
 
 
     createAncrhor(url: string, position: BABYLON.Vector3, scene: BABYLON.Scene) {
-        var pl = BABYLON.Mesh.CreatePlane("23", .1, scene);
-        var mm = new BABYLON.StandardMaterial("SD", scene);
+        var pl = BABYLON.Mesh.CreatePlane("anch" + this.id, .1, scene);
+        var mm = new BABYLON.StandardMaterial("SD" + this.id, scene);
         mm.opacityTexture = new BABYLON.Texture(url, scene);
         mm.emissiveColor = BABYLON.Color3.White();
         pl.material = mm;
         mm.diffuseColor = BABYLON.Color3.White();
         mm.specularColor = BABYLON.Color3.Black();
-        //pl.renderingGroupId = 1;
+        pl.renderingGroupId = 2;
         pl.position = position;
-        this.anchors = pl;
-        //this.lookAtCamera(pl, scene);
+        this.anchor = pl;
     }
 
+    changeanchorTesture(texture: BABYLON.Texture) {
+        (<BABYLON.StandardMaterial>this.anchor.material).opacityTexture = texture;
+    }
 
     wrapText(context, text, x, y, maxWidth, lineHeight) {
         var words = text.split('\n');
@@ -346,14 +347,15 @@ class TextCanvas {
     }
     updateTitleText(text: string) {
         this.titleText = text;
-        var textureContext = (<BABYLON.DynamicTexture>(<BABYLON.StandardMaterial>this.titleMesh.material).diffuseTexture).getContext();
-        //textureContext.font = "bold 40px Calibri";
-        textureContext.save();
-        textureContext.fillStyle = "white";
-        textureContext.textAlign = "left";
-        this.wrapText(textureContext, this.descriptionText, 0, 80, this.width, 25);
-        textureContext.restore();
-        (<BABYLON.DynamicTexture>(<BABYLON.StandardMaterial>this.descriptionMesh.material).diffuseTexture).update();
+        // var textureContext = (<BABYLON.DynamicTexture>(<BABYLON.StandardMaterial>this.titleMesh.material).diffuseTexture).getContext();
+        // //textureContext.font = "bold 40px Calibri";
+        // textureContext.save();
+        // textureContext.fillStyle = "white";
+        // textureContext.textAlign = "left";
+        // this.wrapText(textureContext, this.descriptionText, 0, 80, this.width, 25);
+        // textureContext.restore();
+        // (<BABYLON.DynamicTexture>(<BABYLON.StandardMaterial>this.descriptionMesh.material).diffuseTexture).update();
+        (<BABYLON.StandardMaterial>this.titleMesh.material).diffuseTexture = this.createText(this.titleText, 'rgba(0, 0, 0, 0)', this.scene, 'white', this.titleHeight);
     }
 
     updateDescriptionText(text: string) {
