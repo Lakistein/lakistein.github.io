@@ -710,6 +710,9 @@ var TextCanvasManager = (function () {
                 _this.pointss.push(_this.textCanvases[index].line.getVerticesData(BABYLON.VertexBuffer.PositionKind));
                 _this.arr.push(_this.textCanvases[index].titleMesh.getVertexBuffer(BABYLON.VertexBuffer.PositionKind).getData());
                 _this.addingNewCanvas = false;
+                document.getElementById("anchBtn").style.visibility = "visible";
+                if (!visible)
+                    document.getElementById("editCardPanel").style.visibility = 'visible';
                 return;
             }
             var pickInfo = scene.pick(evt.clientX, evt.clientY);
@@ -832,6 +835,8 @@ var TextCanvasManager = (function () {
         t.onclick = function (ev) {
             visible = !visible;
             document.getElementById("anchBtn").style.visibility = visible ? "collapse" : "visible";
+            if (!visible)
+                document.getElementById("editCardPanel").style.visibility = 'collapse';
         };
         var visible = false;
         var b = document.getElementById("anchBtn");
@@ -881,11 +886,15 @@ var TextCanvasManager = (function () {
         //     document.getElementById("TextCanvasEditor").style.visibility = 'hidden';
         // }
         //var count = 0;
+        var ancDoc = document.getElementById("anchorPointScreenCoordinate");
         scene.registerBeforeRender(function () {
             if (scene.activeCamera) {
                 for (var i = 0; i < _this.textCanvases.length; i++) {
                     if (!_this.textCanvases[i].enabled)
                         continue;
+                    var p = BABYLON.Vector3.Project(_this.textCanvases[0].anchor.position, BABYLON.Matrix.Identity(), scene.getTransformMatrix(), scene.activeCamera.viewport.toGlobal(scene.getEngine()));
+                    ancDoc.textContent = p.x + "," + p.y;
+                    console.log(p.x + "," + p.y);
                     _this.lookAtCamera(_this.textCanvases[i].titleMesh, scene);
                     _this.lookAtCamera(_this.textCanvases[i].anchor, scene);
                     var offsetCard = _this.textCanvases[i].offset;
