@@ -266,13 +266,17 @@ class TextCanvasManager {
 
         //var count = 0;
         var ancDoc = document.getElementById("anchorPointScreenCoordinate");
+        ancDoc.style.position = "absolute";
         scene.registerBeforeRender(() => {
             if (scene.activeCamera) {
                 for (var i = 0; i < this.textCanvases.length; i++) {
                     if (!this.textCanvases[i].enabled) continue;
-                        var p = BABYLON.Vector3.Project(this.textCanvases[0].anchor.position, BABYLON.Matrix.Identity(), scene.getTransformMatrix(), scene.activeCamera.viewport.toGlobal(scene.getEngine()));
-                    ancDoc.textContent = p.x + "," + p.y;
-                    console.log(p.x + "," + p.y);
+                    var p = BABYLON.Vector3.Project(this.textCanvases[0].anchor.position, BABYLON.Matrix.Identity(), scene.getTransformMatrix(), scene.activeCamera.viewport.toGlobal(scene.getEngine()));
+                    ancDoc.textContent = "X:" + p.x.toFixed(2) + " Y:" + p.y.toFixed(2);
+                    ancDoc.style.top = p.y.toFixed(2).toString() + "px";
+                    ancDoc.style.left = p.x.toFixed(2).toString() + "px";
+
+                    //  console.log(p.x + "," + p.y);
                     this.lookAtCamera(this.textCanvases[i].titleMesh, scene);
                     this.lookAtCamera(this.textCanvases[i].anchor, scene);
                     var offsetCard = this.textCanvases[i].offset;
@@ -290,7 +294,7 @@ class TextCanvasManager {
                     // else
 
                     this.pointss[i][3] = offsetCard2 == 3 ? pos.x + dir.x / 8 : pos.x - dir.x / 8;
-                    this.pointss[i][4] = offsetCard2 == 3 ? pos.y + dir.y / 8  : pos.y - dir.y / 8 ;
+                    this.pointss[i][4] = offsetCard2 == 3 ? pos.y + dir.y / 8 : pos.y - dir.y / 8;
                     this.pointss[i][5] = offsetCard2 == 3 ? pos.z + dir.z / 8 : pos.z - dir.z / 8;
 
                     this.pointss[i][6] = pos.x;

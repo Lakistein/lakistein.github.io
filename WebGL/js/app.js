@@ -887,14 +887,17 @@ var TextCanvasManager = (function () {
         // }
         //var count = 0;
         var ancDoc = document.getElementById("anchorPointScreenCoordinate");
+        ancDoc.style.position = "absolute";
         scene.registerBeforeRender(function () {
             if (scene.activeCamera) {
                 for (var i = 0; i < _this.textCanvases.length; i++) {
                     if (!_this.textCanvases[i].enabled)
                         continue;
                     var p = BABYLON.Vector3.Project(_this.textCanvases[0].anchor.position, BABYLON.Matrix.Identity(), scene.getTransformMatrix(), scene.activeCamera.viewport.toGlobal(scene.getEngine()));
-                    ancDoc.textContent = p.x + "," + p.y;
-                    console.log(p.x + "," + p.y);
+                    ancDoc.textContent = "X:" + p.x.toFixed(2) + " Y:" + p.y.toFixed(2);
+                    ancDoc.style.top = p.y.toFixed(2).toString() + "px";
+                    ancDoc.style.left = p.x.toFixed(2).toString() + "px";
+                    //  console.log(p.x + "," + p.y);
                     _this.lookAtCamera(_this.textCanvases[i].titleMesh, scene);
                     _this.lookAtCamera(_this.textCanvases[i].anchor, scene);
                     var offsetCard = _this.textCanvases[i].offset;
