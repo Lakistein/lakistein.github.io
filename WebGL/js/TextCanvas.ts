@@ -223,7 +223,7 @@ class TextCanvas {
     }
 
     setTextCanvasEnabled(value: boolean) {
-        if (!this.isPopedOut) return;
+        //if (!this.isPopedOut) return;
 
         this.line.setEnabled(value);
         this.titleMesh.setEnabled(value);

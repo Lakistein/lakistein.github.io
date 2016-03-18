@@ -270,9 +270,8 @@ class TextCanvasManager {
         scene.registerBeforeRender(() => {
             if (scene.activeCamera) {
                 for (var i = 0; i < this.textCanvases.length; i++) {
-                    if (!this.textCanvases[i].enabled) continue;
                     var p = BABYLON.Vector3.Project(this.textCanvases[0].anchor.position, BABYLON.Matrix.Identity(), scene.getTransformMatrix(), scene.activeCamera.viewport.toGlobal(scene.getEngine()));
-                    ancDoc.textContent = "X:" + p.x.toFixed(2) + " Y:" + p.y.toFixed(2);
+                    ancDoc.textContent = "X:" + p.x.toFixed(2) + " Y:" + p.y.toFixed(2) + (this.textCanvases[0].anchor.isEnabled() ? "\nEnabled" : "\nDisabled");
                     ancDoc.style.top = p.y.toFixed(2).toString() + "px";
                     ancDoc.style.left = p.x.toFixed(2).toString() + "px";
 
@@ -327,12 +326,10 @@ class TextCanvasManager {
             // count = 0;
 
             // check if anchor point is visible, if not disable canvas
-            // for (var i = 0; i < this.rays.length; i++) {
-            //     if (!this.textCanvases[i].enabled || !this.textCanvases[i].visible) continue;
-
-            //     this.rays[i] = BABYLON.Ray.CreateNewFromTo(scene.activeCamera.position, new BABYLON.Vector3(this.pointss[i][0], this.pointss[i][1], this.pointss[i][2]));
-            //     this.textCanvases[i].setTextCanvasEnabled(!this.checkIfRayColidesWithMesh(this.rays[i], modelMeshes, scene));
-            // }
+            for (var i = 0; i < this.rays.length; i++) {
+                this.rays[i] = BABYLON.Ray.CreateNewFromTo(scene.activeCamera.position, new BABYLON.Vector3(this.pointss[i][0], this.pointss[i][1], this.pointss[i][2]));
+                this.textCanvases[i].setTextCanvasEnabled(!this.checkIfRayColidesWithMesh(this.rays[i], modelMeshes, scene));
+            }
         });
     }
 

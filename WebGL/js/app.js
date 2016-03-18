@@ -461,8 +461,7 @@ var TextCanvas = (function () {
         }));
     };
     TextCanvas.prototype.setTextCanvasEnabled = function (value) {
-        if (!this.isPopedOut)
-            return;
+        //if (!this.isPopedOut) return;
         this.line.setEnabled(value);
         this.titleMesh.setEnabled(value);
         this.descriptionMesh.setEnabled(value);
@@ -891,10 +890,8 @@ var TextCanvasManager = (function () {
         scene.registerBeforeRender(function () {
             if (scene.activeCamera) {
                 for (var i = 0; i < _this.textCanvases.length; i++) {
-                    if (!_this.textCanvases[i].enabled)
-                        continue;
                     var p = BABYLON.Vector3.Project(_this.textCanvases[0].anchor.position, BABYLON.Matrix.Identity(), scene.getTransformMatrix(), scene.activeCamera.viewport.toGlobal(scene.getEngine()));
-                    ancDoc.textContent = "X:" + p.x.toFixed(2) + " Y:" + p.y.toFixed(2);
+                    ancDoc.textContent = "X:" + p.x.toFixed(2) + " Y:" + p.y.toFixed(2) + (_this.textCanvases[0].anchor.isEnabled() ? "\nEnabled" : "\nDisabled");
                     ancDoc.style.top = p.y.toFixed(2).toString() + "px";
                     ancDoc.style.left = p.x.toFixed(2).toString() + "px";
                     //  console.log(p.x + "," + p.y);
@@ -941,11 +938,10 @@ var TextCanvasManager = (function () {
             // if (count < 20) return;
             // count = 0;
             // check if anchor point is visible, if not disable canvas
-            // for (var i = 0; i < this.rays.length; i++) {
-            //     if (!this.textCanvases[i].enabled || !this.textCanvases[i].visible) continue;
-            //     this.rays[i] = BABYLON.Ray.CreateNewFromTo(scene.activeCamera.position, new BABYLON.Vector3(this.pointss[i][0], this.pointss[i][1], this.pointss[i][2]));
-            //     this.textCanvases[i].setTextCanvasEnabled(!this.checkIfRayColidesWithMesh(this.rays[i], modelMeshes, scene));
-            // }
+            for (var i = 0; i < _this.rays.length; i++) {
+                _this.rays[i] = BABYLON.Ray.CreateNewFromTo(scene.activeCamera.position, new BABYLON.Vector3(_this.pointss[i][0], _this.pointss[i][1], _this.pointss[i][2]));
+                _this.textCanvases[i].setTextCanvasEnabled(!_this.checkIfRayColidesWithMesh(_this.rays[i], modelMeshes, scene));
+            }
         });
     }
     TextCanvasManager.prototype.removeCard = function (index) {
