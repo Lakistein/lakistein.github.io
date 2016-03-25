@@ -1201,7 +1201,7 @@ var UploadManager = (function () {
             // blackMetal.microSurface = 0.61;
             // var blackBox = new BABYLON.PBRMaterial("Black Box", scene);
             // blackBox.albedoTexture = new BABYLON.Texture("./textures/models-textures/blackbox.jpg", scene);
-            // blackBox.ambientTexture = new BABYLON.Texture("./BOX_STYLE_1.jpg", scene);
+            // blackBox.ambientTexture = new BABYLON.Texture("./textures/models-textures/BOX_STYLE_1.jpg", scene);
             // blackBox.reflectivityColor = new BABYLON.Color3(0, 0, 0);
             // blackBox.indexOfRefraction = 2;
             // blackBox.directIntensity = 1.7;
@@ -1235,17 +1235,17 @@ var UploadManager = (function () {
                 pbr.cameraExposure = 1.5;
                 pbr.cameraContrast = 2;
                 pbr.microSurface = 0.46;
-                pbr.albedoTexture = mat.diffuseTexture;
+                pbr.albedoTexture = new BABYLON.Texture(mat.diffuseTexture.getInternalTexture().url, scene); // mat.diffuseTexture;
                 if (newMeshes[i].name.indexOf("Part_") > -1) {
                     var a = './' + name + '_Part_' + newMeshes[i].name.substr(newMeshes[i].name.indexOf("Part_") + 5, 1) + '_AO.jpg';
-                    pbr.ambientTexture = new BABYLON.Texture(a, scene);
+                    pbr.ambientTexture = new BABYLON.Texture(a /*"./textures/models-textures/BOX_STYLE_1.jpg"*/, scene);
                     pbr.ambientTexture.coordinatesIndex = 1;
                 }
                 if (mat.name.indexOf("TRANSPARENT") > -1) {
                     pbr.opacityTexture = mat.diffuseTexture;
                 }
+                newMeshes[i].convertToFlatShadedMesh();
                 newMeshes[i].material = pbr;
-                scene.getLightByName("hemilight").excludedMeshes.push(newMeshes[i]);
             }
             var refl = scene.getMeshByName("reflectionPlane").material.reflectionTexture;
             for (var i = 0; i < newMeshes.length; i++) {
