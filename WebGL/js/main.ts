@@ -14,7 +14,7 @@
 var sceneMain: BABYLON.Scene;
 var envUI: EnvironmentUI;
 var uploadManager: UploadManager;
-var modelMeshes = [];
+var modelMeshes: BABYLON.AbstractMesh[] = [];
 window.addEventListener('DOMContentLoaded', function() {
     var canvas = <HTMLCanvasElement>document.getElementById('renderCanvas');
     var engine = new BABYLON.Engine(canvas, true);
@@ -43,7 +43,7 @@ window.addEventListener('DOMContentLoaded', function() {
         var textCanv = new TextCanvasManager(json, scene);
 
         uploadManager = new UploadManager(scene, envMng);
-      //  uploadManager.uploadNewModel("./", "HEADSET", scene, envMng);
+        //  uploadManager.uploadNewModel("./", "HEADSET", scene, envMng);
         return scene;
     }
 

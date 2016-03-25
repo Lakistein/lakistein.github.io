@@ -120,7 +120,7 @@ var EnvironmentManager = (function () {
     EnvironmentManager.prototype.loadEnvironment = function (scene, jsonEnv) {
         var _this = this;
         BABYLON.SceneLoader.ImportMesh("", "./", "ENVIRONMENT.babylon", scene, function (environment) {
-            var hemilight = new BABYLON.HemisphericLight("hemilight1", new BABYLON.Vector3(0, 1, 0), scene);
+            var hemilight = new BABYLON.HemisphericLight("hemilight", new BABYLON.Vector3(0, 1, 0), scene);
             hemilight.range = 0.1;
             hemilight.intensity = 0.7;
             for (var i = 0; i < environment.length; i++) {
@@ -1134,10 +1134,10 @@ var UploadManager = (function () {
             reader.readAsText(file);
         }
         reader.onloadend = function () {
-            _this.uploadNewModel("", "data:" + reader.result, _this.scene, _this.envMng);
+            _this.uploadNewModel(file.name.substr(0, file.name.indexOf(".")), "", "data:" + reader.result, _this.scene, _this.envMng);
         };
     };
-    UploadManager.prototype.uploadNewModel = function (modelPath, modelName, scene, envManager) {
+    UploadManager.prototype.uploadNewModel = function (name, modelPath, modelName, scene, envManager) {
         if (modelMeshes.length > 0) {
             for (var i = 0; i < modelMeshes.length; i++) {
                 modelMeshes[i].dispose();
@@ -1226,26 +1226,32 @@ var UploadManager = (function () {
             for (var i = 0; i < newMeshes.length; i++) {
                 var mat = newMeshes[i].material;
                 var pbr = new BABYLON.PBRMaterial("PBR" + i, scene);
-                pbr.reflectivityColor = new BABYLON.Color3(0.3, 0.3, 0.3);
-                pbr.specularIntensity = 0.1;
-                pbr.indexOfRefraction = 0.52;
-                pbr.directIntensity = 1;
-                pbr.environmentIntensity = 0.05;
-                pbr.overloadedShadowIntensity = 0.8;
-                pbr.overloadedShadeIntensity = 0.8;
-                pbr.cameraExposure = 1.26;
-                pbr.cameraContrast = 1.6;
-                pbr.microSurface = 0.31;
+                pbr.reflectivityColor = new BABYLON.Color3(0, 0, 0);
+                pbr.indexOfRefraction = 2;
+                pbr.directIntensity = 1.7;
+                pbr.environmentIntensity = 0.09;
+                pbr.overloadedShadowIntensity = 0.6;
+                pbr.overloadedShadeIntensity = 0.22;
+                pbr.cameraExposure = 1.5;
+                pbr.cameraContrast = 2;
+                pbr.microSurface = 0.46;
                 pbr.albedoTexture = mat.diffuseTexture;
+                if (newMeshes[i].name.indexOf("Part_") > -1) {
+                    var a = './' + name + '_Part_' + newMeshes[i].name.substr(newMeshes[i].name.indexOf("Part_") + 5, 1) + '_AO.jpg';
+                    pbr.ambientTexture = new BABYLON.Texture(a, scene);
+                    pbr.ambientTexture.coordinatesIndex = 1;
+                }
                 if (mat.name.indexOf("TRANSPARENT") > -1) {
                     pbr.opacityTexture = mat.diffuseTexture;
                 }
                 newMeshes[i].material = pbr;
+                scene.getLightByName("hemilight").excludedMeshes.push(newMeshes[i]);
             }
             var refl = scene.getMeshByName("reflectionPlane").material.reflectionTexture;
             for (var i = 0; i < newMeshes.length; i++) {
                 refl.renderList.push(newMeshes[i]);
             }
+            debugger;
             envManager.setReflection(scene, null);
         });
     };
