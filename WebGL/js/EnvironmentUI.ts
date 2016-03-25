@@ -2,12 +2,11 @@
 /// <reference path="EnvironmentManager.ts" />
 
 class EnvironmentUI {
-
     environment: Environment;
     environmentManager: EnvironmentManager;
 
-    constructor(jsonString: string, scene: BABYLON.Scene) {
-        this.environmentManager = new EnvironmentManager(jsonString, scene);
+    constructor(environmentManager: EnvironmentManager, scene: BABYLON.Scene) {
+        this.environmentManager = environmentManager;
         var environments = document.getElementsByClassName('environment');
         var env = this.environmentManager;
         for (var i = 0; i < environments.length; i++) {

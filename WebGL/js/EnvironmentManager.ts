@@ -6,26 +6,102 @@ class EnvironmentManager {
     currentEnvironment: number;
     environments: Environment[] = [];
 
-
-
     constructor(json: string, scene: BABYLON.Scene) {
         var jsonEnv = JSON.parse(json);
+        this.loadEnvironment(scene, jsonEnv);
+    }
 
-        for (var i = 0; i < jsonEnv.length; i++) {
-            this.environments.push(new Environment(jsonEnv[i], scene));
-        }
+    loadEnvironment(scene: BABYLON.Scene, jsonEnv: any) {
+        BABYLON.SceneLoader.ImportMesh("", "./", "ENVIRONMENT.babylon", scene, (environment) => {
+            var hemilight = new BABYLON.HemisphericLight("hemilight1", new BABYLON.Vector3(0, 1, 0), scene);
+            hemilight.range = 0.1;
+            hemilight.intensity = 0.7;
+            for (var i = 0; i < environment.length; i++) {
+                switch (environment[i].name) {
+                    case "background":
+                        var gradientMaterial = new BABYLON.GradientMaterial("grad", scene);
+                        gradientMaterial.topColor = BABYLON.Color3.Red();
+                        gradientMaterial.bottomColor = BABYLON.Color3.Blue();
+                        environment[i].position.y = -0.1;
+                        environment[i].material = gradientMaterial;
+                        environment[i].isPickable = false;
+                        hemilight.includedOnlyMeshes.push(environment[i]);
+                        break;
+                    case "GROUNDPLANE_STYLE_1":
+                        // TODO: fix reflection
+                        var ground = new BABYLON.PBRMaterial("g", scene);
+                        ground.albedoTexture = new BABYLON.Texture("./textures/models-textures/GROUNDPLANESHADOW_STYLE_1.png", scene);
+                        ground.opacityTexture = new BABYLON.Texture("./textures/models-textures/GROUNDPLANESHADOW_STYLE_1.png", scene);
+                        ground.albedoTexture.hasAlpha = true;
+                        ground.reflectivityColor = new BABYLON.Color3(0, 0, 0);
+                        ground.directIntensity = 2;
+                        ground.environmentIntensity = 0;
+                        ground.overloadedShadeIntensity = 0;
+                        ground.cameraExposure = 2;
+                        ground.cameraContrast = 2;
+                        ground.microSurface = 0;
+                        environment[i].position.y = 0.01;
+                        environment[i].material = ground;
+                        environment[i].isPickable = false;
+                        break;
+                    case "groundPlane":
+                        var groundPlaneMaterial = new BABYLON.PBRMaterial("groundPlaneMaterial", scene);
+                        groundPlaneMaterial.albedoTexture = new BABYLON.Texture("./textures/flare.png", scene);
+                        groundPlaneMaterial.opacityTexture = new BABYLON.Texture("./textures/flare.png", scene);
+                        groundPlaneMaterial.albedoTexture.hasAlpha = true;
+                        groundPlaneMaterial.reflectivityColor = new BABYLON.Color3(0, 0, 0);
+                        groundPlaneMaterial.directIntensity = 2;
+                        groundPlaneMaterial.environmentIntensity = 0;
+                        groundPlaneMaterial.overloadedShadeIntensity = 0;
+                        groundPlaneMaterial.cameraExposure = 2;
+                        groundPlaneMaterial.cameraContrast = 2;
+                        groundPlaneMaterial.microSurface = 0;
+                        groundPlaneMaterial.alpha = 1;
+                        environment[i].material = groundPlaneMaterial;
+                        environment[i].isPickable = false;
+                        break;
+                    case "reflectionPlane":
+                        var mirrorMaterial = new BABYLON.StandardMaterial("mirror", scene);
+                        mirrorMaterial.reflectionTexture = new BABYLON.MirrorTexture("mirror", 1024, scene, false);
+                        (<BABYLON.MirrorTexture>mirrorMaterial.reflectionTexture).mirrorPlane = new BABYLON.Plane(0, -1, 0, 0);
+                        mirrorMaterial.alpha = 0.1;
+                        mirrorMaterial.diffuseColor = new BABYLON.Color3(0.0, 0.0, 0.0);
+                        mirrorMaterial.specularColor = new BABYLON.Color3(0.0, 0.0, 0.0);
+                        mirrorMaterial.reflectionTexture.level = 1;
+                        environment[i].material = mirrorMaterial;
+                        environment[i].scaling = new BABYLON.Vector3(1010, 1010, 1010);
+                        environment[i].isPickable = false;
+                        break;
+                }
 
-        var skybox = BABYLON.Mesh.CreateBox("skybox", 1000.0, scene);
-        var skyboxMaterial = new BABYLON.StandardMaterial("skyboxMaterial", scene);
-        skyboxMaterial.backFaceCulling = false;
-        skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("", scene);
-        skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-        skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
-        skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
-        skybox.infiniteDistance = true;
-        skybox.material = skyboxMaterial;
-        skybox.isPickable = false;
-        this.setEnvironment(this.environments[2].id, scene);
+                // if (environment[i].name != "background")
+                //     hemilight.excludedMeshes.push(environment[i]);
+            }
+
+            var refl = (<BABYLON.StandardMaterial>scene.getMeshByName("reflectionPlane").material).reflectionTexture;
+            for (var i = 0; i < environment.length; i++) {
+                if (environment[i].name != "reflectionPlane")
+                    (<BABYLON.MirrorTexture>refl).renderList.push(environment[i]);
+            }
+
+            for (var i = 0; i < jsonEnv.length; i++) {
+                this.environments.push(new Environment(jsonEnv[i], scene));
+            }
+
+            var skybox = BABYLON.Mesh.CreateBox("skybox", 1000.0, scene);
+            var skyboxMaterial = new BABYLON.StandardMaterial("skyboxMaterial", scene);
+            skyboxMaterial.backFaceCulling = false;
+            skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("", scene);
+            skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+            skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+            skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+            skybox.infiniteDistance = true;
+            skybox.material = skyboxMaterial;
+            skybox.isPickable = false;
+            this.setEnvironment(this.environments[2].id, scene);
+
+            (<BABYLON.MirrorTexture>refl).renderList.push(scene.getMeshByName("skybox"));
+        });
     }
 
     findEnvironmentById(id: string): Environment {
@@ -80,14 +156,12 @@ class EnvironmentManager {
     }
 
     setReflection(scene: BABYLON.Scene, color?: BABYLON.Color3) {
-        for (var i = 0; i < scene.meshes.length; i++) {
-            if (<BABYLON.PBRMaterial>scene.meshes[i].material instanceof BABYLON.PBRMaterial && scene.meshes[i].name != "GROUNDPLANE_STYLE_1" && scene.meshes[i].name != "skybox" && scene.meshes[i].name != "reflectionPlane") {
-                if (this.environments[this.currentEnvironment].reflectionTexture) {
-                    (<BABYLON.PBRMaterial>scene.meshes[i].material).reflectionTexture = this.environments[this.currentEnvironment].reflectionTexture;
-                }
-                else {
-                    (<BABYLON.PBRMaterial>scene.meshes[i].material).reflectionColor = (color) ? color : this.environments[this.currentEnvironment].backgroundColor;
-                }
+        for (var i = 0; i < modelMeshes.length; i++) {
+            if (this.environments[this.currentEnvironment].reflectionTexture) {
+                (<BABYLON.PBRMaterial>modelMeshes[i].material).reflectionTexture = this.environments[this.currentEnvironment].reflectionTexture;
+            }
+            else {
+                (<BABYLON.PBRMaterial>modelMeshes[i].material).reflectionColor = (color) ? color : this.environments[this.currentEnvironment].backgroundColor;
             }
         }
     }
@@ -114,6 +188,8 @@ class EnvironmentManager {
             this.environments[this.currentEnvironment].groundTexture = null;
         }
         reader.onloadend = () => {
+            console.log(file.name);
+
             var mesh = scene.getMeshByName("groundPlane");
             if ((<BABYLON.PBRMaterial>mesh.material).albedoTexture)
                 (<BABYLON.PBRMaterial>mesh.material).albedoTexture.dispose();
