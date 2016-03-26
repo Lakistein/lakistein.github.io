@@ -44,7 +44,7 @@ window.addEventListener('DOMContentLoaded', function() {
         camera.attachControl(canvas, true);
         camera.wheelPrecision = 50;
         scene.activeCamera = camera;
-        var light = new BABYLON.HemisphericLight("", BABYLON.Vector3.Up(), scene);
+        var light = new BABYLON.PointLight("", new BABYLON.Vector3(0, 2, 3), scene);
         var pbr = new BABYLON.PBRMaterial("PBR Material", scene);
         pbr.reflectivityColor = BABYLON.Color3.Black();
         pbr.albedoColor = BABYLON.Color3.Red();
@@ -53,6 +53,18 @@ window.addEventListener('DOMContentLoaded', function() {
 
         displayMaterialValues(pbr);
 
+        var skybox = BABYLON.Mesh.CreateBox("skybox", 1000.0, scene);
+        var skyboxMaterial = new BABYLON.StandardMaterial("skyboxMaterial", scene);
+        skyboxMaterial.backFaceCulling = false;
+        skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./cubemap/skybox", scene);
+        skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+        skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+        skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+        skybox.infiniteDistance = true;
+        skybox.material = skyboxMaterial;
+        skybox.isPickable = false;
+        
+        pbr.reflectionTexture = skyboxMaterial.reflectionTexture;
         return scene;
     }
 
