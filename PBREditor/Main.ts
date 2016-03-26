@@ -40,18 +40,24 @@ window.addEventListener('DOMContentLoaded', function() {
         camera.wheelPrecision = 50;
         scene.activeCamera = camera;
 
-        var light = new BABYLON.PointLight("", new BABYLON.Vector3(0, 2, 3), scene);
-        var skybox = BABYLON.Mesh.CreateBox("skybox", 1000.0, scene);
-        var skyboxMaterial = new BABYLON.StandardMaterial("skyboxMaterial", scene);
-        skyboxMaterial.backFaceCulling = false;
-        var reflectionTexture = new BABYLON.CubeTexture("./cubemap/skybox", scene);
-        skyboxMaterial.reflectionTexture = reflectionTexture;
-        skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-        skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
-        skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
-        skybox.infiniteDistance = true;
-        skybox.material = skyboxMaterial;
-        skybox.isPickable = false;
+        // Light
+        new BABYLON.PointLight("point", new BABYLON.Vector3(0, 40, 0), scene);
+
+        // Environment Texture
+        var hdrTexture = new BABYLON.HDRCubeTexture("./room.hdr", scene, 512);
+
+        // Skybox
+        var hdrSkybox = BABYLON.Mesh.CreateBox("hdrSkyBox", 1000.0, scene);
+        var hdrSkyboxMaterial = new BABYLON.PBRMaterial("skyBox", scene);
+        hdrSkyboxMaterial.backFaceCulling = false;
+        hdrSkyboxMaterial.reflectionTexture = hdrTexture.clone();
+        hdrSkyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+        hdrSkyboxMaterial.microSurface = 1.0;
+        hdrSkyboxMaterial.cameraExposure = 0.6;
+        hdrSkyboxMaterial.cameraContrast = 1.6;
+        hdrSkyboxMaterial.disableLighting = true;
+        hdrSkybox.material = hdrSkyboxMaterial;
+        hdrSkybox.infiniteDistance = true;
 
         // Flat 1
         {
@@ -63,8 +69,7 @@ window.addEventListener('DOMContentLoaded', function() {
             Flat_1.material = Flat_1_pbr;
 
             displayMaterialValues(Flat_1_pbr);
-            Flat_1_pbr.reflectionTexture = reflectionTexture;
-            Flat_1_pbr.refractionTexture = reflectionTexture;
+            Flat_1_pbr.reflectionTexture = hdrTexture;
         }
 
         // Felt 1
@@ -76,8 +81,7 @@ window.addEventListener('DOMContentLoaded', function() {
             Felt_1.material = Felt_1_pbr;
             Felt_1.position.addInPlace(new BABYLON.Vector3(0, 0, -6));
             displayMaterialValues(Felt_1_pbr);
-            Felt_1_pbr.reflectionTexture = reflectionTexture;
-            Felt_1_pbr.refractionTexture = reflectionTexture;
+            Felt_1_pbr.reflectionTexture = hdrTexture;
         }
 
         // Semigloss 1
@@ -89,8 +93,7 @@ window.addEventListener('DOMContentLoaded', function() {
             Semigloss_1.material = Semigloss_1_pbr;
             Semigloss_1.position.addInPlace(new BABYLON.Vector3(4, 0, -6));
             displayMaterialValues(Semigloss_1_pbr);
-            Semigloss_1_pbr.reflectionTexture = reflectionTexture;
-            Semigloss_1_pbr.refractionTexture = reflectionTexture;
+            Semigloss_1_pbr.reflectionTexture = hdrTexture;
         }
 
         // Semigloss 2 
@@ -102,8 +105,7 @@ window.addEventListener('DOMContentLoaded', function() {
             Semigloss_2.material = Semigloss_2_pbr;
             Semigloss_2.position.addInPlace(new BABYLON.Vector3(-4, 0, -2));
             displayMaterialValues(Semigloss_2_pbr);
-            Semigloss_2_pbr.reflectionTexture = reflectionTexture;
-            Semigloss_2_pbr.refractionTexture = reflectionTexture;
+            Semigloss_2_pbr.reflectionTexture = hdrTexture;
         }
 
         // Specular 1,
@@ -115,8 +117,7 @@ window.addEventListener('DOMContentLoaded', function() {
             Specular_1.material = Specular_1_pbr;
             Specular_1.position.addInPlace(new BABYLON.Vector3(0, 0, -2));
             displayMaterialValues(Specular_1_pbr);
-            Specular_1_pbr.reflectionTexture = reflectionTexture;
-            Specular_1_pbr.refractionTexture = reflectionTexture;
+            Specular_1_pbr.reflectionTexture = hdrTexture;
         }
         // Specular 2
         {
@@ -127,8 +128,7 @@ window.addEventListener('DOMContentLoaded', function() {
             Specular_2.material = Specular_2_pbr;
             Specular_2.position.addInPlace(new BABYLON.Vector3(4, 0, -2));
             displayMaterialValues(Specular_2_pbr);
-            Specular_2_pbr.reflectionTexture = reflectionTexture;
-            Specular_2_pbr.refractionTexture = reflectionTexture;
+            Specular_2_pbr.reflectionTexture = hdrTexture;
         }
 
         // Specular 3
@@ -140,8 +140,7 @@ window.addEventListener('DOMContentLoaded', function() {
             Specular_3.material = Specular_3_pbr;
             Specular_3.position.addInPlace(new BABYLON.Vector3(-4, 0, 2));
             displayMaterialValues(Specular_3_pbr);
-            Specular_3_pbr.reflectionTexture = reflectionTexture;
-            Specular_3_pbr.refractionTexture = reflectionTexture;
+            Specular_3_pbr.reflectionTexture = hdrTexture;
         }
 
         // Chrome 1
@@ -153,8 +152,7 @@ window.addEventListener('DOMContentLoaded', function() {
             Chrome_1.material = Chrome_1_pbr;
             Chrome_1.position.addInPlace(new BABYLON.Vector3(0, 0, 2));
             displayMaterialValues(Chrome_1_pbr);
-            Chrome_1_pbr.reflectionTexture = reflectionTexture;
-            Chrome_1_pbr.refractionTexture = reflectionTexture;
+            Chrome_1_pbr.reflectionTexture = hdrTexture;
         }
 
         // Chrome 2
@@ -166,8 +164,7 @@ window.addEventListener('DOMContentLoaded', function() {
             Chrome_2.material = Chrome_2_pbr;
             Chrome_2.position.addInPlace(new BABYLON.Vector3(4, 0, 2));
             displayMaterialValues(Chrome_2_pbr);
-            Chrome_2_pbr.reflectionTexture = reflectionTexture;
-            Chrome_2_pbr.refractionTexture = reflectionTexture;
+            Chrome_2_pbr.reflectionTexture = hdrTexture;
         }
 
         // Chrome 3
@@ -180,10 +177,9 @@ window.addEventListener('DOMContentLoaded', function() {
             Chrome_3.material = Chrome_3_pbr;
             Chrome_3.position.addInPlace(new BABYLON.Vector3(-4, 0, 6));
             displayMaterialValues(Chrome_3_pbr);
-            Chrome_3_pbr.reflectionTexture = reflectionTexture;
-            Chrome_3_pbr.refractionTexture = reflectionTexture;
-        } 
-        
+            Chrome_3_pbr.reflectionTexture = hdrTexture;
+        }
+
         // Glass 1
         {
             var Glass_1_pbr = new BABYLON.PBRMaterial("Glass 1", scene);
@@ -193,12 +189,12 @@ window.addEventListener('DOMContentLoaded', function() {
             Glass_1.material = Glass_1_pbr;
             Glass_1.position.addInPlace(new BABYLON.Vector3(0, 0, 6));
             displayMaterialValues(Glass_1_pbr);
-            Glass_1_pbr.reflectionTexture = reflectionTexture;
-            Glass_1_pbr.refractionTexture = reflectionTexture;
+            Glass_1_pbr.reflectionTexture = hdrTexture;
+            Glass_1_pbr.refractionTexture = hdrTexture;
         }
-        
+
         // Glass 2
-         {
+        {
             var Glass_2_pbr = new BABYLON.PBRMaterial("Glass 2", scene);
             Glass_2_pbr.reflectivityColor = BABYLON.Color3.Black();
             Glass_2_pbr.albedoColor = BABYLON.Color3.Red();
@@ -206,8 +202,8 @@ window.addEventListener('DOMContentLoaded', function() {
             Glass_2.material = Glass_2_pbr;
             Glass_2.position.addInPlace(new BABYLON.Vector3(4, 0, 6));
             displayMaterialValues(Glass_2_pbr);
-            Glass_2_pbr.reflectionTexture = reflectionTexture;
-            Glass_2_pbr.refractionTexture = reflectionTexture;
+            Glass_2_pbr.reflectionTexture = hdrTexture;
+            Glass_2_pbr.refractionTexture = hdrTexture;
         }
         return scene;
     }
