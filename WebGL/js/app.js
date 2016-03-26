@@ -134,23 +134,6 @@ var EnvironmentManager = (function () {
                         environment[i].isPickable = false;
                         hemilight.includedOnlyMeshes.push(environment[i]);
                         break;
-                    case "GROUNDPLANE_STYLE_1":
-                        // TODO: fix reflection
-                        var ground = new BABYLON.PBRMaterial("g", scene);
-                        ground.albedoTexture = new BABYLON.Texture("./textures/models-textures/GROUNDPLANESHADOW_STYLE_1.png", scene);
-                        ground.opacityTexture = new BABYLON.Texture("./textures/models-textures/GROUNDPLANESHADOW_STYLE_1.png", scene);
-                        ground.albedoTexture.hasAlpha = true;
-                        ground.reflectivityColor = new BABYLON.Color3(0, 0, 0);
-                        ground.directIntensity = 2;
-                        ground.environmentIntensity = 0;
-                        ground.overloadedShadeIntensity = 0;
-                        ground.cameraExposure = 2;
-                        ground.cameraContrast = 2;
-                        ground.microSurface = 0;
-                        environment[i].position.y = 0.01;
-                        environment[i].material = ground;
-                        environment[i].isPickable = false;
-                        break;
                     case "groundPlane":
                         var groundPlaneMaterial = new BABYLON.PBRMaterial("groundPlaneMaterial", scene);
                         groundPlaneMaterial.albedoTexture = new BABYLON.Texture("./textures/flare.png", scene);
@@ -1134,7 +1117,8 @@ var UploadManager = (function () {
             reader.readAsText(file);
         }
         reader.onloadend = function () {
-            _this.uploadNewModel(file.name.substr(0, file.name.indexOf(".")), "", "data:" + reader.result, _this.scene, _this.envMng);
+            //this.uploadNewModel(file.name.substr(0, file.name.indexOf(".")), "", "data:" + reader.result, this.scene, this.envMng);
+            _this.uploadNewModel("", "./", "Headset.babylon", _this.scene, _this.envMng);
         };
     };
     UploadManager.prototype.uploadNewModel = function (name, modelPath, modelName, scene, envManager) {
@@ -1146,106 +1130,167 @@ var UploadManager = (function () {
         }
         BABYLON.SceneLoader.ImportMesh(null, modelPath, modelName, scene, function (newMeshes) {
             modelMeshes = newMeshes;
-            // var ambientTexture: BABYLON.Texture = new BABYLON.Texture("./textures/models-textures/HEADSET_STYLE_1.jpg", scene);
-            // var blackPlastic = new BABYLON.PBRMaterial("Black Plastic", scene);
-            // blackPlastic.albedoTexture = new BABYLON.Texture("./textures/models-textures/blackplastic.jpg", scene);
-            // blackPlastic.ambientTexture = ambientTexture;
-            // blackPlastic.ambientTexture.coordinatesIndex = 1;
-            // blackPlastic.reflectivityColor = new BABYLON.Color3(0.3, 0.3, 0.3);
-            // blackPlastic.specularIntensity = 0.1;
-            // blackPlastic.indexOfRefraction = 0.52;
-            // blackPlastic.directIntensity = 1;
-            // blackPlastic.environmentIntensity = 0.05;
-            // blackPlastic.overloadedShadowIntensity = 0.8;
-            // blackPlastic.overloadedShadeIntensity = 0.8;
-            // blackPlastic.cameraExposure = 1.26;
-            // blackPlastic.cameraContrast = 1.6;
-            // blackPlastic.microSurface = 0.31;
-            // var redPlastic = new BABYLON.PBRMaterial("Red Plastic", scene);
-            // redPlastic.albedoTexture = new BABYLON.Texture("./textures/models-textures/redplastic.jpg", scene);
-            // redPlastic.ambientTexture = ambientTexture;
-            // redPlastic.ambientTexture.coordinatesIndex = 1;
-            // redPlastic.reflectivityColor = new BABYLON.Color3(0.2, 0.2, 0.2);
-            // redPlastic.indexOfRefraction = .52;
-            // redPlastic.directIntensity = 1;
-            // redPlastic.environmentIntensity = 0.5;
-            // redPlastic.specularIntensity = 0.3;
-            // redPlastic.overloadedShadowIntensity = 1.3;
-            // redPlastic.overloadedShadeIntensity = 0.68;
-            // redPlastic.cameraExposure = 0.8;
-            // redPlastic.cameraContrast = 2;
-            // redPlastic.microSurface = 0.34;
-            // var chrome = new BABYLON.PBRMaterial("Chrome", scene);
-            // chrome.albedoTexture = new BABYLON.Texture("./textures/models-textures/chrome.jpg", scene);
-            // chrome.ambientTexture = ambientTexture;
-            // chrome.ambientTexture.coordinatesIndex = 1;
-            // chrome.reflectivityColor = new BABYLON.Color3(.9, .9, .9);
-            // chrome.directIntensity = 0.3;
-            // chrome.specularIntensity = 1.5;
-            // chrome.environmentIntensity = 0.6;
-            // chrome.cameraExposure = .23;
-            // chrome.cameraContrast = 1.9;
-            // chrome.microSurface = 0.21;
-            // var blackMetal = new BABYLON.PBRMaterial("Black Metal", scene);
-            // blackMetal.albedoTexture = new BABYLON.Texture("./textures/models-textures/blackmetal.jpg", scene);
-            // blackMetal.ambientTexture = ambientTexture;
-            // blackMetal.ambientTexture.coordinatesIndex = 1;
-            // blackMetal.reflectivityColor = new BABYLON.Color3(0.1, 0.1, 0.1);
-            // blackMetal.indexOfRefraction = 2;
-            // blackMetal.directIntensity = 0.2;
-            // blackMetal.environmentIntensity = 0.24;
-            // blackMetal.specularIntensity = 0.7;
-            // blackMetal.overloadedShadeIntensity = 0.8;
-            // blackMetal.cameraExposure = 1.99;
-            // blackMetal.cameraContrast = 1;
-            // blackMetal.microSurface = 0.61;
-            // var blackBox = new BABYLON.PBRMaterial("Black Box", scene);
-            // blackBox.albedoTexture = new BABYLON.Texture("./textures/models-textures/blackbox.jpg", scene);
-            // blackBox.ambientTexture = new BABYLON.Texture("./textures/models-textures/BOX_STYLE_1.jpg", scene);
-            // blackBox.reflectivityColor = new BABYLON.Color3(0, 0, 0);
-            // blackBox.indexOfRefraction = 2;
-            // blackBox.directIntensity = 1.7;
-            // blackBox.environmentIntensity = 0.09;
-            // blackBox.overloadedShadowIntensity = 0.6;
-            // blackBox.overloadedShadeIntensity = 0.22;
-            // blackBox.cameraExposure = 1.5;
-            // blackBox.cameraContrast = 2;
-            // blackBox.microSurface = 0.46;
-            // var blackCushion = new BABYLON.PBRMaterial("Black Cushion", scene);
-            // blackCushion.albedoTexture = new BABYLON.Texture("./textures/models-textures/blackcushion.jpg", scene);
-            // blackCushion.ambientTexture = ambientTexture;
-            // blackCushion.ambientTexture.coordinatesIndex = 1;
-            // blackCushion.reflectivityColor = new BABYLON.Color3(0.05, 0.05, 0.05);
-            // blackCushion.indexOfRefraction = .52;
-            // blackCushion.directIntensity = 2;
-            // blackCushion.environmentIntensity = 0;
-            // blackCushion.overloadedShadeIntensity = 0.81;
-            // blackCushion.cameraExposure = 2;
-            // blackCushion.cameraContrast = 2;
-            // blackCushion.microSurface = 0.4;
+            var ambientTexture = new BABYLON.Texture("./textures/models-textures/HEADSET_STYLE_1.jpg", scene);
+            var blackPlastic = new BABYLON.PBRMaterial("Black Plastic", scene);
+            blackPlastic.albedoTexture = new BABYLON.Texture("./textures/models-textures/blackplastic.jpg", scene);
+            blackPlastic.ambientTexture = ambientTexture;
+            blackPlastic.ambientTexture.coordinatesIndex = 1;
+            blackPlastic.reflectivityColor = new BABYLON.Color3(0.3, 0.3, 0.3);
+            blackPlastic.specularIntensity = 0.1;
+            blackPlastic.indexOfRefraction = 0.52;
+            blackPlastic.directIntensity = 1;
+            blackPlastic.environmentIntensity = 0.05;
+            blackPlastic.overloadedShadowIntensity = 0.8;
+            blackPlastic.overloadedShadeIntensity = 0.8;
+            blackPlastic.cameraExposure = 1.26;
+            blackPlastic.cameraContrast = 1.6;
+            blackPlastic.microSurface = 0.31;
+            var redPlastic = new BABYLON.PBRMaterial("Red Plastic", scene);
+            redPlastic.albedoTexture = new BABYLON.Texture("./textures/models-textures/redplastic.jpg", scene);
+            redPlastic.ambientTexture = ambientTexture;
+            redPlastic.ambientTexture.coordinatesIndex = 1;
+            redPlastic.reflectivityColor = new BABYLON.Color3(0.2, 0.2, 0.2);
+            redPlastic.indexOfRefraction = .52;
+            redPlastic.directIntensity = 1;
+            redPlastic.environmentIntensity = 0.5;
+            redPlastic.specularIntensity = 0.3;
+            redPlastic.overloadedShadowIntensity = 1.3;
+            redPlastic.overloadedShadeIntensity = 0.68;
+            redPlastic.cameraExposure = 0.8;
+            redPlastic.cameraContrast = 2;
+            redPlastic.microSurface = 0.34;
+            var chrome = new BABYLON.PBRMaterial("Chrome", scene);
+            chrome.albedoTexture = new BABYLON.Texture("./textures/models-textures/chrome.jpg", scene);
+            chrome.ambientTexture = ambientTexture;
+            chrome.ambientTexture.coordinatesIndex = 1;
+            chrome.reflectivityColor = new BABYLON.Color3(.9, .9, .9);
+            chrome.directIntensity = 0.3;
+            chrome.specularIntensity = 1.5;
+            chrome.environmentIntensity = 0.6;
+            chrome.cameraExposure = .23;
+            chrome.cameraContrast = 1.9;
+            chrome.microSurface = 0.21;
+            var blackMetal = new BABYLON.PBRMaterial("Black Metal", scene);
+            blackMetal.albedoTexture = new BABYLON.Texture("./textures/models-textures/blackmetal.jpg", scene);
+            blackMetal.ambientTexture = ambientTexture;
+            blackMetal.ambientTexture.coordinatesIndex = 1;
+            blackMetal.reflectivityColor = new BABYLON.Color3(0.1, 0.1, 0.1);
+            blackMetal.indexOfRefraction = 2;
+            blackMetal.directIntensity = 0.2;
+            blackMetal.environmentIntensity = 0.24;
+            blackMetal.specularIntensity = 0.7;
+            blackMetal.overloadedShadeIntensity = 0.8;
+            blackMetal.cameraExposure = 1.99;
+            blackMetal.cameraContrast = 1;
+            blackMetal.microSurface = 0.61;
+            var blackBox = new BABYLON.PBRMaterial("Black Box", scene);
+            blackBox.albedoTexture = new BABYLON.Texture("./textures/models-textures/blackbox.jpg", scene);
+            blackBox.ambientTexture = new BABYLON.Texture("./textures/models-textures/BOX_STYLE_1.jpg", scene);
+            blackBox.reflectivityColor = new BABYLON.Color3(0, 0, 0);
+            blackBox.indexOfRefraction = 2;
+            blackBox.directIntensity = 1.7;
+            blackBox.environmentIntensity = 0.09;
+            blackBox.overloadedShadowIntensity = 0.6;
+            blackBox.overloadedShadeIntensity = 0.22;
+            blackBox.cameraExposure = 1.5;
+            blackBox.cameraContrast = 2;
+            blackBox.microSurface = 0.46;
+            var blackCushion = new BABYLON.PBRMaterial("Black Cushion", scene);
+            blackCushion.albedoTexture = new BABYLON.Texture("./textures/models-textures/blackcushion.jpg", scene);
+            blackCushion.ambientTexture = ambientTexture;
+            blackCushion.ambientTexture.coordinatesIndex = 1;
+            blackCushion.reflectivityColor = new BABYLON.Color3(0.05, 0.05, 0.05);
+            blackCushion.indexOfRefraction = .52;
+            blackCushion.directIntensity = 2;
+            blackCushion.environmentIntensity = 0;
+            blackCushion.overloadedShadeIntensity = 0.81;
+            blackCushion.cameraExposure = 2;
+            blackCushion.cameraContrast = 2;
+            blackCushion.microSurface = 0.4;
             for (var i = 0; i < newMeshes.length; i++) {
-                var mat = newMeshes[i].material;
-                var pbr = new BABYLON.PBRMaterial("PBR" + i, scene);
-                pbr.reflectivityColor = new BABYLON.Color3(0, 0, 0);
-                pbr.indexOfRefraction = 2;
-                pbr.directIntensity = 1.7;
-                pbr.environmentIntensity = 0.09;
-                pbr.overloadedShadowIntensity = 0.6;
-                pbr.overloadedShadeIntensity = 0.22;
-                pbr.cameraExposure = 1.5;
-                pbr.cameraContrast = 2;
-                pbr.microSurface = 0.46;
-                pbr.albedoTexture = new BABYLON.Texture(mat.diffuseTexture.getInternalTexture().url, scene); // mat.diffuseTexture;
-                if (newMeshes[i].name.indexOf("Part_") > -1) {
-                    var a = './' + name + '_Part_' + newMeshes[i].name.substr(newMeshes[i].name.indexOf("Part_") + 5, 1) + '_AO.jpg';
-                    pbr.ambientTexture = new BABYLON.Texture(a /*"./textures/models-textures/BOX_STYLE_1.jpg"*/, scene);
-                    pbr.ambientTexture.coordinatesIndex = 1;
+                // var mat: BABYLON.StandardMaterial = <BABYLON.StandardMaterial>newMeshes[i].material;
+                // if(!mat) continue;
+                // // var redPlastic = new BABYLON.PBRMaterial("Red Plastic", scene);
+                // // redPlastic.albedoTexture = new BABYLON.Texture("./textures/models-textures/redplastic.jpg", scene);
+                // // redPlastic.ambientTexture = ambientTexture;
+                // // redPlastic.ambientTexture.coordinatesIndex = 1;
+                // // redPlastic.reflectivityColor = new BABYLON.Color3(0.2, 0.2, 0.2);
+                // // redPlastic.indexOfRefraction = .52;
+                // // redPlastic.directIntensity = 1;
+                // // redPlastic.environmentIntensity = 0.5;
+                // // redPlastic.specularIntensity = 0.3;
+                // // redPlastic.overloadedShadowIntensity = 1.3;
+                // // redPlastic.overloadedShadeIntensity = 0.68;
+                // // redPlastic.cameraExposure = 0.8;
+                // // redPlastic.cameraContrast = 2;
+                // // redPlastic.microSurface = 0.34;
+                // var pbr = new BABYLON.PBRMaterial("PBR" + i, scene);
+                // pbr.reflectivityColor = new BABYLON.Color3(0.2, 0.2, 0.2);
+                // pbr.indexOfRefraction = .52;
+                // pbr.directIntensity = 1;
+                // pbr.specularIntensity = 0.5;
+                // pbr.environmentIntensity = 0.09;
+                // pbr.overloadedShadowIntensity = 1.3;
+                // pbr.overloadedShadeIntensity = 0.68;
+                // pbr.cameraExposure = 0.8;
+                // pbr.cameraContrast = 2;
+                // pbr.microSurface = 0.34;
+                // //  pbr.albedoTexture = new BABYLON.Texture(mat.diffuseTexture.getInternalTexture().url, scene);// mat.diffuseTexture;
+                // if (newMeshes[i].name.indexOf("Part_") > -1) {
+                //     var a = './' + name + '_Part_' + newMeshes[i].name.substr(newMeshes[i].name.indexOf("Part_") + 5, 1) + '_AO.jpg';
+                //     pbr.ambientTexture = new BABYLON.Texture(a/*"./textures/models-textures/BOX_STYLE_1.jpg"*/, scene);
+                //     pbr.ambientTexture.coordinatesIndex = 1;
+                //     var a = './' + name + '_Part_' + newMeshes[i].name.substr(newMeshes[i].name.indexOf("Part_") + 5, 1) + '_Diffuse.jpg';
+                //     pbr.albedoTexture = new BABYLON.Texture(a/*"./textures/models-textures/BOX_STYLE_1.jpg"*/, scene);
+                // }
+                // if (mat.name.indexOf("TRANSPARENT") > -1) {
+                //     pbr.opacityTexture = mat.diffuseTexture;
+                // }
+                // // (<BABYLON.Mesh>newMeshes[i]).shad.convertToFlatShadedMesh();
+                // newMeshes[i].material = pbr;
+                // scene.getLightByName("hemilight").excludedMeshes.push(newMeshes[i]);
+                switch (newMeshes[i].name) {
+                    case "BOX_STYLE_1":
+                        blackBox.ambientTexture = new BABYLON.Texture("./textures/models-textures/BOX_STYLE_1.jpg", scene);
+                        newMeshes[i].material = blackBox;
+                        break;
+                    case "GROUNDPLANE_STYLE_1":
+                        var ground = new BABYLON.PBRMaterial("g", scene);
+                        ground.albedoTexture = new BABYLON.Texture("./textures/models-textures/GROUNDPLANESHADOW_STYLE_1.png", scene);
+                        ground.opacityTexture = new BABYLON.Texture("./textures/models-textures/GROUNDPLANESHADOW_STYLE_1.png", scene);
+                        ground.albedoTexture.hasAlpha = true;
+                        ground.reflectivityColor = new BABYLON.Color3(0, 0, 0);
+                        ground.directIntensity = 2;
+                        ground.environmentIntensity = 0;
+                        ground.overloadedShadeIntensity = 0;
+                        ground.cameraExposure = 2;
+                        ground.cameraContrast = 2;
+                        ground.microSurface = 0;
+                        //newMeshes[i].position.y = 0.01;
+                        newMeshes[i].material = ground;
+                        newMeshes[i].isPickable = false;
+                        break;
+                    case "HEADSETARCH_STYLE_1":
+                        blackMetal.ambientTexture = ambientTexture;
+                        newMeshes[i].material = blackMetal;
+                        break;
+                    case "HEADSETBLACKPLASTIC_STYLE_1":
+                        blackPlastic.ambientTexture = ambientTexture;
+                        newMeshes[i].material = blackPlastic;
+                        break;
+                    case "HEADSETCHROME_STYLE_1":
+                        chrome.ambientTexture = ambientTexture;
+                        newMeshes[i].material = chrome;
+                        break;
+                    case "HEADSETCOLOREDPLASTIC_STYLE_1":
+                        redPlastic.ambientTexture = ambientTexture;
+                        newMeshes[i].material = redPlastic;
+                        break;
+                    case "HEADSETCUSHION_STYLE_1":
+                        blackCushion.ambientTexture = ambientTexture;
+                        newMeshes[i].material = blackCushion;
+                    default: break;
                 }
-                if (mat.name.indexOf("TRANSPARENT") > -1) {
-                    pbr.opacityTexture = mat.diffuseTexture;
-                }
-                //                (<BABYLON.Mesh>newMeshes[i]).convertToFlatShadedMesh();
-                newMeshes[i].material = pbr;
             }
             var refl = scene.getMeshByName("reflectionPlane").material.reflectionTexture;
             for (var i = 0; i < newMeshes.length; i++) {

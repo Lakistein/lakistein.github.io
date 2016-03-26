@@ -27,23 +27,6 @@ class EnvironmentManager {
                         environment[i].isPickable = false;
                         hemilight.includedOnlyMeshes.push(environment[i]);
                         break;
-                    case "GROUNDPLANE_STYLE_1":
-                        // TODO: fix reflection
-                        var ground = new BABYLON.PBRMaterial("g", scene);
-                        ground.albedoTexture = new BABYLON.Texture("./textures/models-textures/GROUNDPLANESHADOW_STYLE_1.png", scene);
-                        ground.opacityTexture = new BABYLON.Texture("./textures/models-textures/GROUNDPLANESHADOW_STYLE_1.png", scene);
-                        ground.albedoTexture.hasAlpha = true;
-                        ground.reflectivityColor = new BABYLON.Color3(0, 0, 0);
-                        ground.directIntensity = 2;
-                        ground.environmentIntensity = 0;
-                        ground.overloadedShadeIntensity = 0;
-                        ground.cameraExposure = 2;
-                        ground.cameraContrast = 2;
-                        ground.microSurface = 0;
-                        environment[i].position.y = 0.01;
-                        environment[i].material = ground;
-                        environment[i].isPickable = false;
-                        break;
                     case "groundPlane":
                         var groundPlaneMaterial = new BABYLON.PBRMaterial("groundPlaneMaterial", scene);
                         groundPlaneMaterial.albedoTexture = new BABYLON.Texture("./textures/flare.png", scene);
