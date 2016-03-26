@@ -247,10 +247,10 @@ var EnvironmentManager = (function () {
     };
     EnvironmentManager.prototype.setReflection = function (scene, color) {
         for (var i = 0; i < modelMeshes.length; i++) {
-            if (this.environments[this.currentEnvironment].reflectionTexture) {
+            if (this.environments[this.currentEnvironment].reflectionTexture && modelMeshes[i].material) {
                 modelMeshes[i].material.reflectionTexture = this.environments[this.currentEnvironment].reflectionTexture;
             }
-            else {
+            else if (modelMeshes[i].material) {
                 modelMeshes[i].material.reflectionColor = (color) ? color : this.environments[this.currentEnvironment].backgroundColor;
             }
         }
@@ -1244,7 +1244,7 @@ var UploadManager = (function () {
                 if (mat.name.indexOf("TRANSPARENT") > -1) {
                     pbr.opacityTexture = mat.diffuseTexture;
                 }
-                newMeshes[i].convertToFlatShadedMesh();
+                //                (<BABYLON.Mesh>newMeshes[i]).convertToFlatShadedMesh();
                 newMeshes[i].material = pbr;
             }
             var refl = scene.getMeshByName("reflectionPlane").material.reflectionTexture;

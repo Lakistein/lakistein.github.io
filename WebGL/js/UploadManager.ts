@@ -144,7 +144,7 @@ class UploadManager {
                     pbr.opacityTexture = mat.diffuseTexture;
                 }
 
-                (<BABYLON.Mesh>newMeshes[i]).convertToFlatShadedMesh();
+    //                (<BABYLON.Mesh>newMeshes[i]).convertToFlatShadedMesh();
                 newMeshes[i].material = pbr;
                 // scene.getLightByName("hemilight").excludedMeshes.push(newMeshes[i]);
 

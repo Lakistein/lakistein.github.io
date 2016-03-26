@@ -157,10 +157,10 @@ class EnvironmentManager {
 
     setReflection(scene: BABYLON.Scene, color?: BABYLON.Color3) {
         for (var i = 0; i < modelMeshes.length; i++) {
-            if (this.environments[this.currentEnvironment].reflectionTexture) {
+            if (this.environments[this.currentEnvironment].reflectionTexture && modelMeshes[i].material) {
                 (<BABYLON.PBRMaterial>modelMeshes[i].material).reflectionTexture = this.environments[this.currentEnvironment].reflectionTexture;
             }
-            else {
+            else if(modelMeshes[i].material){
                 (<BABYLON.PBRMaterial>modelMeshes[i].material).reflectionColor = (color) ? color : this.environments[this.currentEnvironment].backgroundColor;
             }
         }

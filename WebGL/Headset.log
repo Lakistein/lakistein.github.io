@@ -1,0 +1,90 @@
+	Exporter version: 4.4.2, Blender version: 2.71 (sub 0)
+========= Conversion from Blender to Babylon.js =========
+	Scene settings used:
+		selected layers only:  false
+		flat shading entire scene:  false
+		inline textures:  false
+		texture directory:  /Users/jonvarner/Desktop/Headset_New/New Assets/
+	Python World class constructor completed
+	WARNING: No active camera has been assigned, or is not in a currently selected Blender layer
+	processing begun of mesh:  Headset_Part_2
+		processing begun of Standard material:  Headset_Part_2_DIFFUSE
+			Diffuse texture found "Headset_New_UVs_file8"
+				Image texture found, type:  diffuseTexture, mapped using: "map1"
+		num positions      :  2336
+		num normals        :  2336
+		num uvs            :  4672
+		num uvs2           :  4672
+		num colors         :  0
+		num indices        :  7680
+	processing begun of mesh:  Headset_Part_6
+		processing begun of Standard material:  Headset_Part_6_DIFFUSE
+			Diffuse texture found "Headset_New_UVs_file2"
+				Image texture found, type:  diffuseTexture, mapped using: "map1"
+	WARNING: Error encountered processing image file:  , Error:  '/Users/jonvarner/Desktop/Headset_New/New Assets/blackblox.jpg' and '/Users/jonvarner/Desktop/Headset_New/New Assets/blackblox.jpg' are the same file
+		num positions      :  1795
+		num normals        :  1795
+		num uvs            :  3590
+		num uvs2           :  3590
+		num colors         :  0
+		num indices        :  2085
+	processing begun of mesh:  Headset_Part_1
+		processing begun of Standard material:  Headset_Part_1_DIFFUSE
+			Diffuse texture found "Headset_New_UVs_file5"
+				Image texture found, type:  diffuseTexture, mapped using: "map1"
+	WARNING: Error encountered processing image file:  , Error:  '/Users/jonvarner/Desktop/Headset_New/New Assets/blackplastic.jpg' and '/Users/jonvarner/Desktop/Headset_New/New Assets/blackplastic.jpg' are the same file
+		num positions      :  13506
+		num normals        :  13506
+		num uvs            :  27012
+		num uvs2           :  27012
+		num colors         :  0
+		num indices        :  31896
+	processing begun of mesh:  Headset_Part_4
+		processing begun of Standard material:  Headset_Part_4_DIFFUSE
+			Diffuse texture found "file2"
+				Image texture found, type:  diffuseTexture, mapped using: "map1"
+	WARNING: Error encountered processing image file:  , Error:  '/Users/jonvarner/Desktop/Headset_New/New Assets/chrome.jpg' and '/Users/jonvarner/Desktop/Headset_New/New Assets/chrome.jpg' are the same file
+		num positions      :  4589
+		num normals        :  4589
+		num uvs            :  9178
+		num uvs2           :  9178
+		num colors         :  0
+		num indices        :  7392
+	processing begun of mesh:  Headset_Part_5
+		processing begun of Standard material:  Headset_Part_5_DIFFUSE
+			Diffuse texture found "Headset_New_UVs_file4"
+				Image texture found, type:  diffuseTexture, mapped using: "map1"
+	WARNING: Error encountered processing image file:  , Error:  '/Users/jonvarner/Desktop/Headset_New/New Assets/blackmetal.jpg' and '/Users/jonvarner/Desktop/Headset_New/New Assets/blackmetal.jpg' are the same file
+		num positions      :  1178
+		num normals        :  1178
+		num uvs            :  2356
+		num uvs2           :  2356
+		num colors         :  0
+		num indices        :  1752
+	processing begun of mesh:  Ground_Plane
+		processing begun of Standard material:  Ground_Plane_DIFFUSE
+			Diffuse texture found "ground_plane_file7"
+				Image texture found, type:  diffuseTexture, mapped using: "map1"
+	WARNING: Error encountered processing image file:  , Error:  '/Users/jonvarner/Desktop/Headset_New/New Assets/GROUNDPLANESHADOW_STYLE_1.png' and '/Users/jonvarner/Desktop/Headset_New/New Assets/GROUNDPLANESHADOW_STYLE_1.png' are the same file
+				WARNING: Opacity non-std way to indicate opacity, use material alpha to also use Opacity texture
+		num positions      :  4
+		num normals        :  4
+		num uvs            :  8
+		num uvs2           :  8
+		num colors         :  0
+		num indices        :  6
+	processing begun of mesh:  Headset_Part_3
+		processing begun of Standard material:  Headset_Part_3_DIFFUSE
+			Diffuse texture found "file1"
+				Image texture found, type:  diffuseTexture, mapped using: "map1"
+	WARNING: Error encountered processing image file:  , Error:  '/Users/jonvarner/Desktop/Headset_New/New Assets/redplastic.jpg' and '/Users/jonvarner/Desktop/Headset_New/New Assets/redplastic.jpg' are the same file
+		num positions      :  705
+		num normals        :  705
+		num uvs            :  1410
+		num uvs2           :  1410
+		num colors         :  0
+		num indices        :  2436
+========= Writing of scene file started =========
+========= Writing of scene file completed =========
+========= end of processing =========
+elapsed time:  0 min, 0.819 secs
