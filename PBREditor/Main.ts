@@ -41,8 +41,8 @@ window.addEventListener('DOMContentLoaded', function() {
         scene.activeCamera = camera;
 
         // Light
-        new BABYLON.PointLight("point", new BABYLON.Vector3(0, 40, 0), scene);
-
+        var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
+        light.intensity = 1;
         // Environment Texture
         var hdrTexture = new BABYLON.HDRCubeTexture("./room.hdr", scene, 512);
 
@@ -67,9 +67,8 @@ window.addEventListener('DOMContentLoaded', function() {
             var Flat_1 = BABYLON.Mesh.CreateSphere("Flat 1", 100, 3, scene, true);
             Flat_1.position.addInPlace(new BABYLON.Vector3(-4, 0, -6));
             Flat_1.material = Flat_1_pbr;
-
-            displayMaterialValues(Flat_1_pbr);
             Flat_1_pbr.reflectionTexture = hdrTexture;
+            displayMaterialValues(Flat_1_pbr);
         }
 
         // Felt 1
