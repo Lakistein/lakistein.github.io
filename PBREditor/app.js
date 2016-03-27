@@ -36,14 +36,15 @@ window.addEventListener('DOMContentLoaded', function () {
         scene.activeCamera = camera;
         // Light
         var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
-        light.intensity = 1;
+        light.intensity = 10;
         // Environment Texture
-        var hdrTexture = new BABYLON.HDRCubeTexture("./room.hdr", scene, 512);
+        var hdrTexturee = new BABYLON.HDRCubeTexture("./room.hdr", scene, 512);
+        var hdrTexture = new BABYLON.HDRCubeTexture("./room.hdr", scene, 64, false, true, false);
         // Skybox
         var hdrSkybox = BABYLON.Mesh.CreateBox("hdrSkyBox", 1000.0, scene);
         var hdrSkyboxMaterial = new BABYLON.PBRMaterial("skyBox", scene);
         hdrSkyboxMaterial.backFaceCulling = false;
-        hdrSkyboxMaterial.reflectionTexture = hdrTexture.clone();
+        hdrSkyboxMaterial.reflectionTexture = hdrTexturee.clone();
         hdrSkyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
         hdrSkyboxMaterial.microSurface = 1.0;
         hdrSkyboxMaterial.cameraExposure = 0.6;
@@ -60,6 +61,7 @@ window.addEventListener('DOMContentLoaded', function () {
             Flat_1.position.addInPlace(new BABYLON.Vector3(-4, 0, -6));
             Flat_1.material = Flat_1_pbr;
             Flat_1_pbr.reflectionTexture = hdrTexture;
+            Flat_1_pbr.reflectionTexture;
             displayMaterialValues(Flat_1_pbr);
         }
         // Felt 1
