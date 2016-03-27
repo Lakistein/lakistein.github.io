@@ -38,13 +38,12 @@ window.addEventListener('DOMContentLoaded', function () {
         var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
         light.intensity = 10;
         // Environment Texture
-        var hdrTexturee = new BABYLON.HDRCubeTexture("./country.hdr", scene, 512);
-        var hdrTexture = new BABYLON.HDRCubeTexture("./country.hdr", scene, 64, false, true, false, true);
+        var hdrTexture = new BABYLON.HDRCubeTexture("./room.hdr", scene, 128, false, true, false, true);
         // Skybox
         var hdrSkybox = BABYLON.Mesh.CreateBox("hdrSkyBox", 1000.0, scene);
         var hdrSkyboxMaterial = new BABYLON.PBRMaterial("skyBox", scene);
         hdrSkyboxMaterial.backFaceCulling = false;
-        hdrSkyboxMaterial.reflectionTexture = hdrTexturee.clone();
+        hdrSkyboxMaterial.reflectionTexture = hdrTexture.clone();
         hdrSkyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
         hdrSkyboxMaterial.microSurface = 1.0;
         hdrSkyboxMaterial.cameraExposure = 0.6;
