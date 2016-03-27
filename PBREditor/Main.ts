@@ -42,9 +42,9 @@ window.addEventListener('DOMContentLoaded', function() {
 
         // Light
         var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
-        light.intensity = 10;
+        light.intensity = 1;
         // Environment Texture
-        var hdrTexture = new BABYLON.HDRCubeTexture("./room.hdr", scene, 128, false, true, false, true);
+        var hdrTexture = new BABYLON.CubeTexture("./cubemap/skybox", scene); //new BABYLON.HDRCubeTexture("./room.hdr", scene, 128, false, true, false, true);
         
         // Skybox
         var hdrSkybox = BABYLON.Mesh.CreateBox("hdrSkyBox", 1000.0, scene);
