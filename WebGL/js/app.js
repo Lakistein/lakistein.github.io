@@ -1208,7 +1208,7 @@ var UploadManager = (function () {
                     pbr.ambientTexture = new BABYLON.Texture(a /*"./textures/models-textures/BOX_STYLE_1.jpg"*/, scene);
                     pbr.ambientTexture.coordinatesIndex = 1;
                 }
-                newMeshes[i].outlineWidth = 1;
+                newMeshes[i].outlineWidth = 0.3;
                 newMeshes[i].outlineColor = BABYLON.Color3.White();
                 newMeshes[i].material = pbr;
             }

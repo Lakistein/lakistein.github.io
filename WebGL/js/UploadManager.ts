@@ -155,7 +155,7 @@ class UploadManager {
 
                 }
 
-                newMeshes[i].outlineWidth = 1;
+                newMeshes[i].outlineWidth = 0.3;
                 newMeshes[i].outlineColor = BABYLON.Color3.White();
                 newMeshes[i].material = pbr;
             }
