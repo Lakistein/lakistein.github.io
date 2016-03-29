@@ -6,6 +6,7 @@
 /// <reference path="TextCanvasManager.ts" />
 /// <reference path="LensFlareSystem.ts" />
 /// <reference path="UploadManager.ts" />
+/// <reference path="MaterialManager.ts" />
 
 // things to download: 
 // Skyboxes with reflections
@@ -44,6 +45,9 @@ window.addEventListener('DOMContentLoaded', function() {
 
         uploadManager = new UploadManager(scene, envMng);
         //  uploadManager.uploadNewModel("./", "HEADSET", scene, envMng);
+        
+        var materials = '[{"name":"Plastic","indexOfRefraction":0.52,"alpha":1,"directIntensity":1,"emissiveIntensity":0,"environmentIntensity":0.5,"specularIntensity":0.3,"overloadedShadowIntensity":1.3,"overloadedShadeIntensity":0.68,"cameraExposure":0.8,"cameraContrast":2,"microSurface":0.34,"reflectivityColor":{"r":0.2,"g":0.2,"b":0.2}},{"name":"Metal","indexOfRefraction":2,"alpha":1,"directIntensity":1.7,"emissiveIntensity":1,"environmentIntensity":0.09,"specularIntensity":1,"overloadedShadowIntensity":0.6,"overloadedShadeIntensity":0.22,"cameraExposure":1.5,"cameraContrast":2,"microSurface":0.46,"reflectivityColor":{"r":0,"g":0,"b":0}},{"name":"Chrome","indexOfRefraction":0.66,"alpha":1,"directIntensity":0.3,"emissiveIntensity":1,"environmentIntensity":1,"specularIntensity":1.5,"overloadedShadowIntensity":1,"overloadedShadeIntensity":1,"cameraExposure":0.23,"cameraContrast":1.9,"microSurface":0.99,"reflectivityColor":{"r":1,"g":1,"b":1}}]';
+        var materialManager = new MaterialManager(materials, scene);
         return scene;
     }
 

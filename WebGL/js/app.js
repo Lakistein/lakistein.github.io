@@ -1,32 +1,3 @@
-/// <reference path="babylon.pbrMaterial.d.ts" />
-var PBRConverter = (function () {
-    function PBRConverter() {
-    }
-    PBRConverter.PBRToJSON = function (material) {
-        return '{ ' +
-            '"indexOfRefraction":' + material.indexOfRefraction + ',' +
-            '"albedoTexture":"' + ((material.albedoTexture) ? encodeURI(material.albedoTexture.getInternalTexture().url) : "null") + '",' +
-            '"ambientTexture":"' + ((material.ambientTexture) ? encodeURI(material.ambientTexture.getInternalTexture().url) : "null") + '",' +
-            '"bumpTexture":"' + ((material.bumpTexture) ? encodeURI(material.bumpTexture.getInternalTexture().url) : "null") + '",' +
-            '"emissiveTexture":"' + ((material.emissiveTexture) ? encodeURI(material.emissiveTexture.getInternalTexture().url) : "null") + '",' +
-            '"alpha" : ' + material.alpha + ',' +
-            '"directIntensity" : ' + material.directIntensity + ',' +
-            '"emissiveIntensity" : ' + material.emissiveIntensity + ',' +
-            '"environmentIntensity" : ' + material.environmentIntensity + ',' +
-            '"specularIntensity" : ' + material.specularIntensity + ',' +
-            '"overloadedShadowIntensity" : ' + material.overloadedShadowIntensity + ',' +
-            '"overloadedShadeIntensity" : ' + material.overloadedShadeIntensity + ',' +
-            '"cameraExposure" : ' + material.cameraExposure + ',' +
-            '"cameraContrast" : ' + material.cameraContrast + ',' +
-            '"microSurface" : ' + material.microSurface + ',' +
-            '"reflectivityColor" : {"r":' + material.reflectivityColor.r + ', "g":' + material.reflectivityColor.g + ', "b":' + material.reflectionColor.b + '}' +
-            '}';
-    };
-    PBRConverter.prototype.JSONToPBR = function (json) {
-        return null;
-    };
-    return PBRConverter;
-})();
 /// <reference path="babylon.d.ts" />
 /// <reference path="babylon.pbrMaterial.d.ts" />
 // TODO: uradi simple interface
@@ -1128,7 +1099,6 @@ var UploadManager = (function () {
             modelMeshes = [];
         }
         BABYLON.SceneLoader.ImportMesh(null, modelPath, modelName, scene, function (newMeshes) {
-            modelMeshes = newMeshes;
             // var ambientTexture: BABYLON.Texture = new BABYLON.Texture("./textures/models-textures/HEADSET_STYLE_1.jpg", scene);
             // var blackPlastic = new BABYLON.PBRMaterial("Black Plastic", scene);
             // blackPlastic.albedoTexture = new BABYLON.Texture("./textures/models-textures/blackplastic.jpg", scene);
@@ -1168,7 +1138,7 @@ var UploadManager = (function () {
             // chrome.environmentIntensity = 0.6;
             // chrome.cameraExposure = .23;
             // chrome.cameraContrast = 1.9;
-            // chrome.microSurface = 0.21;
+            // chrome.microSurface = 0.99;
             // var blackMetal = new BABYLON.PBRMaterial("Black Metal", scene);
             // blackMetal.albedoTexture = new BABYLON.Texture("./textures/models-textures/blackmetal.jpg", scene);
             // blackMetal.ambientTexture = ambientTexture;
@@ -1209,15 +1179,6 @@ var UploadManager = (function () {
             for (var i = 0; i < newMeshes.length; i++) {
                 var mat = newMeshes[i].material;
                 var pbr = new BABYLON.PBRMaterial("PBR" + i, scene);
-                // blackBox.reflectivityColor = new BABYLON.Color3(0, 0, 0);
-                // blackBox.indexOfRefraction = 2;
-                // blackBox.directIntensity = 1.7;
-                // blackBox.environmentIntensity = 0.09;
-                // blackBox.overloadedShadowIntensity = 0.6;
-                // blackBox.overloadedShadeIntensity = 0.22;
-                // blackBox.cameraExposure = 1.5;
-                // blackBox.cameraContrast = 2;
-                // blackBox.microSurface = 0.46;
                 pbr.reflectivityColor = new BABYLON.Color3(0, 0, 0);
                 pbr.indexOfRefraction = 2;
                 pbr.directIntensity = 1.7;
@@ -1228,27 +1189,150 @@ var UploadManager = (function () {
                 pbr.cameraContrast = 2;
                 pbr.microSurface = 0.46;
                 pbr.albedoTexture = mat.diffuseTexture;
-                // debugger;
                 if (mat.name.indexOf("Ground_Plane") > -1) {
                     pbr.albedoTexture = mat.diffuseTexture;
                     pbr.opacityTexture = mat.diffuseTexture;
+                    newMeshes[i].isPickable = false;
+                    newMeshes[i].renderOutline = false;
+                    newMeshes[i].material = pbr;
+                    continue;
                 }
+                else {
+                    modelMeshes.push(newMeshes[i]);
+                }
+                newMeshes[i].actionManager = new BABYLON.ActionManager(scene);
+                newMeshes[i].actionManager.registerAction(new BABYLON.SetValueAction(BABYLON.ActionManager.OnPointerOutTrigger, newMeshes[i], "renderOutline", false));
+                newMeshes[i].actionManager.registerAction(new BABYLON.SetValueAction(BABYLON.ActionManager.OnPointerOverTrigger, newMeshes[i], "renderOutline", true));
                 if (newMeshes[i].name.indexOf("Part_") > -1) {
                     var a = './' + name + '_Part_' + newMeshes[i].name.substr(newMeshes[i].name.indexOf("Part_") + 5, 1) + '_AO.jpg';
                     pbr.ambientTexture = new BABYLON.Texture(a /*"./textures/models-textures/BOX_STYLE_1.jpg"*/, scene);
                     pbr.ambientTexture.coordinatesIndex = 1;
                 }
+                newMeshes[i].outlineWidth = 1;
+                newMeshes[i].outlineColor = BABYLON.Color3.White();
                 newMeshes[i].material = pbr;
             }
             var refl = scene.getMeshByName("reflectionPlane").material.reflectionTexture;
             for (var i = 0; i < newMeshes.length; i++) {
                 refl.renderList.push(newMeshes[i]);
             }
-            debugger;
             envManager.setReflection(scene, null);
         });
     };
     return UploadManager;
+})();
+/// <reference path="babylon.d.ts"/>
+/// <reference path="babylon.pbrMaterial.d.ts" />
+var Material = (function () {
+    function Material(json, scene) {
+        var jsonMat = JSON.parse(json);
+        this.name = jsonMat.name;
+        this.pbr = new BABYLON.PBRMaterial(jsonMat.name, scene);
+        this.pbr.indexOfRefraction = jsonMat.indexOfRefraction;
+        this.pbr.alpha = jsonMat.alpha;
+        this.pbr.directIntensity = jsonMat.directIntensity;
+        this.pbr.emissiveIntensity = jsonMat.emissiveIntensity;
+        this.pbr.environmentIntensity = jsonMat.environmentIntensity;
+        this.pbr.specularIntensity = jsonMat.specularIntensity;
+        this.pbr.overloadedShadowIntensity = jsonMat.overloadedShadowIntensity;
+        this.pbr.overloadedShadeIntensity = jsonMat.overloadedShadeIntensity;
+        this.pbr.cameraExposure = jsonMat.cameraExposure;
+        this.pbr.cameraContrast = jsonMat.cameraContrast;
+        this.pbr.microSurface = jsonMat.microSurface;
+        this.pbr.reflectivityColor = new BABYLON.Color3(jsonMat.reflectivityColor.r, jsonMat.reflectivityColor.g, jsonMat.reflectivityColor.b);
+    }
+    Material.prototype.ToJSON = function () {
+        return '{ ' +
+            '"name":"' + this.pbr.name + '",' +
+            '"indexOfRefraction":' + this.pbr.indexOfRefraction + ',' +
+            '"alpha" : ' + this.pbr.alpha + ',' +
+            '"directIntensity" : ' + this.pbr.directIntensity + ',' +
+            '"emissiveIntensity" : ' + this.pbr.emissiveIntensity + ',' +
+            '"environmentIntensity" : ' + this.pbr.environmentIntensity + ',' +
+            '"specularIntensity" : ' + this.pbr.specularIntensity + ',' +
+            '"overloadedShadowIntensity" : ' + this.pbr.overloadedShadowIntensity + ',' +
+            '"overloadedShadeIntensity" : ' + this.pbr.overloadedShadeIntensity + ',' +
+            '"cameraExposure" : ' + this.pbr.cameraExposure + ',' +
+            '"cameraContrast" : ' + this.pbr.cameraContrast + ',' +
+            '"microSurface" : ' + this.pbr.microSurface + ',' +
+            '"reflectivityColor" : {"r":' + this.pbr.reflectivityColor.r + ', "g":' + this.pbr.reflectivityColor.g + ', "b":' + this.pbr.reflectionColor.b + '}' +
+            '}';
+    };
+    return Material;
+})();
+/// <reference path="babylon.d.ts" />
+/// <reference path="Material.ts" />
+var MaterialManager = (function () {
+    function MaterialManager(materials, scene) {
+        var _this = this;
+        this.materials = {};
+        var jsonMat = JSON.parse(materials);
+        var htmlElement = document.getElementById("materialBody");
+        for (var i = 0; i < jsonMat.length; i++) {
+            this.materials[jsonMat[i].name] = new Material(JSON.stringify(jsonMat[i]), scene);
+            //<img class="material" src=".\textures\models-textures\redplastic.jpg" alt="Plastic" draggable="true">
+            var img = document.createElement("img");
+            img.src = "./textures/materials/" + jsonMat[i].name + ".jpg";
+            img.alt = jsonMat[i].name;
+            img.className = "material";
+            img.draggable = true;
+            if (i % 2 == 0 && i > 0)
+                htmlElement.appendChild(document.createElement("br"));
+            htmlElement.appendChild(img);
+        }
+        var file = document.getElementsByClassName('material');
+        var startdrag = function (evt) {
+            evt.dataTransfer.setData("text", evt.target.alt);
+        };
+        for (var i = 0; i < file.length; i++) {
+            file[i].addEventListener('dragstart', startdrag, false);
+        }
+        var canvas = scene.getEngine().getRenderingCanvas();
+        var dragover = function (evt) {
+            evt.preventDefault();
+            var pickResult = scene.pick(evt.offsetX, evt.offsetY);
+            for (var i = 0; i < modelMeshes.length; i++) {
+                modelMeshes[i].renderOutline = false;
+            }
+            if (pickResult.hit) {
+                pickResult.pickedMesh.renderOutline = true;
+            }
+        };
+        var drop = function (evt) {
+            debugger;
+            evt.preventDefault();
+            console.log(evt.dataTransfer.getData("text"));
+            var mat = _this.cloneMaterial(_this.materials[evt.dataTransfer.getData("text")].pbr, scene);
+            // var src = evt.dataTransfer.getData("text");
+            var pickResult = scene.pick(evt.offsetX, evt.offsetY);
+            if (pickResult.hit) {
+                mat.albedoTexture = pickResult.pickedMesh.material.albedoTexture;
+                mat.ambientTexture = pickResult.pickedMesh.material.ambientTexture;
+                mat.reflectionTexture = pickResult.pickedMesh.material.reflectionTexture;
+                mat.refractionTexture = pickResult.pickedMesh.material.refractionTexture;
+                pickResult.pickedMesh.material = mat;
+            }
+        };
+        canvas.addEventListener('dragover', dragover, false);
+        canvas.addEventListener('drop', drop, false);
+    }
+    MaterialManager.prototype.cloneMaterial = function (material, scene) {
+        var pbr = new BABYLON.PBRMaterial(material.name, scene);
+        pbr.indexOfRefraction = material.indexOfRefraction;
+        pbr.alpha = material.alpha;
+        pbr.directIntensity = material.directIntensity;
+        pbr.emissiveIntensity = material.emissiveIntensity;
+        pbr.environmentIntensity = material.environmentIntensity;
+        pbr.specularIntensity = material.specularIntensity;
+        pbr.overloadedShadowIntensity = material.overloadedShadowIntensity;
+        pbr.overloadedShadeIntensity = material.overloadedShadeIntensity;
+        pbr.cameraExposure = material.cameraExposure;
+        pbr.cameraContrast = material.cameraContrast;
+        pbr.microSurface = material.microSurface;
+        pbr.reflectivityColor = new BABYLON.Color3(material.reflectivityColor.r, material.reflectivityColor.g, material.reflectivityColor.b);
+        return pbr;
+    };
+    return MaterialManager;
 })();
 /// <reference path="babylon.d.ts" />
 /// <reference path="babylon.pbrMaterial.d.ts" />
@@ -1258,6 +1342,7 @@ var UploadManager = (function () {
 /// <reference path="TextCanvasManager.ts" />
 /// <reference path="LensFlareSystem.ts" />
 /// <reference path="UploadManager.ts" />
+/// <reference path="MaterialManager.ts" />
 // things to download: 
 // Skyboxes with reflections
 // Materials
@@ -1288,6 +1373,8 @@ window.addEventListener('DOMContentLoaded', function () {
         var textCanv = new TextCanvasManager(json, scene);
         uploadManager = new UploadManager(scene, envMng);
         //  uploadManager.uploadNewModel("./", "HEADSET", scene, envMng);
+        var materials = '[{"name":"Plastic","indexOfRefraction":0.52,"alpha":1,"directIntensity":1,"emissiveIntensity":0,"environmentIntensity":0.5,"specularIntensity":0.3,"overloadedShadowIntensity":1.3,"overloadedShadeIntensity":0.68,"cameraExposure":0.8,"cameraContrast":2,"microSurface":0.34,"reflectivityColor":{"r":0.2,"g":0.2,"b":0.2}},{"name":"Metal","indexOfRefraction":2,"alpha":1,"directIntensity":1.7,"emissiveIntensity":1,"environmentIntensity":0.09,"specularIntensity":1,"overloadedShadowIntensity":0.6,"overloadedShadeIntensity":0.22,"cameraExposure":1.5,"cameraContrast":2,"microSurface":0.46,"reflectivityColor":{"r":0,"g":0,"b":0}},{"name":"Chrome","indexOfRefraction":0.66,"alpha":1,"directIntensity":0.3,"emissiveIntensity":1,"environmentIntensity":1,"specularIntensity":1.5,"overloadedShadowIntensity":1,"overloadedShadeIntensity":1,"cameraExposure":0.23,"cameraContrast":1.9,"microSurface":0.99,"reflectivityColor":{"r":1,"g":1,"b":1}}]';
+        var materialManager = new MaterialManager(materials, scene);
         return scene;
     }
     sceneMain = createScene();
