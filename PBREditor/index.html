@@ -22,6 +22,18 @@
             height: 100%;
             touch-action: none;
         }
+        
+        #btn {
+            position: absolute;
+            left: 10px;
+            top: 200px;
+        }
+        
+        #txt {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
     </style>
 
 </head>
@@ -29,6 +41,8 @@
 <body>
     <canvas id="renderCanvas"></canvas>
     <script src="./app.js"></script>
+    <input type="button" id="btn" value="Generate Json">
+    <textarea name="" id="txt" cols="30" rows="10"></textarea>
 </body>
 
 </html>

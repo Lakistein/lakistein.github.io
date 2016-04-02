@@ -7,9 +7,33 @@ window.addEventListener('DOMContentLoaded', function() {
     var engine = new BABYLON.Engine(canvas, true);
     var camera: BABYLON.ArcRotateCamera;
     var gui = new dat.GUI();
+    function generateJson(pbr: BABYLON.PBRMaterial, display: boolean) {
+        var txt = '{' +
+            '"name":"' + pbr.name + '",' +
+            '"isGlass":"' + (pbr.refractionTexture ? "true" : "false") + '",' +
+            '"indexOfRefraction":' + pbr.indexOfRefraction + ',' +
+            '"alpha":' + pbr.alpha + ',' +
+            '"directIntensity":' + pbr.directIntensity + ',' +
+            '"emissiveIntensity":' + pbr.emissiveIntensity + ',' +
+            '"environmentIntensity":' + pbr.environmentIntensity + ',' +
+            '"specularIntensity":' + pbr.specularIntensity + ',' +
+            '"overloadedShadowIntensity":' + pbr.overloadedShadowIntensity + ',' +
+            '"overloadedShadeIntensity":' + pbr.overloadedShadeIntensity + ',' +
+            '"cameraExposure":' + pbr.cameraExposure + ',' +
+            '"cameraContrast":' + pbr.cameraContrast + ',' +
+            '"microSurface":' + pbr.microSurface + ',' +
+            '"reflectivityColor":{"r":' + pbr.reflectivityColor.r + ', "g":' + pbr.reflectivityColor.g + ', "b":' + pbr.reflectionColor.b + '}' +
+            '}';
 
+        if (display) {
+            var txtAre = document.getElementById("txt");
+            var btn = document.getElementById("btn");
+            txtAre.textContent = txt;
+        }
+    }
     function displayMaterialValues(material: BABYLON.PBRMaterial) {
         var folder = gui.addFolder(material.name);
+        folder.add(material, "name");
         folder.add(material, "indexOfRefraction", 0, 2);
         folder.add(material, "alpha", 0, 1);
         folder.add(material, "directIntensity", 0, 2);
@@ -31,6 +55,30 @@ window.addEventListener('DOMContentLoaded', function() {
         folder.add(material.reflectivityColor, "r", 0, 1);
         folder.add(material.reflectivityColor, "g", 0, 1);
         folder.add(material.reflectivityColor, "b", 0, 1);
+        var obj = { Generate_Json: function() {  var txt = '{' +
+            '"name":"' + material.name + '",' +
+            '"isGlass":"' + (material.refractionTexture ? "true" : "false") + '",' +
+            '"indexOfRefraction":' + material.indexOfRefraction + ',' +
+            '"alpha":' + material.alpha + ',' +
+            '"directIntensity":' + material.directIntensity + ',' +
+            '"emissiveIntensity":' + material.emissiveIntensity + ',' +
+            '"environmentIntensity":' + material.environmentIntensity + ',' +
+            '"specularIntensity":' + material.specularIntensity + ',' +
+            '"overloadedShadowIntensity":' + material.overloadedShadowIntensity + ',' +
+            '"overloadedShadeIntensity":' + material.overloadedShadeIntensity + ',' +
+            '"cameraExposure":' + material.cameraExposure + ',' +
+            '"cameraContrast":' + material.cameraContrast + ',' +
+            '"microSurface":' + material.microSurface + ',' +
+            '"reflectivityColor":{"r":' + material.reflectivityColor.r + ', "g":' + material.reflectivityColor.g + ', "b":' + material.reflectionColor.b + '}' +
+            '}';
+
+     
+            var txtAre = document.getElementById("txt");
+            var btn = document.getElementById("btn");
+            txtAre.textContent = txt;
+        }  };
+
+        folder.add(obj, 'Generate_Json');
     }
 
     function createScene() {
@@ -45,7 +93,7 @@ window.addEventListener('DOMContentLoaded', function() {
         light.intensity = 1;
         // Environment Texture
         var hdrTexture = new BABYLON.HDRCubeTexture("./room.hdr", scene, 128, false, true, false, true);//new BABYLON.CubeTexture("./cubemap/skybox", scene); 
-        
+
         // Skybox
         var hdrSkybox = BABYLON.Mesh.CreateBox("hdrSkyBox", 1000.0, scene);
         var hdrSkyboxMaterial = new BABYLON.PBRMaterial("skyBox", scene);
@@ -205,6 +253,21 @@ window.addEventListener('DOMContentLoaded', function() {
             Glass_2_pbr.reflectionTexture = hdrTexture;
             Glass_2_pbr.refractionTexture = hdrTexture;
         }
+        var txtAre = document.getElementById("txt");
+        var btn = document.getElementById("btn");
+        btn.onclick = (ev) => {
+            var txt = "[";
+            for (var i = 0; i < scene.meshes.length; i++) {
+                if (scene.meshes[i].material instanceof BABYLON.PBRMaterial && scene.meshes[i].material.name != "skyBox") {
+                    txt += generateJson(<BABYLON.PBRMaterial>scene.meshes[i].material, false);
+                    txt += ",";
+                }
+            }
+
+            txt = txt.substr(0, txt.length - 2);
+            txt += "]";
+            txtAre.textContent = txt;
+        }
         return scene;
     }
 
@@ -216,4 +279,5 @@ window.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('resize', function() {
         engine.resize();
     });
+
 });
