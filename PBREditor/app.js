@@ -28,6 +28,7 @@ window.addEventListener('DOMContentLoaded', function () {
             var btn = document.getElementById("btn");
             txtAre.textContent = txt;
         }
+        return txt;
     }
     function displayMaterialValues(material) {
         var folder = gui.addFolder(material.name);

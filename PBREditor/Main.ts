@@ -7,7 +7,7 @@ window.addEventListener('DOMContentLoaded', function() {
     var engine = new BABYLON.Engine(canvas, true);
     var camera: BABYLON.ArcRotateCamera;
     var gui = new dat.GUI();
-    function generateJson(pbr: BABYLON.PBRMaterial, display: boolean) {
+    function generateJson(pbr: BABYLON.PBRMaterial, display: boolean): string {
         var txt = '{' +
             '"name":"' + pbr.name + '",' +
             '"isGlass":"' + (pbr.refractionTexture ? "true" : "false") + '",' +
@@ -30,6 +30,8 @@ window.addEventListener('DOMContentLoaded', function() {
             var btn = document.getElementById("btn");
             txtAre.textContent = txt;
         }
+        
+        return txt;
     }
     function displayMaterialValues(material: BABYLON.PBRMaterial) {
         var folder = gui.addFolder(material.name);
