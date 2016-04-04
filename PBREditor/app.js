@@ -4,28 +4,31 @@
 window.addEventListener('DOMContentLoaded', function () {
     var canvas = document.getElementById('renderCanvas');
     var engine = new BABYLON.Engine(canvas, true);
-    var camera;
     var gui = new dat.GUI();
     var sceneMain;
-    var sceneMainTemp;
+    var scene, scene2;
     var hdrTexture;
     var gui2 = new dat.GUI();
+    var newSphere;
+    var scenes = [];
+    var num = 0;
     function generateJson(pbr, display) {
+        debugger;
         var txt = '{' +
             '"name":"' + pbr.name + '",' +
             '"isGlass":"' + (pbr.refractionTexture ? "true" : "false") + '",' +
-            '"indexOfRefraction":' + pbr.indexOfRefraction + ',' +
-            '"alpha":' + pbr.alpha + ',' +
-            '"directIntensity":' + pbr.directIntensity + ',' +
-            '"emissiveIntensity":' + pbr.emissiveIntensity + ',' +
-            '"environmentIntensity":' + pbr.environmentIntensity + ',' +
-            '"specularIntensity":' + pbr.specularIntensity + ',' +
-            '"overloadedShadowIntensity":' + pbr.overloadedShadowIntensity + ',' +
-            '"overloadedShadeIntensity":' + pbr.overloadedShadeIntensity + ',' +
-            '"cameraExposure":' + pbr.cameraExposure + ',' +
-            '"cameraContrast":' + pbr.cameraContrast + ',' +
-            '"microSurface":' + pbr.microSurface + ',' +
-            '"reflectivityColor":{"r":' + pbr.reflectivityColor.r + ', "g":' + pbr.reflectivityColor.g + ', "b":' + pbr.reflectionColor.b + '}' +
+            '"indexOfRefraction":' + pbr.indexOfRefraction.toPrecision(2) + ',' +
+            '"alpha":' + pbr.alpha.toPrecision(2) + ',' +
+            '"directIntensity":' + pbr.directIntensity.toPrecision(2) + ',' +
+            '"emissiveIntensity":' + pbr.emissiveIntensity.toPrecision(2) + ',' +
+            '"environmentIntensity":' + pbr.environmentIntensity.toPrecision(2) + ',' +
+            '"specularIntensity":' + pbr.specularIntensity.toPrecision(2) + ',' +
+            '"overloadedShadowIntensity":' + pbr.overloadedShadowIntensity.toPrecision(2) + ',' +
+            '"overloadedShadeIntensity":' + pbr.overloadedShadeIntensity.toPrecision(2) + ',' +
+            '"cameraExposure":' + pbr.cameraExposure.toPrecision(2) + ',' +
+            '"cameraContrast":' + pbr.cameraContrast.toPrecision(2) + ',' +
+            '"microSurface":' + pbr.microSurface.toPrecision(2) + ',' +
+            '"reflectivityColor":{"r":' + pbr.reflectivityColor.r.toPrecision(2) + ', "g":' + pbr.reflectivityColor.g.toPrecision(2) + ', "b":' + pbr.reflectivityColor.b.toPrecision(2) + '}' +
             '}';
         if (display) {
             var txtAre = document.getElementById("txt");
@@ -70,7 +73,7 @@ window.addEventListener('DOMContentLoaded', function () {
         var color = folder.addColor(material, "albedoColor").listen();
         color.onChange(function (value) {
             material.albedoColor = new BABYLON.Color3(value.r / 255, value.g / 255, value.b / 255);
-            console.log(material.albedoColor);
+            //console.log(material.albedoColor);
         });
         folder.add(material.reflectivityColor, "r", 0, 1).listen();
         folder.add(material.reflectivityColor, "g", 0, 1).listen();
@@ -90,25 +93,13 @@ window.addEventListener('DOMContentLoaded', function () {
                     '"cameraExposure":' + material.cameraExposure.toPrecision(2) + ',' +
                     '"cameraContrast":' + material.cameraContrast.toPrecision(2) + ',' +
                     '"microSurface":' + material.microSurface.toPrecision(2) + ',' +
-                    '"reflectivityColor":{"r":' + material.reflectivityColor.r.toPrecision(2) + ', "g":' + material.reflectivityColor.g.toPrecision(2) + ', "b":' + material.reflectionColor.b.toPrecision(2) + '}' +
+                    '"reflectivityColor":{"r":' + material.reflectivityColor.r.toPrecision(2) + ', "g":' + material.reflectivityColor.g.toPrecision(2) + ', "b":' + material.reflectivityColor.b.toPrecision(2) + '}' +
                     '}';
                 var txtAre = document.getElementById("txt");
                 var btn = document.getElementById("btn");
                 txtAre.textContent = txt;
             } };
         var obj2 = { Open_In_New_Scene: function (material2) {
-                debugger;
-                sceneMainTemp = sceneMain;
-                var scene2 = new BABYLON.Scene(engine);
-                var camera2 = new BABYLON.ArcRotateCamera("Camera2", 0, 0, 6, new BABYLON.Vector3(0, 0, 0), scene2);
-                camera2.attachControl(canvas, false);
-                camera2.wheelPrecision = 50;
-                scene2.activeCamera = camera2;
-                scene2.clearColor = BABYLON.Color3.Gray();
-                // Light
-                var light = new BABYLON.HemisphericLight("light12", new BABYLON.Vector3(0, 1, 0), scene2);
-                light.intensity = 1;
-                var newSphere = BABYLON.Mesh.CreateSphere("Sphere2", 100, 3, scene2, true);
                 newSphere.material = material2;
                 var folder = gui2.__folders['Material'];
                 if (folder) {
@@ -157,18 +148,31 @@ window.addEventListener('DOMContentLoaded', function () {
                 folder.add(material2.reflectivityColor, "g", 0, 1).listen();
                 folder.add(material2.reflectivityColor, "b", 0, 1).listen();
                 var obj3 = { Back: function () {
-                        sceneMain = sceneMainTemp;
+                        num = 0;
                     } };
                 folder.add(obj3, 'Back');
                 folder.add(obj, 'Generate_Json');
-                sceneMain = scene2;
+                num = 1;
+                debugger;
             } };
         folder.add(obj, 'Generate_Json');
         folder.add({ Open_In_New_Scene: obj2.Open_In_New_Scene.bind(this, material) }, 'Open_In_New_Scene');
     }
     function createScene() {
-        var scene = new BABYLON.Scene(engine);
-        camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 6, new BABYLON.Vector3(0, 0, 0), scene);
+        scene2 = new BABYLON.Scene(engine);
+        var camera2 = new BABYLON.ArcRotateCamera("Camera2", 0, 0, 6, new BABYLON.Vector3(0, 0, 0), scene2);
+        camera2.attachControl(canvas, true);
+        camera2.wheelPrecision = 50;
+        scene2.activeCamera = camera2;
+        scene2.clearColor = BABYLON.Color3.Gray();
+        // Light
+        var light = new BABYLON.HemisphericLight("light12", new BABYLON.Vector3(0, 1, 0), scene2);
+        light.intensity = 1;
+        newSphere = BABYLON.Mesh.CreateSphere("Sphere2", 100, 3, scene2, true);
+        scene = new BABYLON.Scene(engine);
+        scenes.push(scene);
+        scenes.push(scene2);
+        var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 6, new BABYLON.Vector3(0, 0, 0), scene);
         camera.attachControl(canvas, false);
         camera.wheelPrecision = 50;
         scene.activeCamera = camera;
@@ -176,7 +180,7 @@ window.addEventListener('DOMContentLoaded', function () {
         var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
         light.intensity = 1;
         // Environment Texture
-        var hdrTexture = new BABYLON.HDRCubeTexture("./room.hdr", scene, 32, false, true, false, true); //new BABYLON.CubeTexture("./cubemap/skybox", scene); 
+        var hdrTexture = new BABYLON.HDRCubeTexture("./room.hdr", scene, 128, false, true, false, true); //new BABYLON.CubeTexture("./cubemap/skybox", scene); 
         // Skybox
         var hdrSkybox = BABYLON.Mesh.CreateBox("hdrSkyBox", 1000.0, scene);
         var hdrSkyboxMaterial = new BABYLON.PBRMaterial("skyBox", scene);
@@ -342,7 +346,8 @@ window.addEventListener('DOMContentLoaded', function () {
     }
     sceneMain = createScene();
     engine.runRenderLoop(function () {
-        sceneMain.render();
+        scenes[num].render();
+        console.log(sceneMain.activeCamera.alpha);
     });
     window.addEventListener('resize', function () {
         engine.resize();
