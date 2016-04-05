@@ -44,16 +44,18 @@ class MaterialManager {
         var drop = (evt) => {
             debugger;
             evt.preventDefault();
-            console.log(evt.dataTransfer.getData("text"));
             var mat = this.cloneMaterial((<Material>this.materials[evt.dataTransfer.getData("text")]).pbr, scene);
 
-            // var src = evt.dataTransfer.getData("text");
             var pickResult = scene.pick(evt.offsetX, evt.offsetY);
             if (pickResult.hit) {
                 mat.albedoTexture = (<BABYLON.PBRMaterial>pickResult.pickedMesh.material).albedoTexture;
                 mat.ambientTexture = (<BABYLON.PBRMaterial>pickResult.pickedMesh.material).ambientTexture;
                 mat.reflectionTexture = (<BABYLON.PBRMaterial>pickResult.pickedMesh.material).reflectionTexture;
-                mat.refractionTexture = (<BABYLON.PBRMaterial>pickResult.pickedMesh.material).refractionTexture;
+                if (this.materials[evt.dataTransfer.getData("text")].isGlass)
+                    mat.refractionTexture = (<BABYLON.PBRMaterial>pickResult.pickedMesh.material).reflectionTexture;
+                else
+                    mat.refractionTexture = null;
+                mat.emissiveColor = BABYLON.Color3.White();
                 pickResult.pickedMesh.material = mat;
             }
         }

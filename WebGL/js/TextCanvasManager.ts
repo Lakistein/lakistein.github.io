@@ -270,7 +270,7 @@ class TextCanvasManager {
         scene.registerBeforeRender(() => {
             if (scene.activeCamera) {
                 for (var i = 0; i < this.textCanvases.length; i++) {
-                    var p = BABYLON.Vector3.Project(this.textCanvases[0].anchor.position, BABYLON.Matrix.Identity(), scene.getTransformMatrix(), scene.activeCamera.viewport.toGlobal(scene.getEngine()));
+                    var p = BABYLON.Vector3.Project(this.textCanvases[0].anchor.position, BABYLON.Matrix.Identity(), scene.getTransformMatrix(), scene.activeCamera.viewport.toGlobal(scene.getEngine().getRenderWidth(), scene.getEngine().getRenderHeight()));
                     ancDoc.textContent = "X:" + p.x.toFixed(2) + " Y:" + p.y.toFixed(2) + (this.textCanvases[0].anchor.isEnabled() ? "\nEnabled" : "\nDisabled");
                     ancDoc.style.top = p.y.toFixed(2).toString() + "px";
                     ancDoc.style.left = p.x.toFixed(2).toString() + "px";

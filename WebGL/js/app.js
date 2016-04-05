@@ -916,7 +916,7 @@ var TextCanvasManager = (function () {
         scene.registerBeforeRender(function () {
             if (scene.activeCamera) {
                 for (var i = 0; i < _this.textCanvases.length; i++) {
-                    var p = BABYLON.Vector3.Project(_this.textCanvases[0].anchor.position, BABYLON.Matrix.Identity(), scene.getTransformMatrix(), scene.activeCamera.viewport.toGlobal(scene.getEngine()));
+                    var p = BABYLON.Vector3.Project(_this.textCanvases[0].anchor.position, BABYLON.Matrix.Identity(), scene.getTransformMatrix(), scene.activeCamera.viewport.toGlobal(scene.getEngine().getRenderWidth(), scene.getEngine().getRenderHeight()));
                     ancDoc.textContent = "X:" + p.x.toFixed(2) + " Y:" + p.y.toFixed(2) + (_this.textCanvases[0].anchor.isEnabled() ? "\nEnabled" : "\nDisabled");
                     ancDoc.style.top = p.y.toFixed(2).toString() + "px";
                     ancDoc.style.left = p.x.toFixed(2).toString() + "px";
@@ -1099,102 +1099,20 @@ var UploadManager = (function () {
             modelMeshes = [];
         }
         BABYLON.SceneLoader.ImportMesh(null, modelPath, modelName, scene, function (newMeshes) {
-            // var ambientTexture: BABYLON.Texture = new BABYLON.Texture("./textures/models-textures/HEADSET_STYLE_1.jpg", scene);
-            // var blackPlastic = new BABYLON.PBRMaterial("Black Plastic", scene);
-            // blackPlastic.albedoTexture = new BABYLON.Texture("./textures/models-textures/blackplastic.jpg", scene);
-            // blackPlastic.ambientTexture = ambientTexture;
-            // blackPlastic.ambientTexture.coordinatesIndex = 1;
-            // blackPlastic.reflectivityColor = new BABYLON.Color3(0.3, 0.3, 0.3);
-            // blackPlastic.specularIntensity = 0.1;
-            // blackPlastic.indexOfRefraction = 0.52;
-            // blackPlastic.directIntensity = 1;
-            // blackPlastic.environmentIntensity = 0.05;
-            // blackPlastic.overloadedShadowIntensity = 0.8;
-            // blackPlastic.overloadedShadeIntensity = 0.8;
-            // blackPlastic.cameraExposure = 1.26;
-            // blackPlastic.cameraContrast = 1.6;
-            // blackPlastic.microSurface = 0.31;
-            // var redPlastic = new BABYLON.PBRMaterial("Red Plastic", scene);
-            // redPlastic.albedoTexture = new BABYLON.Texture("./textures/models-textures/redplastic.jpg", scene);
-            // redPlastic.ambientTexture = ambientTexture;
-            // redPlastic.ambientTexture.coordinatesIndex = 1;
-            // redPlastic.reflectivityColor = new BABYLON.Color3(0.2, 0.2, 0.2);
-            // redPlastic.indexOfRefraction = .52;
-            // redPlastic.directIntensity = 1;
-            // redPlastic.environmentIntensity = 0.5;
-            // redPlastic.specularIntensity = 0.3;
-            // redPlastic.overloadedShadowIntensity = 1.3;
-            // redPlastic.overloadedShadeIntensity = 0.68;
-            // redPlastic.cameraExposure = 0.8;
-            // redPlastic.cameraContrast = 2;
-            // redPlastic.microSurface = 0.34;
-            // var chrome = new BABYLON.PBRMaterial("Chrome", scene);
-            // chrome.albedoTexture = new BABYLON.Texture("./textures/models-textures/chrome.jpg", scene);
-            // chrome.ambientTexture = ambientTexture;
-            // chrome.ambientTexture.coordinatesIndex = 1;
-            // chrome.reflectivityColor = new BABYLON.Color3(.9, .9, .9);
-            // chrome.directIntensity = 0.3;
-            // chrome.specularIntensity = 1.5;
-            // chrome.environmentIntensity = 0.6;
-            // chrome.cameraExposure = .23;
-            // chrome.cameraContrast = 1.9;
-            // chrome.microSurface = 0.99;
-            // var blackMetal = new BABYLON.PBRMaterial("Black Metal", scene);
-            // blackMetal.albedoTexture = new BABYLON.Texture("./textures/models-textures/blackmetal.jpg", scene);
-            // blackMetal.ambientTexture = ambientTexture;
-            // blackMetal.ambientTexture.coordinatesIndex = 1;
-            // blackMetal.reflectivityColor = new BABYLON.Color3(0.1, 0.1, 0.1);
-            // blackMetal.indexOfRefraction = 2;
-            // blackMetal.directIntensity = 0.2;
-            // blackMetal.environmentIntensity = 0.24;
-            // blackMetal.specularIntensity = 0.7;
-            // blackMetal.overloadedShadeIntensity = 0.8;
-            // blackMetal.cameraExposure = 1.99;
-            // blackMetal.cameraContrast = 1;
-            // blackMetal.microSurface = 0.61;
-            // var blackBox = new BABYLON.PBRMaterial("Black Box", scene);
-            // blackBox.albedoTexture = new BABYLON.Texture("./textures/models-textures/blackbox.jpg", scene);
-            // blackBox.ambientTexture = new BABYLON.Texture("./textures/models-textures/BOX_STYLE_1.jpg", scene);
-            // blackBox.reflectivityColor = new BABYLON.Color3(0, 0, 0);
-            // blackBox.indexOfRefraction = 2;
-            // blackBox.directIntensity = 1.7;
-            // blackBox.environmentIntensity = 0.09;
-            // blackBox.overloadedShadowIntensity = 0.6;
-            // blackBox.overloadedShadeIntensity = 0.22;
-            // blackBox.cameraExposure = 1.5;
-            // blackBox.cameraContrast = 2;
-            // blackBox.microSurface = 0.46;
-            // var blackCushion = new BABYLON.PBRMaterial("Black Cushion", scene);
-            // blackCushion.albedoTexture = new BABYLON.Texture("./textures/models-textures/blackcushion.jpg", scene);
-            // blackCushion.ambientTexture = ambientTexture;
-            // blackCushion.ambientTexture.coordinatesIndex = 1;
-            // blackCushion.reflectivityColor = new BABYLON.Color3(0.05, 0.05, 0.05);
-            // blackCushion.indexOfRefraction = .52;
-            // blackCushion.directIntensity = 2;
-            // blackCushion.environmentIntensity = 0;
-            // blackCushion.overloadedShadeIntensity = 0.81;
-            // blackCushion.cameraExposure = 2;
-            // blackCushion.cameraContrast = 2;
-            // blackCushion.microSurface = 0.4;
             for (var i = 0; i < newMeshes.length; i++) {
                 var mat = newMeshes[i].material;
                 var pbr = new BABYLON.PBRMaterial("PBR" + i, scene);
-                pbr.reflectivityColor = new BABYLON.Color3(0, 0, 0);
-                pbr.indexOfRefraction = 2;
-                pbr.directIntensity = 1.7;
-                pbr.environmentIntensity = 0.09;
-                pbr.overloadedShadowIntensity = 0.6;
-                pbr.overloadedShadeIntensity = 0.22;
-                pbr.cameraExposure = 1.5;
-                pbr.cameraContrast = 2;
-                pbr.microSurface = 0.46;
                 pbr.albedoTexture = mat.diffuseTexture;
                 if (mat.name.indexOf("Ground_Plane") > -1) {
-                    pbr.albedoTexture = mat.diffuseTexture;
-                    pbr.opacityTexture = mat.diffuseTexture;
+                    debugger;
+                    var stdMat = new BABYLON.StandardMaterial("std", scene);
+                    stdMat.diffuseTexture = new BABYLON.Texture("./Ground_Plane.png", scene); // mat.diffuseTexture;
+                    stdMat.opacityTexture = new BABYLON.Texture("./Ground_Plane.png", scene); //mat.diffuseTexture;
+                    stdMat.specularColor = BABYLON.Color3.Black();
+                    stdMat.diffuseColor = BABYLON.Color3.White();
                     newMeshes[i].isPickable = false;
                     newMeshes[i].renderOutline = false;
-                    newMeshes[i].material = pbr;
+                    newMeshes[i].material = stdMat;
                     continue;
                 }
                 else {
@@ -1203,9 +1121,9 @@ var UploadManager = (function () {
                 newMeshes[i].actionManager = new BABYLON.ActionManager(scene);
                 newMeshes[i].actionManager.registerAction(new BABYLON.SetValueAction(BABYLON.ActionManager.OnPointerOutTrigger, newMeshes[i], "renderOutline", false));
                 newMeshes[i].actionManager.registerAction(new BABYLON.SetValueAction(BABYLON.ActionManager.OnPointerOverTrigger, newMeshes[i], "renderOutline", true));
-                if (newMeshes[i].name.indexOf("Part_") > -1) {
-                    var a = './' + name + '_Part_' + newMeshes[i].name.substr(newMeshes[i].name.indexOf("Part_") + 5, 1) + '_AO.jpg';
-                    pbr.ambientTexture = new BABYLON.Texture(a /*"./textures/models-textures/BOX_STYLE_1.jpg"*/, scene);
+                if (newMeshes[i].name.indexOf("Component_") > -1) {
+                    var url = './' + newMeshes[i].name.substr(0, 12) + '_AO.jpg';
+                    pbr.ambientTexture = new BABYLON.Texture(url, scene);
                     pbr.ambientTexture.coordinatesIndex = 1;
                 }
                 newMeshes[i].outlineWidth = 0.3;
@@ -1227,6 +1145,7 @@ var Material = (function () {
     function Material(json, scene) {
         var jsonMat = JSON.parse(json);
         this.name = jsonMat.name;
+        this.isGlass = jsonMat.isGlass == "true" ? true : false;
         this.pbr = new BABYLON.PBRMaterial(jsonMat.name, scene);
         this.pbr.indexOfRefraction = jsonMat.indexOfRefraction;
         this.pbr.alpha = jsonMat.alpha;
@@ -1242,20 +1161,21 @@ var Material = (function () {
         this.pbr.reflectivityColor = new BABYLON.Color3(jsonMat.reflectivityColor.r, jsonMat.reflectivityColor.g, jsonMat.reflectivityColor.b);
     }
     Material.prototype.ToJSON = function () {
-        return '{ ' +
+        return '{' +
             '"name":"' + this.pbr.name + '",' +
-            '"indexOfRefraction":' + this.pbr.indexOfRefraction + ',' +
-            '"alpha" : ' + this.pbr.alpha + ',' +
-            '"directIntensity" : ' + this.pbr.directIntensity + ',' +
-            '"emissiveIntensity" : ' + this.pbr.emissiveIntensity + ',' +
-            '"environmentIntensity" : ' + this.pbr.environmentIntensity + ',' +
-            '"specularIntensity" : ' + this.pbr.specularIntensity + ',' +
-            '"overloadedShadowIntensity" : ' + this.pbr.overloadedShadowIntensity + ',' +
-            '"overloadedShadeIntensity" : ' + this.pbr.overloadedShadeIntensity + ',' +
-            '"cameraExposure" : ' + this.pbr.cameraExposure + ',' +
-            '"cameraContrast" : ' + this.pbr.cameraContrast + ',' +
-            '"microSurface" : ' + this.pbr.microSurface + ',' +
-            '"reflectivityColor" : {"r":' + this.pbr.reflectivityColor.r + ', "g":' + this.pbr.reflectivityColor.g + ', "b":' + this.pbr.reflectionColor.b + '}' +
+            '"isGlass":"' + (this.pbr.refractionTexture ? "true" : "false") + '",' +
+            '"indexOfRefraction":' + this.pbr.indexOfRefraction.toPrecision(2) + ',' +
+            '"alpha":' + this.pbr.alpha.toPrecision(2) + ',' +
+            '"directIntensity":' + this.pbr.directIntensity.toPrecision(2) + ',' +
+            '"emissiveIntensity":' + this.pbr.emissiveIntensity.toPrecision(2) + ',' +
+            '"environmentIntensity":' + this.pbr.environmentIntensity.toPrecision(2) + ',' +
+            '"specularIntensity":' + this.pbr.specularIntensity.toPrecision(2) + ',' +
+            '"overloadedShadowIntensity":' + this.pbr.overloadedShadowIntensity.toPrecision(2) + ',' +
+            '"overloadedShadeIntensity":' + this.pbr.overloadedShadeIntensity.toPrecision(2) + ',' +
+            '"cameraExposure":' + this.pbr.cameraExposure.toPrecision(2) + ',' +
+            '"cameraContrast":' + this.pbr.cameraContrast.toPrecision(2) + ',' +
+            '"microSurface":' + this.pbr.microSurface.toPrecision(2) + ',' +
+            '"reflectivityColor":{"r":' + this.pbr.reflectivityColor.r.toPrecision(2) + ', "g":' + this.pbr.reflectivityColor.g.toPrecision(2) + ', "b":' + this.pbr.reflectivityColor.b.toPrecision(2) + '}' +
             '}';
     };
     return Material;
@@ -1301,15 +1221,17 @@ var MaterialManager = (function () {
         var drop = function (evt) {
             debugger;
             evt.preventDefault();
-            console.log(evt.dataTransfer.getData("text"));
             var mat = _this.cloneMaterial(_this.materials[evt.dataTransfer.getData("text")].pbr, scene);
-            // var src = evt.dataTransfer.getData("text");
             var pickResult = scene.pick(evt.offsetX, evt.offsetY);
             if (pickResult.hit) {
                 mat.albedoTexture = pickResult.pickedMesh.material.albedoTexture;
                 mat.ambientTexture = pickResult.pickedMesh.material.ambientTexture;
                 mat.reflectionTexture = pickResult.pickedMesh.material.reflectionTexture;
-                mat.refractionTexture = pickResult.pickedMesh.material.refractionTexture;
+                if (_this.materials[evt.dataTransfer.getData("text")].isGlass)
+                    mat.refractionTexture = pickResult.pickedMesh.material.reflectionTexture;
+                else
+                    mat.refractionTexture = null;
+                mat.emissiveColor = BABYLON.Color3.White();
                 pickResult.pickedMesh.material = mat;
             }
         };
@@ -1336,7 +1258,6 @@ var MaterialManager = (function () {
 })();
 /// <reference path="babylon.d.ts" />
 /// <reference path="babylon.pbrMaterial.d.ts" />
-/// <reference path="PBRConverter.ts" />
 /// <reference path="EnvironmentUI.ts" />
 /// <reference path="babylon.gradientMaterial.d.ts" />
 /// <reference path="TextCanvasManager.ts" />
@@ -1372,9 +1293,12 @@ window.addEventListener('DOMContentLoaded', function () {
         var json = '[{"id":0,"text":"Red Plastic","description":"Scratch Resistant","width":0.25,"height":0.03,"position":{"x":0.5733,"y":1.0350,"z":-1.4110},"linePosition":{"x":0.008,"y":0.601,"z":-1.2},"offset":0,"anchorTextureURL":"./textures/anchors/Anchor_2.png"},{"id":1,"text":"Chrome","description":"Durable Metal","width":0.25,"height":0.03,"position":{"x":-2,"y":1,"z":0},"linePosition":{"x":-1.192,"y":0.7488,"z":-0.295},"offset":3,"anchorTextureURL":"./textures/anchors/Anchor_4.png"}]';
         var textCanv = new TextCanvasManager(json, scene);
         uploadManager = new UploadManager(scene, envMng);
-        //  uploadManager.uploadNewModel("./", "HEADSET", scene, envMng);
-        var materials = '[{"name":"Plastic","indexOfRefraction":0.52,"alpha":1,"directIntensity":1,"emissiveIntensity":0,"environmentIntensity":0.5,"specularIntensity":0.3,"overloadedShadowIntensity":1.3,"overloadedShadeIntensity":0.68,"cameraExposure":0.8,"cameraContrast":2,"microSurface":0.34,"reflectivityColor":{"r":0.2,"g":0.2,"b":0.2}},{"name":"Metal","indexOfRefraction":2,"alpha":1,"directIntensity":1.7,"emissiveIntensity":1,"environmentIntensity":0.09,"specularIntensity":1,"overloadedShadowIntensity":0.6,"overloadedShadeIntensity":0.22,"cameraExposure":1.5,"cameraContrast":2,"microSurface":0.46,"reflectivityColor":{"r":0,"g":0,"b":0}},{"name":"Chrome","indexOfRefraction":0.66,"alpha":1,"directIntensity":0.3,"emissiveIntensity":1,"environmentIntensity":1,"specularIntensity":1.5,"overloadedShadowIntensity":1,"overloadedShadeIntensity":1,"cameraExposure":0.23,"cameraContrast":1.9,"microSurface":0.99,"reflectivityColor":{"r":1,"g":1,"b":1}}]';
+        var materials = '[{"name":"Chrome","isGlass":"false","indexOfRefraction":0.66,"alpha":1,"directIntensity":1,"emissiveIntensity":0.9483554303824417,"environmentIntensity":1,"specularIntensity":0.02205477745075446,"overloadedShadowIntensity":1.058629317636214,"overloadedShadeIntensity":1.0145197627347051,"cameraExposure":1.301231869594513,"cameraContrast":0.9263006529316873,"microSurface":0.8711637093048011,"reflectivityColor":{"r":1,"g":1,"b":1}},{"name":"Copper","isGlass":"false","indexOfRefraction":0.3308216617613169,"alpha":0.9814375965585734,"directIntensity":1,"emissiveIntensity":1,"environmentIntensity":1,"specularIntensity":0.1102738872537723,"overloadedShadowIntensity":1,"overloadedShadeIntensity":1,"cameraExposure":1,"cameraContrast":0.8821910980301784,"microSurface":0.4852051039165981,"reflectivityColor":{"r":0.77,"g":0.77,"b":0.77}},{"name":"Brushed Metal","isGlass":"false","indexOfRefraction":0.66,"alpha":1,"directIntensity":1,"emissiveIntensity":1,"environmentIntensity":0.9924649852839507,"specularIntensity":0.2205477745075446,"overloadedShadowIntensity":1.874656083314129,"overloadedShadeIntensity":2,"cameraExposure":1.0365745401854596,"cameraContrast":1.5438344215528121,"microSurface":0.49623249264197533,"reflectivityColor":{"r":1,"g":1,"b":1}},{"name":"Rubber","isGlass":"false","indexOfRefraction":0.66,"alpha":1,"directIntensity":1,"emissiveIntensity":1,"environmentIntensity":0.4852051039165981,"specularIntensity":2,"overloadedShadowIntensity":1,"overloadedShadeIntensity":1,"cameraExposure":1,"cameraContrast":1.102738872537723,"microSurface":0.25,"reflectivityColor":{"r":0.27,"g":0.27,"b":0.27}},{"name":"Matte Finish","isGlass":"false","indexOfRefraction":0.66,"alpha":1,"directIntensity":1,"emissiveIntensity":1,"environmentIntensity":0.15438344215528121,"specularIntensity":1,"overloadedShadowIntensity":1,"overloadedShadeIntensity":1,"cameraExposure":1,"cameraContrast":1,"microSurface":0.07719172107764061,"reflectivityColor":{"r":0.05,"g":0.05,"b":0.05}},{"name":"Clear Glass","isGlass":"true","indexOfRefraction":0.2360347112646383,"alpha":0.3422503313337255,"directIntensity":1.1093631429438,"emissiveIntensity":1,"environmentIntensity":1,"specularIntensity":0.04720694225292766,"overloadedShadowIntensity":0.6372937204145234,"overloadedShadeIntensity":1,"cameraExposure":1,"cameraContrast":1,"microSurface":0.684500662667451,"reflectivityColor":{"r":1,"g":1,"b":1}},{"name":"Dark Metal","isGlass":"true","indexOfRefraction":0.66,"alpha":1.0,"directIntensity":0.15,"emissiveIntensity":1.0,"environmentIntensity":0.29,"specularIntensity":0.49,"overloadedShadowIntensity":1.0,"overloadedShadeIntensity":1.0,"cameraExposure":1.0,"cameraContrast":1.8,"microSurface":0.68,"reflectivityColor":{"r":1.0,"g":1.0,"b":1.0}},{"name":"Frosted Glass","isGlass":"true","indexOfRefraction":0.1102738872537723,"alpha":0.7167802671495199,"directIntensity":0.3749312166628258,"emissiveIntensity":1,"environmentIntensity":0.28671210685980797,"specularIntensity":0.4852051039165981,"overloadedShadowIntensity":1,"overloadedShadeIntensity":1,"cameraExposure":2,"cameraContrast":1.83054652841262,"microSurface":0.28671210685980797,"reflectivityColor":{"r":1,"g":1,"b":1}},{"name":"Felt","isGlass":"false","indexOfRefraction":0.7278076558748972,"alpha":1,"directIntensity":1.3673962019467765,"emissiveIntensity":1,"environmentIntensity":1.8526013058633746,"specularIntensity":1.1909579823407408,"overloadedShadowIntensity":0.8601363205794239,"overloadedShadeIntensity":1.0806840950869685,"cameraExposure":1.3673962019467765,"cameraContrast":1.0145197627347051,"microSurface":0.05513694362688615,"reflectivityColor":{"r":0,"g":0,"b":0}},{"name":"Plastic","isGlass":"false","indexOfRefraction":0.66,"alpha":1,"directIntensity":1.4335605342990398,"emissiveIntensity":1,"environmentIntensity":0.02205477745075446,"specularIntensity":0.08821910980301784,"overloadedShadowIntensity":0.9704102078331962,"overloadedShadeIntensity":1,"cameraExposure":1.4556153117497943,"cameraContrast":1.4997248666513032,"microSurface":0.43006816028971195,"reflectivityColor":{"r":0.56,"g":0.56,"b":0.56}},{"name":"Shiny Plastic","isGlass":"false","indexOfRefraction":0.66,"alpha":1,"directIntensity":1.1247936499884774,"emissiveIntensity":1.1689032048899863,"environmentIntensity":0.9924649852839507,"specularIntensity":0.9042458754809328,"overloadedShadowIntensity":1,"overloadedShadeIntensity":1,"cameraExposure":1,"cameraContrast":1,"microSurface":0.7278076558748972,"reflectivityColor":{"r":0.28,"g":0.28,"b":0.28}},{"name":"Flat Surface","isGlass":"false","indexOfRefraction":0.66,"alpha":1,"directIntensity":1.345341424496022,"emissiveIntensity":1,"environmentIntensity":0,"specularIntensity":0,"overloadedShadowIntensity":1,"overloadedShadeIntensity":1,"cameraExposure":1.345341424496022,"cameraContrast":1,"microSurface":0,"reflectivityColor":{"r":0,"g":0,"b":0}}]';
         var materialManager = new MaterialManager(materials, scene);
+        for (var i = 0; i < scene.meshes.length; i++) {
+            for (var j = 0; j < modelMeshes.length; j++) {
+            }
+        }
         return scene;
     }
     sceneMain = createScene();

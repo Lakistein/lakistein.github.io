@@ -4,10 +4,12 @@
 class Material {
     name: string;
     pbr: BABYLON.PBRMaterial;
+    isGlass: boolean;
 
     constructor(json: string, scene: BABYLON.Scene) {
         var jsonMat = JSON.parse(json);
         this.name = jsonMat.name;
+        this.isGlass = jsonMat.isGlass == "true" ? true : false;
         this.pbr = new BABYLON.PBRMaterial(jsonMat.name, scene);
         this.pbr.indexOfRefraction = jsonMat.indexOfRefraction;
         this.pbr.alpha = jsonMat.alpha;
@@ -24,20 +26,21 @@ class Material {
     }
 
     public ToJSON(): string {
-        return '{ ' +
+        return '{' +
             '"name":"' + this.pbr.name + '",' +
-            '"indexOfRefraction":' + this.pbr.indexOfRefraction + ',' +
-            '"alpha" : ' + this.pbr.alpha + ',' +
-            '"directIntensity" : ' + this.pbr.directIntensity + ',' +
-            '"emissiveIntensity" : ' + this.pbr.emissiveIntensity + ',' +
-            '"environmentIntensity" : ' + this.pbr.environmentIntensity + ',' +
-            '"specularIntensity" : ' + this.pbr.specularIntensity + ',' +
-            '"overloadedShadowIntensity" : ' + this.pbr.overloadedShadowIntensity + ',' +
-            '"overloadedShadeIntensity" : ' + this.pbr.overloadedShadeIntensity + ',' +
-            '"cameraExposure" : ' + this.pbr.cameraExposure + ',' +
-            '"cameraContrast" : ' + this.pbr.cameraContrast + ',' +
-            '"microSurface" : ' + this.pbr.microSurface + ',' +
-            '"reflectivityColor" : {"r":' + this.pbr.reflectivityColor.r + ', "g":' + this.pbr.reflectivityColor.g + ', "b":' + this.pbr.reflectionColor.b + '}' +
+            '"isGlass":"' + (this.pbr.refractionTexture ? "true" : "false") + '",' +
+            '"indexOfRefraction":' + this.pbr.indexOfRefraction.toPrecision(2) + ',' +
+            '"alpha":' + this.pbr.alpha.toPrecision(2) + ',' +
+            '"directIntensity":' + this.pbr.directIntensity.toPrecision(2) + ',' +
+            '"emissiveIntensity":' + this.pbr.emissiveIntensity.toPrecision(2) + ',' +
+            '"environmentIntensity":' + this.pbr.environmentIntensity.toPrecision(2) + ',' +
+            '"specularIntensity":' + this.pbr.specularIntensity.toPrecision(2) + ',' +
+            '"overloadedShadowIntensity":' + this.pbr.overloadedShadowIntensity.toPrecision(2) + ',' +
+            '"overloadedShadeIntensity":' + this.pbr.overloadedShadeIntensity.toPrecision(2) + ',' +
+            '"cameraExposure":' + this.pbr.cameraExposure.toPrecision(2) + ',' +
+            '"cameraContrast":' + this.pbr.cameraContrast.toPrecision(2) + ',' +
+            '"microSurface":' + this.pbr.microSurface.toPrecision(2) + ',' +
+            '"reflectivityColor":{"r":' + this.pbr.reflectivityColor.r.toPrecision(2) + ', "g":' + this.pbr.reflectivityColor.g.toPrecision(2) + ', "b":' + this.pbr.reflectivityColor.b.toPrecision(2) + '}' +
             '}';
     }
 }
