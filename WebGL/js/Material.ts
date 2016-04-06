@@ -11,6 +11,7 @@ class Material {
         this.name = jsonMat.name;
         this.isGlass = jsonMat.isGlass == "true" ? true : false;
         this.pbr = new BABYLON.PBRMaterial(jsonMat.name, scene);
+        this.pbr.albedoColor = BABYLON.Color3.Red();
         this.pbr.indexOfRefraction = jsonMat.indexOfRefraction;
         this.pbr.alpha = jsonMat.alpha;
         this.pbr.directIntensity = jsonMat.directIntensity;

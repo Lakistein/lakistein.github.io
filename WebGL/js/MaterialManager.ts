@@ -32,14 +32,14 @@ class MaterialManager {
         var canvas = scene.getEngine().getRenderingCanvas();
         var dragover = (evt) => {
             evt.preventDefault();
-            var pickResult = scene.pick(evt.offsetX, evt.offsetY);
-            for (var i = 0; i < modelMeshes.length; i++) {
-                modelMeshes[i].renderOutline = false;
-            }
+            // var pickResult = scene.pick(evt.offsetX, evt.offsetY);
+            // for (var i = 0; i < modelMeshes.length; i++) {
+            //     modelMeshes[i].renderOutline = false;
+            // }
 
-            if (pickResult.hit) {
-                pickResult.pickedMesh.renderOutline = true;
-            }
+            // if (pickResult.hit) {
+            //     pickResult.pickedMesh.renderOutline = true;
+            // }
         }
         var drop = (evt) => {
             debugger;
@@ -54,9 +54,10 @@ class MaterialManager {
                 if (this.materials[evt.dataTransfer.getData("text")].isGlass)
                     mat.refractionTexture = (<BABYLON.PBRMaterial>pickResult.pickedMesh.material).reflectionTexture;
                 else
-                    mat.refractionTexture = null;
-                mat.emissiveColor = BABYLON.Color3.White();
+                    mat.refractionTexture = undefined;
+                // mat.emissiveColor = BABYLON.Color3.White();
                 pickResult.pickedMesh.material = mat;
+                //displayMaterialValues(mat, scene);
             }
         }
         canvas.addEventListener('dragover', dragover, false);
@@ -65,6 +66,7 @@ class MaterialManager {
 
     cloneMaterial(material: BABYLON.PBRMaterial, scene: BABYLON.Scene): BABYLON.PBRMaterial {
         var pbr = new BABYLON.PBRMaterial(material.name, scene);
+        pbr.albedoColor = BABYLON.Color3.Red();
         pbr.indexOfRefraction = material.indexOfRefraction;
         pbr.alpha = material.alpha;
         pbr.directIntensity = material.directIntensity;

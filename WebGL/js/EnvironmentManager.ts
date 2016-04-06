@@ -3,7 +3,7 @@
 /// <reference path="Environment.ts" />
 
 class EnvironmentManager {
-    currentEnvironment: number;
+    currentEnvironment: number = 0;
     environments: Environment[] = [];
 
     constructor(json: string, scene: BABYLON.Scene) {
@@ -25,7 +25,7 @@ class EnvironmentManager {
                         environment[i].position.y = -0.1;
                         environment[i].material = gradientMaterial;
                         environment[i].isPickable = false;
-                        hemilight.includedOnlyMeshes.push(environment[i]);
+                        //hemilight.includedOnlyMeshes.push(environment[i]);
                         break;
                     case "groundPlane":
                         var groundPlaneMaterial = new BABYLON.PBRMaterial("groundPlaneMaterial", scene);
@@ -67,21 +67,23 @@ class EnvironmentManager {
                     (<BABYLON.MirrorTexture>refl).renderList.push(environment[i]);
             }
 
-            for (var i = 0; i < jsonEnv.length; i++) {
+            for (var i = 0; i < 1; i++) {
                 this.environments.push(new Environment(jsonEnv[i], scene));
             }
 
-            var skybox = BABYLON.Mesh.CreateBox("skybox", 1000.0, scene);
-            var skyboxMaterial = new BABYLON.StandardMaterial("skyboxMaterial", scene);
-            skyboxMaterial.backFaceCulling = false;
-            skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("", scene);
-            skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-            skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
-            skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
-            skybox.infiniteDistance = true;
-            skybox.material = skyboxMaterial;
-            skybox.isPickable = false;
-            this.setEnvironment(this.environments[2].id, scene);
+            var hdrSkybox = BABYLON.Mesh.CreateBox("skybox", 1000.0, scene);
+            var hdrSkyboxMaterial = new BABYLON.PBRMaterial("skyBoxMat", scene);
+            hdrSkyboxMaterial.backFaceCulling = false;
+            hdrSkyboxMaterial.reflectionTexture = this.environments[this.currentEnvironment].skyboxTexture;
+            hdrSkyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+            hdrSkyboxMaterial.microSurface = 0.85;
+            hdrSkyboxMaterial.cameraExposure = 0.6;
+            hdrSkyboxMaterial.cameraContrast = 1.6;
+            //hdrSkyboxMaterial.disableLighting = true;
+            hdrSkybox.material = hdrSkyboxMaterial;
+            hdrSkybox.infiniteDistance = true;
+            hdrSkybox.isPickable = false;
+            this.setEnvironment(this.environments[0].id, scene);
 
             (<BABYLON.MirrorTexture>refl).renderList.push(scene.getMeshByName("skybox"));
         });
@@ -104,14 +106,14 @@ class EnvironmentManager {
             return;
         }
 
-        this.removeLights(scene);
+        //  this.removeLights(scene);
 
         var environment = this.findEnvironmentById(id);
         if (!environment) environment = this.environments[0];
 
-        for (var i = 0; i < this.environments[this.currentEnvironment].lights.length; i++) {
-            scene.lights.push(this.environments[this.currentEnvironment].lights[i]);
-        }
+        // for (var i = 0; i < this.environments[this.currentEnvironment].lights.length; i++) {
+        //     scene.lights.push(this.environments[this.currentEnvironment].lights[i]);
+        // }
 
         this.setSkybox(<BABYLON.Mesh>scene.getMeshByName("skybox"));
         this.setReflection(scene);
@@ -143,7 +145,7 @@ class EnvironmentManager {
             if (this.environments[this.currentEnvironment].reflectionTexture && modelMeshes[i].material) {
                 (<BABYLON.PBRMaterial>modelMeshes[i].material).reflectionTexture = this.environments[this.currentEnvironment].reflectionTexture;
             }
-            else if(modelMeshes[i].material){
+            else if (modelMeshes[i].material) {
                 (<BABYLON.PBRMaterial>modelMeshes[i].material).reflectionColor = (color) ? color : this.environments[this.currentEnvironment].backgroundColor;
             }
         }

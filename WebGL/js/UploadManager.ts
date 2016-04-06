@@ -53,9 +53,9 @@ class UploadManager {
                     modelMeshes.push(newMeshes[i]);
                 }
 
-                newMeshes[i].actionManager = new BABYLON.ActionManager(scene);
-                newMeshes[i].actionManager.registerAction(new BABYLON.SetValueAction(BABYLON.ActionManager.OnPointerOutTrigger, newMeshes[i], "renderOutline", false));
-                newMeshes[i].actionManager.registerAction(new BABYLON.SetValueAction(BABYLON.ActionManager.OnPointerOverTrigger, newMeshes[i], "renderOutline", true));
+                // newMeshes[i].actionManager = new BABYLON.ActionManager(scene);
+                // newMeshes[i].actionManager.registerAction(new BABYLON.SetValueAction(BABYLON.ActionManager.OnPointerOutTrigger, newMeshes[i], "renderOutline", false));
+                // newMeshes[i].actionManager.registerAction(new BABYLON.SetValueAction(BABYLON.ActionManager.OnPointerOverTrigger, newMeshes[i], "renderOutline", true));
 
                 if (newMeshes[i].name.indexOf("Component_") > -1) {
                     var url = './' + newMeshes[i].name.substr(0, 12) + '_AO.jpg';
