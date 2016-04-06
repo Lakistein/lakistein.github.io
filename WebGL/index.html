@@ -191,6 +191,7 @@
         }
         
         .material {
+            position: relative;
             height: 128px;
             width: 128px;
             margin: 2px 2px 2px 0;
@@ -209,6 +210,20 @@
         #materialBody {
             color: white;
             background-color: black;
+        }
+        
+        .materialBody span {
+            text-align: center;
+        }
+        
+        .materialName {
+            position: absolute;
+            z-index: 100;
+            bottom: 0;
+            left: 0;
+            bottom: 10px;
+            text-align: center;
+            width: 100%;
         }
     </style>
 

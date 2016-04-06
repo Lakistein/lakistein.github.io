@@ -71,7 +71,6 @@ window.addEventListener('DOMContentLoaded', function() {
             Flat_1_pbr.cameraContrast = 0.9;
             Flat_1_pbr.microSurface = 0.87;
             Flat_1_pbr.reflectivityColor = new BABYLON.Color3(1, 1, 1);
-            debugger;
             (<BABYLON.PBRMaterial>Flat_1.material).reflectionTexture = envMng.environments[0].reflectionTexture;
         });
 

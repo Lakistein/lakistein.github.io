@@ -1199,14 +1199,21 @@ var MaterialManager = (function () {
         for (var i = 0; i < jsonMat.length; i++) {
             this.materials[jsonMat[i].name] = new Material(JSON.stringify(jsonMat[i]), scene);
             //<img class="material" src=".\textures\models-textures\redplastic.jpg" alt="Plastic" draggable="true">
+            var span = document.createElement("span");
             var img = document.createElement("img");
+            var txtP = document.createElement("span");
+            txtP.className = "materialName";
+            txtP.innerText = jsonMat[i].name;
             img.src = "./textures/materials/" + jsonMat[i].name + ".jpg";
             img.alt = jsonMat[i].name;
             img.className = "material";
+            span.className = "material";
             img.draggable = true;
             if (i % 2 == 0 && i > 0)
                 htmlElement.appendChild(document.createElement("br"));
-            htmlElement.appendChild(img);
+            span.appendChild(img);
+            span.appendChild(txtP);
+            htmlElement.appendChild(span);
         }
         var file = document.getElementsByClassName('material');
         var startdrag = function (evt) {
@@ -1329,7 +1336,6 @@ window.addEventListener('DOMContentLoaded', function () {
             Flat_1_pbr.cameraContrast = 0.9;
             Flat_1_pbr.microSurface = 0.87;
             Flat_1_pbr.reflectivityColor = new BABYLON.Color3(1, 1, 1);
-            debugger;
             Flat_1.material.reflectionTexture = envMng.environments[0].reflectionTexture;
         });
         return scene;
