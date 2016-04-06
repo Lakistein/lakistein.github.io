@@ -76,7 +76,7 @@ class EnvironmentManager {
             hdrSkyboxMaterial.backFaceCulling = false;
             hdrSkyboxMaterial.reflectionTexture = this.environments[this.currentEnvironment].skyboxTexture;
             hdrSkyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-            hdrSkyboxMaterial.microSurface = 0.85;
+            hdrSkyboxMaterial.microSurface = 0.5;
             hdrSkyboxMaterial.cameraExposure = 0.6;
             hdrSkyboxMaterial.cameraContrast = 1.6;
             //hdrSkyboxMaterial.disableLighting = true;

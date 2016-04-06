@@ -32,14 +32,14 @@ class MaterialManager {
         var canvas = scene.getEngine().getRenderingCanvas();
         var dragover = (evt) => {
             evt.preventDefault();
-            // var pickResult = scene.pick(evt.offsetX, evt.offsetY);
-            // for (var i = 0; i < modelMeshes.length; i++) {
-            //     modelMeshes[i].renderOutline = false;
-            // }
+            var pickResult = scene.pick(evt.offsetX, evt.offsetY);
+            for (var i = 0; i < modelMeshes.length; i++) {
+                modelMeshes[i].renderOutline = false;
+            }
 
-            // if (pickResult.hit) {
-            //     pickResult.pickedMesh.renderOutline = true;
-            // }
+            if (pickResult.hit) {
+                pickResult.pickedMesh.renderOutline = true;
+            }
         }
         var drop = (evt) => {
             debugger;
@@ -57,6 +57,7 @@ class MaterialManager {
                     mat.refractionTexture = undefined;
                 // mat.emissiveColor = BABYLON.Color3.White();
                 pickResult.pickedMesh.material = mat;
+                pickResult.pickedMesh.renderOutline = false;
                 //displayMaterialValues(mat, scene);
             }
         }
