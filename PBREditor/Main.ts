@@ -200,7 +200,7 @@ window.addEventListener('DOMContentLoaded', function() {
         var hdrSkybox = BABYLON.Mesh.CreateBox("hdrSkyBox", 1000.0, scene);
         var hdrSkyboxMaterial = new BABYLON.PBRMaterial("skyBox", scene);
         hdrSkyboxMaterial.backFaceCulling = false;
-        hdrSkyboxMaterial.reflectionTexture = hdrTexture;
+        hdrSkyboxMaterial.reflectionTexture = hdrTexture.clone();
         hdrSkyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
         hdrSkyboxMaterial.microSurface = 0.85;
         hdrSkyboxMaterial.cameraExposure = 0.6;
