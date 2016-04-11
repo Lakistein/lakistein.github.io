@@ -79,7 +79,7 @@ var Environment = (function () {
         this.id = json.id;
         this.groundTexture = null;
         this.groundMesh = scene.getMeshByName("groundPlane");
-        var hdr = new BABYLON.HDRCubeTexture("./room.hdr", scene);
+        var hdr = new BABYLON.HDRCubeTexture(json.skyboxURL, scene);
         this.reflectionTexture = hdr;
         this.skyboxTexture = hdr.clone();
         this.groundShadow = scene.getMeshByName("GROUNDPLANE_STYLE_1");
@@ -165,7 +165,7 @@ var EnvironmentManager = (function () {
     }
     EnvironmentManager.prototype.loadEnvironment = function (scene, jsonEnv) {
         var _this = this;
-        BABYLON.SceneLoader.ImportMesh("", "./", "ENVIRONMENT.babylon", scene, function (environment) {
+        BABYLON.SceneLoader.ImportMesh("", "./", "Environment.babylon", scene, function (environment) {
             var hemilight = new BABYLON.HemisphericLight("hemilight", new BABYLON.Vector3(0, 1, 0), scene);
             hemilight.range = 0.1;
             hemilight.intensity = 0.7;
@@ -558,7 +558,6 @@ window.addEventListener('DOMContentLoaded', function () {
             for (var i = 0; i < modelMeshes.length; i++) {
                 for (var j = 0; j < matJs.length; j++) {
                     if ("Component_" + matJs[j].compNum == modelMeshes[i].name) {
-                        debugger;
                         var mat = materialManager.getMaterial(matJs[j].matName, scene);
                         mat.albedoTexture = modelMeshes[i].material.albedoTexture;
                         mat.ambientTexture = modelMeshes[i].material.ambientTexture;

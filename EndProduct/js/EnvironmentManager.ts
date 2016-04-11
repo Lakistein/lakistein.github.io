@@ -12,7 +12,7 @@ class EnvironmentManager {
     }
 
     loadEnvironment(scene: BABYLON.Scene, jsonEnv: any) {
-        BABYLON.SceneLoader.ImportMesh("", "./", "ENVIRONMENT.babylon", scene, (environment) => {
+        BABYLON.SceneLoader.ImportMesh("", "./", "Environment.babylon", scene, (environment) => {
             var hemilight = new BABYLON.HemisphericLight("hemilight", new BABYLON.Vector3(0, 1, 0), scene);
             hemilight.range = 0.1;
             hemilight.intensity = 0.7;

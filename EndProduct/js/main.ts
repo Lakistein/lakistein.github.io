@@ -50,7 +50,6 @@ window.addEventListener('DOMContentLoaded', function() {
             for (var i = 0; i < modelMeshes.length; i++) {
                 for (var j = 0; j < matJs.length; j++) {
                     if ("Component_" + matJs[j].compNum == modelMeshes[i].name) {
-                        debugger;
                         var mat = materialManager.getMaterial(matJs[j].matName, scene);
                         mat.albedoTexture = (<BABYLON.PBRMaterial>modelMeshes[i].material).albedoTexture;
                         mat.ambientTexture = (<BABYLON.PBRMaterial>modelMeshes[i].material).ambientTexture;
