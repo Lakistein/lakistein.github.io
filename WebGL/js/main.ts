@@ -74,8 +74,6 @@ window.addEventListener('DOMContentLoaded', function() {
             (<BABYLON.PBRMaterial>Flat_1.material).reflectionTexture = envMng.environments[0].reflectionTexture;
         });
 
-
-
         return scene;
     }
 
