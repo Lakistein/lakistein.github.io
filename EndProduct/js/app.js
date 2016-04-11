@@ -579,7 +579,7 @@ window.addEventListener('DOMContentLoaded', function () {
     var isMobile = false; //initiate as false
     // device detection
     sceneMain = createScene();
-    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         var lensFlareSystem = new LensFlareSystem(sceneMain);
     }
     engine.runRenderLoop(function () {

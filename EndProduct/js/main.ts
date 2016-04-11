@@ -74,7 +74,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
     sceneMain = createScene();
 
-    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         var lensFlareSystem = new LensFlareSystem(sceneMain);
     }
 
