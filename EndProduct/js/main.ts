@@ -29,7 +29,7 @@ window.addEventListener('DOMContentLoaded', function() {
         scene.activeCamera = camera;
 
         // Environment / Background
-        var str = '[{"id":1,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./room.hdr","lights":[]}]';
+        var str = '[{"id":1,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./room64.hdr","lights":[]}]';
         var envMng = new EnvironmentManager(str, scene);
 
         // Canvases
@@ -69,17 +69,19 @@ window.addEventListener('DOMContentLoaded', function() {
 
         return scene;
     }
-    var isMobile = false; //initiate as false
-    // device detection
 
     sceneMain = createScene();
+    var op =     BABYLON.SceneOptimizerOptions.HighDegradationAllowed(30);
 
+    BABYLON.SceneOptimizer.OptimizeAsync(sceneMain, op);
     if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         var lensFlareSystem = new LensFlareSystem(sceneMain);
     }
 
     engine.runRenderLoop(function() {
         sceneMain.render();
+        console.log(engine.getFps());
+        
     });
     window.addEventListener('resize', function() {
         engine.resize();
