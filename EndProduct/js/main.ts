@@ -29,7 +29,7 @@ window.addEventListener('DOMContentLoaded', function() {
         scene.activeCamera = camera;
 
         // Environment / Background
-        var str = '[{"id":1,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./room1.babylon.hdr","lights":[]}]';
+        var str = '[{"id":1,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./room.hdr","lights":[]}]';
         var envMng = new EnvironmentManager(str, scene);
 
         // Canvases
