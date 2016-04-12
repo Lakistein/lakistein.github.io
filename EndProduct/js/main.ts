@@ -29,7 +29,7 @@ window.addEventListener('DOMContentLoaded', function() {
         scene.activeCamera = camera;
 
         // Environment / Background
-        var str = '[{"id":1,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./room64.hdr","lights":[]}]';
+        var str = '[{"id":1,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./room1.babylon.hdr","lights":[]}]';
         var envMng = new EnvironmentManager(str, scene);
 
         // Canvases
@@ -58,25 +58,36 @@ window.addEventListener('DOMContentLoaded', function() {
                             mat.refractionTexture = (<BABYLON.PBRMaterial>modelMeshes[i].material).reflectionTexture;
                         else
                             mat.refractionTexture = undefined;
-                        // mat.emissiveColor = BABYLON.Color3.White();
+
                         modelMeshes[i].material = mat;
                         modelMeshes[i].renderOutline = false;
                         break;
                     }
                 }
             }
+            for (var i = 0; i < scene.meshes.length; i++) {
+                var f = false;
+                for (var j = 0; j < modelMeshes.length; j++) {
+                    if (scene.meshes[i] == modelMeshes[j]) {
+                        f = true;
+                        break;
+                    }
+                }
+                scene.meshes[i].isPickable = f;
+            }
+            var lensFlareSystem = new LensFlareSystem(sceneMain);
+
         });
 
         return scene;
     }
 
     sceneMain = createScene();
+    sceneMain.executeWhenReady(() => {
 
-    var lensFlareSystem = new LensFlareSystem(sceneMain);
-
+    });
     engine.runRenderLoop(function() {
         sceneMain.render();
-        console.log(engine.getFps());
     });
     window.addEventListener('resize', function() {
         engine.resize();

@@ -391,6 +391,7 @@ var UploadManager = (function () {
                 newMeshes[i].outlineWidth = 0.3;
                 newMeshes[i].outlineColor = BABYLON.Color3.White();
                 newMeshes[i].material = pbr;
+                newMeshes[i].isPickable = true;
             }
             var refl = scene.getMeshByName("reflectionPlane").material.reflectionTexture;
             for (var i = 0; i < newMeshes.length; i++) {
@@ -542,7 +543,7 @@ window.addEventListener('DOMContentLoaded', function () {
         camera.setPosition(new BABYLON.Vector3(0.004510142482902708, 0.7674630808337399, -2.9880500596552437));
         scene.activeCamera = camera;
         // Environment / Background
-        var str = '[{"id":1,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./room64.hdr","lights":[]}]';
+        var str = '[{"id":1,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./room1.babylon.hdr","lights":[]}]';
         var envMng = new EnvironmentManager(str, scene);
         // Canvases
         // var json: string = '[{"id":0,"text":"Red Plastic","description":"Scratch Resistant","width":0.25,"height":0.03,"position":{"x":0.5733,"y":1.0350,"z":-1.4110},"linePosition":{"x":0.008,"y":0.601,"z":-1.2},"offset":0,"anchorTextureURL":"./textures/anchors/Anchor_2.png"},{"id":1,"text":"Chrome","description":"Durable Metal","width":0.25,"height":0.03,"position":{"x":-2,"y":1,"z":0},"linePosition":{"x":-1.192,"y":0.7488,"z":-0.295},"offset":3,"anchorTextureURL":"./textures/anchors/Anchor_4.png"}]';
@@ -566,21 +567,31 @@ window.addEventListener('DOMContentLoaded', function () {
                             mat.refractionTexture = modelMeshes[i].material.reflectionTexture;
                         else
                             mat.refractionTexture = undefined;
-                        // mat.emissiveColor = BABYLON.Color3.White();
                         modelMeshes[i].material = mat;
                         modelMeshes[i].renderOutline = false;
                         break;
                     }
                 }
             }
+            for (var i = 0; i < scene.meshes.length; i++) {
+                var f = false;
+                for (var j = 0; j < modelMeshes.length; j++) {
+                    if (scene.meshes[i] == modelMeshes[j]) {
+                        f = true;
+                        break;
+                    }
+                }
+                scene.meshes[i].isPickable = f;
+            }
+            var lensFlareSystem = new LensFlareSystem(sceneMain);
         });
         return scene;
     }
     sceneMain = createScene();
-    var lensFlareSystem = new LensFlareSystem(sceneMain);
+    sceneMain.executeWhenReady(function () {
+    });
     engine.runRenderLoop(function () {
         sceneMain.render();
-        console.log(engine.getFps());
     });
     window.addEventListener('resize', function () {
         engine.resize();
