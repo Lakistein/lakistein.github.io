@@ -1,6 +1,4 @@
-/// <reference path="babylon.d.ts" />
-/// <reference path="babylon.pbrMaterial.d.ts" />
-// TODO: uradi simple interface
+
 class Environment {
     id: string;
     lights: BABYLON.Light[] = [];
@@ -14,7 +12,6 @@ class Environment {
     groundMesh: BABYLON.Mesh;
     groundTexture: BABYLON.Texture;
     groundShadow: BABYLON.Mesh;
-
     reflectiveMesh: BABYLON.Mesh;
 
     constructor(json: any, scene: BABYLON.Scene) {

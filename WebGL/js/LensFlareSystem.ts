@@ -1,4 +1,4 @@
-/// <reference path="babylon.d.ts" />
+
 
 class LensFlareSystem {
     constructor(scene: BABYLON.Scene) {

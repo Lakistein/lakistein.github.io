@@ -1,17 +1,22 @@
-/// <reference path="babylon.d.ts" />
-/// <reference path="babylon.pbrMaterial.d.ts" />
 /// <reference path="Environment.ts" />
+/// <reference path="babylon.d.ts" />
+/// <reference path="babylon.gradientMaterial.d.ts" />
+/// <reference path="main.ts" />
 
-class EnvironmentManager {
+
+class EnvironmentManager
+{
     currentEnvironment: number = 0;
     environments: Environment[] = [];
 
-    constructor(json: string, scene: BABYLON.Scene) {
+    constructor(json: string, scene: BABYLON.Scene)
+    {
         var jsonEnv = JSON.parse(json);
         this.loadEnvironment(scene, jsonEnv);
     }
 
-    loadEnvironment(scene: BABYLON.Scene, jsonEnv: any) {
+    loadEnvironment(scene: BABYLON.Scene, jsonEnv: any) 
+    {
         BABYLON.SceneLoader.ImportMesh("", "./", "ENVIRONMENT.babylon", scene, (environment) => {
             var hemilight = new BABYLON.HemisphericLight("hemilight", new BABYLON.Vector3(0, 1, 0), scene);
             hemilight.range = 0.1;

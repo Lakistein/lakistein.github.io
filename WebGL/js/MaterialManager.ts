@@ -1,4 +1,4 @@
-/// <reference path="babylon.d.ts" />
+
 /// <reference path="Material.ts" />
 
 class MaterialManager {
@@ -7,7 +7,7 @@ class MaterialManager {
     constructor(materials: string, scene: BABYLON.Scene) {
         var jsonMat = JSON.parse(materials);
         var htmlElement = document.getElementById("materialBody");
-        for (var i = 0; i < jsonMat.length; i++) {
+        /*for (var i = 0; i < jsonMat.length; i++) {
             this.materials[jsonMat[i].name] = new Material(JSON.stringify(jsonMat[i]), scene);
             //<img class="material" src=".\textures\models-textures\redplastic.jpg" alt="Plastic" draggable="true">
             var span = document.createElement("span");
@@ -25,7 +25,7 @@ class MaterialManager {
             span.appendChild(img);
             span.appendChild(txtP);
             htmlElement.appendChild(span);
-        }
+        }*/
 
         var file = document.getElementsByClassName('material');
 

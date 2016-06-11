@@ -1,11 +1,13 @@
 /// <reference path="Environment.ts" />
 /// <reference path="EnvironmentManager.ts" />
 
+
 class EnvironmentUI {
     environment: Environment;
     environmentManager: EnvironmentManager;
 
     constructor(environmentManager: EnvironmentManager, scene: BABYLON.Scene) {
+        var self = this;
         this.environmentManager = environmentManager;
         var environments = document.getElementsByClassName('environment');
         var env = this.environmentManager;
@@ -15,7 +17,64 @@ class EnvironmentUI {
             });
         }
 
-        document.getElementById("background").onchange = (ev) => {
+        $('body').on('editorPropertyChanged', function(e) {
+            //console.log(e.name, e.value);
+            
+            if(e.name === "show_background") {
+                if(e.value === true) {
+                    self.environmentManager.turnBackgroundOnOff(true);
+                }
+                else if(e.value === false) {
+                    self.environmentManager.turnBackgroundOnOff(false);
+                }
+            }
+            
+            if(e.name === "show_ground_plane") {
+                if(e.value === true) {
+                    self.environmentManager.turnGroundPlaneOffOn(true);
+                }
+                else if(e.value === false) {
+                    self.environmentManager.turnGroundPlaneOffOn(false);
+                }
+            }
+            
+            if(e.name === "show_shadow") {
+                if(e.value === true) {
+                    self.environmentManager.turnShadowOffOn(true);
+                }
+                else if(e.value === false) {
+                    self.environmentManager.turnShadowOffOn(false);
+                }
+            }
+            
+            if(e.name === "show_reflective") {
+                if(e.value === true) {
+                    self.environmentManager.turnReflectivePlaneOffOn(true);
+                }
+                else if(e.value === false) {
+                    self.environmentManager.turnReflectivePlaneOffOn(false);
+                }
+            }
+            
+            if(e.name === "gragient_top_hue") {
+                self.environmentManager.changeTopGradient(e.value);
+            }
+            
+            if(e.name === "gragient_bottom_hue") {
+                self.environmentManager.changeBottomGradient(e.value);
+            }
+            
+            if(e.name === "gragient_offset") {
+                self.environmentManager.changeGradientOffset(e.value);
+            }
+            
+            if(e.name === "reflective_amount") {
+                self.environmentManager.changeReflectionAmount(e.value);
+            }
+           
+        });
+        
+        /*document.getElementById("background").onchange = (ev) => {
             this.environmentManager.turnBackgroundOnOff((<HTMLInputElement>ev.target).checked);
         };
 
@@ -61,6 +120,6 @@ class EnvironmentUI {
                 document.getElementById("arrowIcon").style.transform = "rotatex(" + k + "deg)";
                 k += 180;
             }
-        });
+        });*/
     }
 }

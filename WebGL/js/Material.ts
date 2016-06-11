@@ -1,5 +1,4 @@
-/// <reference path="babylon.d.ts"/>
-/// <reference path="babylon.pbrMaterial.d.ts" />
+
 
 class Material {
     name: string;

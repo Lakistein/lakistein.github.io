@@ -1,6 +1,4 @@
-/// <reference path="babylon.d.ts" />
 /// <reference path="EnvironmentManager.ts" />
-
 
 class UploadManager {
     currentModel: BABYLON.AbstractMesh;

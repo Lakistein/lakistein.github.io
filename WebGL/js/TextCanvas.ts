@@ -1,4 +1,4 @@
-/// <reference path="babylon.d.ts" />
+
 
 class TextCanvas {
     id: string;
@@ -285,6 +285,9 @@ class TextCanvas {
     createText(text: string, backgroundColor, scene, textColor, height) {
         var dynamicTexture = new BABYLON.DynamicTexture('dynamic texture', { width: this.width * 2048, height: height * 1024 }, scene, false);
         dynamicTexture.hasAlpha = true;
+        dynamicTexture.wrapU = BABYLON.Texture.CLAMP_ADDRESSMODE;
+        dynamicTexture.wrapV = BABYLON.Texture.CLAMP_ADDRESSMODE;
+
         var texts = text.split("\n");
         for (var i = 0; i < Math.min(texts.length, 4); i++) {
             dynamicTexture.drawText(texts[i], 10, i * 29 + 25, '20pt Arial', textColor, backgroundColor);
@@ -438,159 +441,159 @@ class TextCanvas {
         this.descriptionMesh.parent = this.titleMesh;
     }
 
-    // createTexts(text, width, height, position, scene: BABYLON.Scene) {
+//     createTexts(text, width, height, position, scene: BABYLON.Scene) {
 
-    //     var panel = this.createMesh("", width, height, true, scene, true);
-    //     // panel.showBoundingBox = true;
-    //     // panel.outline = 1;
-    //     panel.position = position;
-    //     panel.rotation = new BABYLON.Vector3(0, 0, 0);
+//         var panel = this.createMesh("", width, height, true, scene, true);
+//         // panel.showBoundingBox = true;
+//         // panel.outline = 1;
+//         panel.position = position;
+//         panel.rotation = new BABYLON.Vector3(0, 0, 0);
 
-    //     var panmat = new BABYLON.StandardMaterial("panmat", scene);
-    //     panel.material = panmat;
-    //     var panelTexture = new BABYLON.DynamicTexture("dyntex", 0, scene, true);
-    //     panelTexture.hasAlpha = true;
-    //     var ptSize = panelTexture.getSize();
-    //     panmat.emissiveColor = new BABYLON.Color3(1, 1, 1);
-    //     panmat.specularColor = new BABYLON.Color3(0, 0, 0);
-    //     panmat.diffuseTexture = panelTexture;
+//         var panmat = new BABYLON.StandardMaterial("panmat", scene);
+//         panel.material = panmat;
+//         var panelTexture = new BABYLON.DynamicTexture("dyntex", 0, scene, true);
+//         panelTexture.hasAlpha = true;
+//         var ptSize = panelTexture.getSize();
+//         panmat.emissiveColor = new BABYLON.Color3(1, 1, 1);
+//         panmat.specularColor = new BABYLON.Color3(0, 0, 0);
+//         panmat.diffuseTexture = panelTexture;
 
-    //     var getPowerOfTwo = function(value, pow) {
-    //         var pow = pow || 1;
-    //         while (pow < value) {
-    //             pow *= 2;
-    //         }
-    //         return pow;
-    //     };
+//         var getPowerOfTwo = function(value, pow) {
+//             var pow = pow || 1;
+//             while (pow < value) {
+//                 pow *= 2;
+//             }
+//             return pow;
+//         };
 
-    //     var measureText = function(ctx, textToMeasure) {
-    //         var textwidth = ctx.measureText(textToMeasure).width;
-    //         return textwidth;
-    //     };
+//         var measureText = function(ctx, textToMeasure) {
+//             var textwidth = ctx.measureText(textToMeasure).width;
+//             return textwidth;
+//         };
 
-    //     var createMultilineText = function(ctx, textToWrite, maxWidth, text) {
-    //         textToWrite = textToWrite.replace("\n", " ");
-    //         var currentText = textToWrite;
-    //         var futureText;
-    //         var subWidth = 0;
-    //         var maxLineWidth = 0;
+//         var createMultilineText = function(ctx, textToWrite, maxWidth, text) {
+//             textToWrite = textToWrite.replace("\n", " ");
+//             var currentText = textToWrite;
+//             var futureText;
+//             var subWidth = 0;
+//             var maxLineWidth = 0;
 
-    //         var wordArray = textToWrite.split(" ");
-    //         var wordsInCurrent, wordArrayLength;
-    //         wordsInCurrent = wordArrayLength = wordArray.length;
+//             var wordArray = textToWrite.split(" ");
+//             var wordsInCurrent, wordArrayLength;
+//             wordsInCurrent = wordArrayLength = wordArray.length;
 
-    //         while (measureText(ctx, currentText) > maxWidth && wordsInCurrent > 1) {
-    //             wordsInCurrent--;
-    //             var linebreak = false;
+//             while (measureText(ctx, currentText) > maxWidth && wordsInCurrent > 1) {
+//                 wordsInCurrent--;
+//                 var linebreak = false;
 
-    //             currentText = futureText = "";
-    //             for (var i = 0; i < wordArrayLength; i++) {
-    //                 if (i < wordsInCurrent) {
-    //                     currentText += wordArray[i];
-    //                     if (i + 1 < wordsInCurrent) { currentText += " "; }
-    //                 }
-    //                 else {
-    //                     futureText += wordArray[i];
-    //                     if (i + 1 < wordArrayLength) { futureText += " "; }
-    //                 }
-    //             }
-    //         }
-    //         text.push(currentText);
-    //         maxLineWidth = measureText(ctx, currentText);
+//                 currentText = futureText = "";
+//                 for (var i = 0; i < wordArrayLength; i++) {
+//                     if (i < wordsInCurrent) {
+//                         currentText += wordArray[i];
+//                         if (i + 1 < wordsInCurrent) { currentText += " "; }
+//                     }
+//                     else {
+//                         futureText += wordArray[i];
+//                         if (i + 1 < wordArrayLength) { futureText += " "; }
+//                     }
+//                 }
+//             }
+//             text.push(currentText);
+//             maxLineWidth = measureText(ctx, currentText);
 
-    //         if (futureText) {
-    //             subWidth = createMultilineText(ctx, futureText, maxWidth, text);
-    //             if (subWidth > maxLineWidth) {
-    //                 maxLineWidth = subWidth;
-    //             }
-    //         }
+//             if (futureText) {
+//                 subWidth = createMultilineText(ctx, futureText, maxWidth, text);
+//                 if (subWidth > maxLineWidth) {
+//                     maxLineWidth = subWidth;
+//                 }
+//             }
 
-    //         return maxLineWidth;
-    //     };
+//             return maxLineWidth;
+//         };
 
-    //     var drawText = function(textObj) {
-    //         var canvasX, canvasY;
-    //         var textX, textY;
-    //         var ctx;
+//         var drawText = function(textObj) {
+//             var canvasX, canvasY;
+//             var textX, textY;
+//             var ctx;
 
-    //         var text = [];
-    //         var textToWrite = textObj.textToWrite;
-    //         var maxWidth = textObj.maxWidth;
+//             var text = [];
+//             var textToWrite = textObj.textToWrite;
+//             var maxWidth = textObj.maxWidth;
 
-    //         var squareTexture = textObj.squareTexture;
+//             var squareTexture = textObj.squareTexture;
 
-    //         var textHeight = textObj.textHeight;
-    //         var textAlignment = textObj.textAlignment;
-    //         var textColor = textObj.textColor;
-    //         var fontFamily = textObj.fontFamily;
+//             var textHeight = textObj.textHeight;
+//             var textAlignment = textObj.textAlignment;
+//             var textColor = textObj.textColor;
+//             var fontFamily = textObj.fontFamily;
 
-    //         var backgroundColor = textObj.backgroundColor;
+//             var backgroundColor = textObj.backgroundColor;
 
-    //         ctx = textObj.canvas.getContext('2d');
+//             ctx = textObj.canvas.getContext('2d');
 
 
-    //         if (maxWidth && measureText(ctx, textToWrite) > maxWidth) {
-    //             maxWidth = createMultilineText(ctx, textToWrite, maxWidth, text);
-    //             canvasX = getPowerOfTwo(maxWidth);
-    //         } else {
-    //             text.push(textToWrite);
-    //             canvasX = getPowerOfTwo(measureText(ctx, textToWrite).width);
-    //         }
+//             if (maxWidth && measureText(ctx, textToWrite) > maxWidth) {
+//                 maxWidth = createMultilineText(ctx, textToWrite, maxWidth, text);
+//                 canvasX = getPowerOfTwo(maxWidth);
+//             } else {
+//                 text.push(textToWrite);
+//                 canvasX = getPowerOfTwo(measureText(ctx, textToWrite).width);
+//             }
 
-    //         canvasY = getPowerOfTwo(textHeight * (text.length + 1));
+//             canvasY = getPowerOfTwo(textHeight * (text.length + 1));
 
-    //         if (squareTexture) {
-    //             (canvasX > canvasY) ? canvasY = canvasX : canvasX = canvasY;
-    //         }
-    //         textObj.canvas.width = canvasX;
-    //         textObj.canvas.height = canvasY;
+//             if (squareTexture) {
+//                 (canvasX > canvasY) ? canvasY = canvasX : canvasX = canvasY;
+//             }
+//             textObj.canvas.width = canvasX;
+//             textObj.canvas.height = canvasY;
 
-    //         switch (textAlignment) {
-    //             case "left":
-    //                 textX = 0;
-    //                 break;
-    //             case "center":
-    //                 textX = canvasX / 2;
-    //                 break;
-    //             case "right":
-    //                 textX = canvasX;
-    //                 break;
-    //         }
-    //         textY = canvasY / 2;
-    //         ctx.fillStyle = backgroundColor;
-    //         ctx.fillRect(0, 0, textObj.canvas.width, textObj.canvas.height);
+//             switch (textAlignment) {
+//                 case "left":
+//                     textX = 0;
+//                     break;
+//                 case "center":
+//                     textX = canvasX / 2;
+//                     break;
+//                 case "right":
+//                     textX = canvasX;
+//                     break;
+//             }
+//             textY = canvasY / 2;
+//             ctx.fillStyle = backgroundColor;
+//             ctx.fillRect(0, 0, textObj.canvas.width, textObj.canvas.height);
 
-    //         ctx.fillStyle = textColor;
-    //         ctx.textAlign = textAlignment;
+//             ctx.fillStyle = textColor;
+//             ctx.textAlign = textAlignment;
 
-    //         ctx.textBaseline = 'middle';
-    //         ctx.font = textHeight + "px " + fontFamily;
+//             ctx.textBaseline = 'middle';
+//             ctx.font = textHeight + "px " + fontFamily;
 
-    //         var Yoffset = (canvasY - textHeight * (text.length + 1)) * 0.5;
+//             var Yoffset = (canvasY - textHeight * (text.length + 1)) * 0.5;
 
-    //         for (var i = 0; i < text.length; i++) {
-    //             if (text.length > 1) {
-    //                 textY = (i + 1) * textHeight + Yoffset;
-    //             }
-    //             ctx.fillText(text[i], textX, textY);
-    //         }
+//             for (var i = 0; i < text.length; i++) {
+//                 if (text.length > 1) {
+//                     textY = (i + 1) * textHeight + Yoffset;
+//                 }
+//                 ctx.fillText(text[i], textX, textY);
+//             }
 
-    //         panelTexture.update();
-    //     };
+//             panelTexture.update();
+//         };
 
-    //     var tobj = {};
-    //     tobj.canvas = panelTexture._canvas;
-    //     tobj.maxWidth = this.width;
-    //     tobj.squareTexture = 1;
-    //     tobj.textHeight = 5;
-    //     tobj.textAlignment = "left";
-    //     tobj.textColor = "#fff";
-    //     tobj.fontFamily = "Arial";
-    //     tobj.backgroundColor = 'rgba(0, 0, 0, 0)';
-    //     tobj.textToWrite = text;
+//         var tobj = {};
+//         tobj.canvas = panelTexture._canvas;
+//         tobj.maxWidth = this.width;
+//         tobj.squareTexture = 1;
+//         tobj.textHeight = 5;
+//         tobj.textAlignment = "left";
+//         tobj.textColor = "#fff";
+//         tobj.fontFamily = "Arial";
+//         tobj.backgroundColor = 'rgba(0, 0, 0, 0)';
+//         tobj.textToWrite = text;
 
-    //     drawText(tobj);
+//         drawText(tobj);
 
-    //     return panel;
-    // }
+//         return panel;
+//     }
 }
