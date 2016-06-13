@@ -12,68 +12,25 @@ class EnvironmentUI {
         var environments = document.getElementsByClassName('environment');
         var env = this.environmentManager;
         for (var i = 0; i < environments.length; i++) {
-            environments.item(i).addEventListener('click', function() {
+            environments.item(i).addEventListener('click', function () {
                 env.setEnvironment(this.getAttribute("id"), scene);
             });
         }
 
-        $('body').on('editorPropertyChanged', function(e) {
+        $('body').on('editorPropertyChanged', function (e) {
             //console.log(e.name, e.value);
-            
-            if(e.name === "show_background") {
-                if(e.value === true) {
-                    self.environmentManager.turnBackgroundOnOff(true);
-                }
-                else if(e.value === false) {
-                    self.environmentManager.turnBackgroundOnOff(false);
-                }
+            switch (e.name) {
+                case "show_background": self.environmentManager.turnBackgroundOnOff(e.value); break;
+                case "show_ground_plane": self.environmentManager.turnGroundPlaneOffOn(e.value); break;
+                case "show_shadow": self.environmentManager.turnShadowOffOn(e.value); break;
+                case "show_reflective": self.environmentManager.turnReflectivePlaneOffOn(e.value); break;
+                case "gragient_top_hue": self.environmentManager.changeTopGradient(e.value); break;
+                case "gragient_bottom_hue": self.environmentManager.changeBottomGradient(e.value); break;
+                case "gragient_offset": self.environmentManager.changeGradientOffset(e.value); break;
+                case "reflective_amount": self.environmentManager.changeReflectionAmount(e.value); break;
             }
-            
-            if(e.name === "show_ground_plane") {
-                if(e.value === true) {
-                    self.environmentManager.turnGroundPlaneOffOn(true);
-                }
-                else if(e.value === false) {
-                    self.environmentManager.turnGroundPlaneOffOn(false);
-                }
-            }
-            
-            if(e.name === "show_shadow") {
-                if(e.value === true) {
-                    self.environmentManager.turnShadowOffOn(true);
-                }
-                else if(e.value === false) {
-                    self.environmentManager.turnShadowOffOn(false);
-                }
-            }
-            
-            if(e.name === "show_reflective") {
-                if(e.value === true) {
-                    self.environmentManager.turnReflectivePlaneOffOn(true);
-                }
-                else if(e.value === false) {
-                    self.environmentManager.turnReflectivePlaneOffOn(false);
-                }
-            }
-            
-            if(e.name === "gragient_top_hue") {
-                self.environmentManager.changeTopGradient(e.value);
-            }
-            
-            if(e.name === "gragient_bottom_hue") {
-                self.environmentManager.changeBottomGradient(e.value);
-            }
-            
-            if(e.name === "gragient_offset") {
-                self.environmentManager.changeGradientOffset(e.value);
-            }
-            
-            if(e.name === "reflective_amount") {
-                self.environmentManager.changeReflectionAmount(e.value);
-            }
-           
         });
-        
+
         /*document.getElementById("background").onchange = (ev) => {
             this.environmentManager.turnBackgroundOnOff((<HTMLInputElement>ev.target).checked);
         };

@@ -49,31 +49,22 @@ window.addEventListener("DOMContentLoaded", function()
         envUI = new EnvironmentUI(envMng, scene);
         uploadManager = new UploadManager(scene, envMng);
         materialManager = new MaterialManager(materials, scene);
-        testSprite = new Card(scene, camera);
-        
-        
         
         return scene;
     }
 
     sceneMain = createScene();
     
-    
-
     // main render loop
     engine.runRenderLoop(function() 
     {   
         sceneMain.render();
         //fps.textContent = Math.round(engine.getFps()).toString() + " fps";
-        
-        testSprite.update(sceneMain);
     });
     
     // if window gets resized update babylon engine size
     window.addEventListener('resize', function() 
     {
-        
-        
         engine.resize();
     });
 });
