@@ -17,7 +17,7 @@ class EnvironmentManager
 
     loadEnvironment(scene: BABYLON.Scene, jsonEnv: any) 
     {
-        BABYLON.SceneLoader.ImportMesh("", "./", "ENVIRONMENT.babylon", scene, (environment) => {
+        BABYLON.SceneLoader.ImportMesh("", "/static/js/lib/", "environment.babylon", scene, (environment) => {
             var hemilight = new BABYLON.HemisphericLight("hemilight", new BABYLON.Vector3(0, 1, 0), scene);
             hemilight.range = 0.1;
             hemilight.intensity = 0.7;
@@ -34,8 +34,8 @@ class EnvironmentManager
                         break;
                     case "groundPlane":
                         var groundPlaneMaterial = new BABYLON.PBRMaterial("groundPlaneMaterial", scene);
-                        groundPlaneMaterial.albedoTexture = new BABYLON.Texture("./textures/flare.png", scene);
-                        groundPlaneMaterial.opacityTexture = new BABYLON.Texture("./textures/flare.png", scene);
+                        //groundPlaneMaterial.albedoTexture = new BABYLON.Texture("./textures/flare.png", scene);
+                        //groundPlaneMaterial.opacityTexture = new BABYLON.Texture("./textures/flare.png", scene);
                         groundPlaneMaterial.albedoTexture.hasAlpha = true;
                         groundPlaneMaterial.reflectivityColor = new BABYLON.Color3(0, 0, 0);
                         groundPlaneMaterial.directIntensity = 2;

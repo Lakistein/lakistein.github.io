@@ -6,7 +6,7 @@ var Environment = (function () {
         this.id = json.id;
         this.groundTexture = null;
         this.groundMesh = scene.getMeshByName("groundPlane");
-        var hdr = new BABYLON.HDRCubeTexture("./room.hdr", scene);
+        var hdr = new BABYLON.HDRCubeTexture("/static/js/lib/room.hdr", scene);
         this.reflectionTexture = hdr;
         this.skyboxTexture = hdr.clone();
         this.groundShadow = scene.getMeshByName("GROUNDPLANE_STYLE_1");
@@ -63,7 +63,7 @@ var Environment = (function () {
         return json;
     };
     return Environment;
-}());
+})();
 /*
 
 {
@@ -93,7 +93,7 @@ var EnvironmentManager = (function () {
     }
     EnvironmentManager.prototype.loadEnvironment = function (scene, jsonEnv) {
         var _this = this;
-        BABYLON.SceneLoader.ImportMesh("", "./", "ENVIRONMENT.babylon", scene, function (environment) {
+        BABYLON.SceneLoader.ImportMesh("", "/static/js/lib/", "environment.babylon", scene, function (environment) {
             var hemilight = new BABYLON.HemisphericLight("hemilight", new BABYLON.Vector3(0, 1, 0), scene);
             hemilight.range = 0.1;
             hemilight.intensity = 0.7;
@@ -110,8 +110,8 @@ var EnvironmentManager = (function () {
                         break;
                     case "groundPlane":
                         var groundPlaneMaterial = new BABYLON.PBRMaterial("groundPlaneMaterial", scene);
-                        groundPlaneMaterial.albedoTexture = new BABYLON.Texture("./textures/flare.png", scene);
-                        groundPlaneMaterial.opacityTexture = new BABYLON.Texture("./textures/flare.png", scene);
+                        //groundPlaneMaterial.albedoTexture = new BABYLON.Texture("./textures/flare.png", scene);
+                        //groundPlaneMaterial.opacityTexture = new BABYLON.Texture("./textures/flare.png", scene);
                         groundPlaneMaterial.albedoTexture.hasAlpha = true;
                         groundPlaneMaterial.reflectivityColor = new BABYLON.Color3(0, 0, 0);
                         groundPlaneMaterial.directIntensity = 2;
@@ -259,7 +259,7 @@ var EnvironmentManager = (function () {
         this.environments[this.currentEnvironment].reflectiveMesh.material.alpha = value;
     };
     return EnvironmentManager;
-}());
+})();
 /// <reference path="Environment.ts" />
 /// <reference path="EnvironmentManager.ts" />
 var EnvironmentUI = (function () {
@@ -275,49 +275,31 @@ var EnvironmentUI = (function () {
         }
         $('body').on('editorPropertyChanged', function (e) {
             //console.log(e.name, e.value);
-            if (e.name === "show_background") {
-                if (e.value === true) {
-                    self.environmentManager.turnBackgroundOnOff(true);
-                }
-                else if (e.value === false) {
-                    self.environmentManager.turnBackgroundOnOff(false);
-                }
-            }
-            if (e.name === "show_ground_plane") {
-                if (e.value === true) {
-                    self.environmentManager.turnGroundPlaneOffOn(true);
-                }
-                else if (e.value === false) {
-                    self.environmentManager.turnGroundPlaneOffOn(false);
-                }
-            }
-            if (e.name === "show_shadow") {
-                if (e.value === true) {
-                    self.environmentManager.turnShadowOffOn(true);
-                }
-                else if (e.value === false) {
-                    self.environmentManager.turnShadowOffOn(false);
-                }
-            }
-            if (e.name === "show_reflective") {
-                if (e.value === true) {
-                    self.environmentManager.turnReflectivePlaneOffOn(true);
-                }
-                else if (e.value === false) {
-                    self.environmentManager.turnReflectivePlaneOffOn(false);
-                }
-            }
-            if (e.name === "gragient_top_hue") {
-                self.environmentManager.changeTopGradient(e.value);
-            }
-            if (e.name === "gragient_bottom_hue") {
-                self.environmentManager.changeBottomGradient(e.value);
-            }
-            if (e.name === "gragient_offset") {
-                self.environmentManager.changeGradientOffset(e.value);
-            }
-            if (e.name === "reflective_amount") {
-                self.environmentManager.changeReflectionAmount(e.value);
+            switch (e.name) {
+                case "show_background":
+                    self.environmentManager.turnBackgroundOnOff(e.value);
+                    break;
+                case "show_ground_plane":
+                    self.environmentManager.turnGroundPlaneOffOn(e.value);
+                    break;
+                case "show_shadow":
+                    self.environmentManager.turnShadowOffOn(e.value);
+                    break;
+                case "show_reflective":
+                    self.environmentManager.turnReflectivePlaneOffOn(e.value);
+                    break;
+                case "gragient_top_hue":
+                    self.environmentManager.changeTopGradient(e.value);
+                    break;
+                case "gragient_bottom_hue":
+                    self.environmentManager.changeBottomGradient(e.value);
+                    break;
+                case "gragient_offset":
+                    self.environmentManager.changeGradientOffset(e.value);
+                    break;
+                case "reflective_amount":
+                    self.environmentManager.changeReflectionAmount(e.value);
+                    break;
             }
         });
         /*document.getElementById("background").onchange = (ev) => {
@@ -369,7 +351,7 @@ var EnvironmentUI = (function () {
         });*/
     }
     return EnvironmentUI;
-}());
+})();
 var TextCanvas = (function () {
     function TextCanvas(jsonCanv, index, scene) {
         this.enabled = true;
@@ -736,7 +718,7 @@ var TextCanvas = (function () {
         this.descriptionMesh.parent = this.titleMesh;
     };
     return TextCanvas;
-}());
+})();
 /// <reference path="TextCanvas.ts" />
 var TextCanvasManager = (function () {
     function TextCanvasManager(json, scene) {
@@ -1061,7 +1043,7 @@ var TextCanvasManager = (function () {
         mesh.rotation.x = -scene.activeCamera.beta + (Math.PI / 2);
     };
     return TextCanvasManager;
-}());
+})();
 var LensFlareSystem = (function () {
     function LensFlareSystem(scene) {
         var mainLensEmitter = new BABYLON.Mesh("lensEmitter", scene);
@@ -1130,24 +1112,51 @@ var LensFlareSystem = (function () {
         });
     }
     return LensFlareSystem;
-}());
+})();
 /// <reference path="EnvironmentManager.ts" />
 var UploadManager = (function () {
     function UploadManager(scene, envMng) {
-        this.envMng = envMng;
-        this.scene = scene;
+        var self = this;
+        self.envMng = envMng;
+        self.scene = scene;
+        $('body').on('modelChanged', function (e) {
+            console.log(e.tab, e.model, e.textures);
+            // var file = (<File>(<HTMLInputElement>document.getElementById('uploadFiles')).files[0]);
+            // var reader = new FileReader();
+            // if (file) {
+            //     reader.readAsText(file);
+            // }
+            // reader.onloadend = () => {
+            //file.name.substr(0, file.name.indexOf("."))
+            if (e.model == null && modelMeshes.length > 0) {
+                for (var i = 0; i < modelMeshes.length; i++) {
+                    modelMeshes[i].dispose();
+                }
+                modelMeshes = [];
+                return;
+            }
+            var strSplt = e.model.split('/');
+            var mName = strSplt[strSplt.length - 1];
+            strSplt.pop();
+            var mPath = strSplt.join('/');
+            console.log(strSplt);
+            mPath += '/';
+            console.log(mName);
+            console.log(mPath);
+            self.uploadNewModel(mName, mPath, mName, self.scene, self.envMng);
+            // };
+        });
     }
-    UploadManager.prototype.uploadModel = function () {
-        var _this = this;
-        var file = document.getElementById('uploadFiles').files[0];
-        var reader = new FileReader();
-        if (file) {
-            reader.readAsText(file);
-        }
-        reader.onloadend = function () {
-            _this.uploadNewModel(file.name.substr(0, file.name.indexOf(".")), "", "data:" + reader.result, _this.scene, _this.envMng);
-        };
-    };
+    // uploadModel() {
+    //     var file = (<File>(<HTMLInputElement>document.getElementById('uploadFiles')).files[0]);
+    //     var reader = new FileReader();
+    //     if (file) {
+    //         reader.readAsText(file);
+    //     }
+    //     reader.onloadend = () => {
+    //         this.uploadNewModel(file.name.substr(0, file.name.indexOf(".")), "", "data:" + reader.result, this.scene, this.envMng);
+    //     };
+    // }
     UploadManager.prototype.uploadNewModel = function (name, modelPath, modelName, scene, envManager) {
         if (modelMeshes.length > 0) {
             for (var i = 0; i < modelMeshes.length; i++) {
@@ -1195,7 +1204,7 @@ var UploadManager = (function () {
         });
     };
     return UploadManager;
-}());
+})();
 var Material = (function () {
     function Material(json, scene) {
         var jsonMat = JSON.parse(json);
@@ -1235,7 +1244,7 @@ var Material = (function () {
             '}';
     };
     return Material;
-}());
+})();
 /// <reference path="Material.ts" />
 var MaterialManager = (function () {
     function MaterialManager(materials, scene) {
@@ -1319,7 +1328,7 @@ var MaterialManager = (function () {
         return pbr;
     };
     return MaterialManager;
-}());
+})();
 /// <reference path="babylon.d.ts" />
 var Card = (function () {
     function Card(scene, camera) {
@@ -1352,7 +1361,7 @@ var Card = (function () {
         this.card.rotation.x = -scene.activeCamera.beta + (Math.PI / 2);
     };
     return Card;
-}());
+})();
 /// <reference path="babylon.d.ts" />
 /// <reference path="babylon.pbrMaterial.d.ts" />
 /// <reference path="babylon.gradientMaterial.d.ts" />
@@ -1393,7 +1402,6 @@ window.addEventListener("DOMContentLoaded", function () {
         envUI = new EnvironmentUI(envMng, scene);
         uploadManager = new UploadManager(scene, envMng);
         materialManager = new MaterialManager(materials, scene);
-        testSprite = new Card(scene, camera);
         return scene;
     }
     sceneMain = createScene();
@@ -1401,7 +1409,6 @@ window.addEventListener("DOMContentLoaded", function () {
     engine.runRenderLoop(function () {
         sceneMain.render();
         //fps.textContent = Math.round(engine.getFps()).toString() + " fps";
-        testSprite.update(sceneMain);
     });
     // if window gets resized update babylon engine size
     window.addEventListener('resize', function () {

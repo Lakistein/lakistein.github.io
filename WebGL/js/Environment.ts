@@ -20,7 +20,7 @@ class Environment {
         this.id = json.id;
         this.groundTexture = null;
         this.groundMesh = <BABYLON.Mesh>scene.getMeshByName("groundPlane");
-        var hdr = new BABYLON.HDRCubeTexture("./room.hdr", scene);
+        var hdr = new BABYLON.HDRCubeTexture("/static/js/lib/room.hdr", scene);
         this.reflectionTexture = hdr;
         this.skyboxTexture = hdr.clone();
         this.groundShadow = <BABYLON.Mesh>scene.getMeshByName("GROUNDPLANE_STYLE_1");

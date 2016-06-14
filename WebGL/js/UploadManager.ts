@@ -5,21 +5,57 @@ class UploadManager {
     scene: BABYLON.Scene;
     envMng: EnvironmentManager;
     constructor(scene: BABYLON.Scene, envMng: EnvironmentManager) {
-        this.envMng = envMng;
-        this.scene = scene;
+        var self = this;
+        self.envMng = envMng;
+        self.scene = scene;
+
+        $('body').on('modelChanged', function (e) {
+            console.log(e.tab, e.model, e.textures);
+            // var file = (<File>(<HTMLInputElement>document.getElementById('uploadFiles')).files[0]);
+            // var reader = new FileReader();
+
+            // if (file) {
+            //     reader.readAsText(file);
+            // }
+            // reader.onloadend = () => {
+            //file.name.substr(0, file.name.indexOf("."))
+            if (e.model == null && modelMeshes.length > 0) {
+                for (var i = 0; i < modelMeshes.length; i++) {
+                    (<BABYLON.AbstractMesh>modelMeshes[i]).dispose();
+                }
+                modelMeshes = [];
+                return;
+            }
+
+            var strSplt = e.model.split('/');
+
+            var mName = strSplt[strSplt.length - 1];
+            strSplt.pop();
+
+
+            var mPath = strSplt.join('/');
+            console.log(strSplt);
+            mPath += '/';
+            console.log(mName);
+            console.log(mPath);
+
+            self.uploadNewModel(mName, mPath, mName, self.scene, self.envMng);
+            // };
+        });
     }
 
-    uploadModel() {
-        var file = (<File>(<HTMLInputElement>document.getElementById('uploadFiles')).files[0]);
-        var reader = new FileReader();
+    // uploadModel() {
+    //     var file = (<File>(<HTMLInputElement>document.getElementById('uploadFiles')).files[0]);
+    //     var reader = new FileReader();
 
-        if (file) {
-            reader.readAsText(file);
-        }
-        reader.onloadend = () => {
-            this.uploadNewModel(file.name.substr(0, file.name.indexOf(".")), "", "data:" + reader.result, this.scene, this.envMng);
-        };
-    }
+    //     if (file) {
+    //         reader.readAsText(file);
+    //     }
+    //     reader.onloadend = () => {
+    //         this.uploadNewModel(file.name.substr(0, file.name.indexOf(".")), "", "data:" + reader.result, this.scene, this.envMng);
+    //     };
+    // }
+
 
     uploadNewModel(name: string, modelPath: string, modelName: string, scene: BABYLON.Scene, envManager: EnvironmentManager) {
         if (modelMeshes.length > 0) {
@@ -29,7 +65,7 @@ class UploadManager {
             modelMeshes = [];
         }
 
-        BABYLON.SceneLoader.ImportMesh(null, modelPath, modelName, scene, function(newMeshes) {
+        BABYLON.SceneLoader.ImportMesh(null, modelPath, modelName, scene, function (newMeshes) {
             for (var i = 0; i < newMeshes.length; i++) {
                 var mat: BABYLON.StandardMaterial = <BABYLON.StandardMaterial>newMeshes[i].material;
                 var pbr = new BABYLON.PBRMaterial("PBR" + i, scene);
@@ -65,7 +101,6 @@ class UploadManager {
                 newMeshes[i].outlineColor = BABYLON.Color3.White();
                 newMeshes[i].material = pbr;
             }
-
 
             var refl = (<BABYLON.StandardMaterial>scene.getMeshByName("reflectionPlane").material).reflectionTexture;
             for (var i = 0; i < newMeshes.length; i++) {
