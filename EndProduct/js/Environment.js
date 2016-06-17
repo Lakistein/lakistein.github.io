@@ -1,30 +1,69 @@
-/// <reference path="babylon.2.3.d.ts" />
+/// <reference path="babylon.d.ts" />
 /// <reference path="babylon.pbrMaterial.d.ts" />
+// TODO: uradi simple interface
 var Environment = (function () {
-    //     constructor(environments: JSON) {
-    // 
-    //     }
-    function Environment(scene) {
-        this.lights = scene.lights;
-        this.backgroundColor = scene.getMeshByName("background").material.albedoColor;
-        this.ambientColor = scene.ambientColor;
+    function Environment(json, scene) {
+        this.lights = [];
+        if (!json)
+            return;
+        this.id = json.id;
+        this.groundTexture = null;
+        this.groundMesh = scene.getMeshByName("groundPlane");
+        var hdr = new BABYLON.HDRCubeTexture(json.skyboxURL, scene);
+        this.reflectionTexture = hdr;
+        this.skyboxTexture = hdr.clone();
+        this.groundShadow = scene.getMeshByName("GROUNDPLANE_STYLE_1");
+        this.backgroundMesh = scene.getMeshByName("background");
+        this.reflectiveMesh = scene.getMeshByName("reflectionPlane");
+        // this.rotateBackground = true;
+        // for (var i = 0; i < json.lights.length; i++) {
+        //     switch (json.lights[i].type) {
+        //         case "spot":
+        //             this.lights.push(new BABYLON.SpotLight("spot", new BABYLON.Vector3(json.lights[i].position.x, json.lights[i].position.y, json.lights[i].position.z), new BABYLON.Vector3(json.lights[i].direction.x, json.lights[i].direction.y, json.lights[i].direction.z), json.lights[i].angle, 1, scene));
+        //             break;
+        //         case "point":
+        //             this.lights.push(new BABYLON.PointLight("point", new BABYLON.Vector3(json.lights[i].position.x, json.lights[i].position.y, json.lights[i].position.z), scene));
+        //             break;
+        //         case "hemi":
+        //             this.lights.push(new BABYLON.HemisphericLight("hemi", new BABYLON.Vector3(json.lights[i].position.x, json.lights[i].position.y, json.lights[i].position.z), scene));
+        //             break;
+        //         // case "direction":
+        //         //     light = new BABYLON.DirectionalLight("hemi", new BABYLON.Vector3(json.lights[i].position.x, json.lights[i].position.y, json.lights[i].position.z), scene);
+        //         //     break;
+        //     }
+        //     this.lights[i].excludedMeshes.push(this.backgroundMesh);
+        //     this.lights[i].intensity = json.lights[i].intensity;
+        //     this.lights[i].range = json.lights[i].range;
+        //     this.lights[i].diffuse = new BABYLON.Color3(json.lights[i].diffuse.r, json.lights[i].diffuse.g, json.lights[i].diffuse.b);
+        //     this.lights[i].specular = new BABYLON.Color3(json.lights[i].specular.r, json.lights[i].specular.g, json.lights[i].specular.b);
+        // }
+        scene.registerBeforeRender(function () {
+            if (this.backgroundMesh == null)
+                this.backgroundMesh = scene.getMeshByName("background");
+            if (this.backgroundMesh && scene.activeCamera) {
+                this.backgroundMesh.rotation.y = -(scene.activeCamera.alpha) + -Math.PI / 2;
+            }
+        });
     }
     Environment.prototype.toJSON = function () {
-        var json = '{"backgroundColor": {"r": ' + this.backgroundColor.r + ', "g":' + this.backgroundColor.g + ',"b":' + this.backgroundColor.b + '},' + '"lights": [';
+        var json = '"lights": [';
         for (var i = 0; i < this.lights.length; i++) {
-            json += ' {' +
-                '"type": "' + this.lights[i].name + '",' +
-                '"position": { "x": ' + this.lights[i].getAbsolutePosition().x + ', "y": ' + this.lights[i].getAbsolutePosition().x + ', "z": ' + this.lights[i].getAbsolutePosition().x + ' },' +
-                '"intensity": ' + this.lights[i].intensity + ',' +
-                '"range": ' + this.lights[i].range + ',' +
-                '}';
+            if (this.lights[i].name !== "spot" && this.lights[i].name !== "point" && this.lights[i].name !== "hemi")
+                continue;
+            json += '{' +
+                '"type":' + JSON.stringify(this.lights[i].name) + ',' +
+                '"position": ' + JSON.stringify(this.lights[i].getAbsolutePosition()) + ',';
             if (this.lights[i].name === "spot") {
-                json += '"coneAngle:' + this.lights[i].angle + ',' +
-                    '"direction": { "x": ' + this.lights[i].direction.x + ', "y": ' + this.lights[i].direction.y + ', "z": ' + this.lights[i].direction.z + ' },';
+                json += '"angle":' + this.lights[i].angle + ',' +
+                    '"direction":' + JSON.stringify(this.lights[i].direction) + ',';
             }
+            json += '"diffuse:"' + JSON.stringify(this.lights[i].diffuse) + ',' + '"specular:"' + JSON.stringify(this.lights[i].specular) + ',' +
+                '"intensity": ' + this.lights[i].intensity + ',' +
+                '"range":' + this.lights[i].range.toPrecision(2) + '},';
         }
+        json = json.substring(0, json.length - 1);
         json += ']}';
-        return JSON.stringify(json);
+        return json;
     };
     return Environment;
 })();
@@ -36,6 +75,8 @@ var Environment = (function () {
         "type": "point",
         "position": {"x": 1,"y": 1,"z": 1},
         "direction": {"x": 1,"y": 1,"z": 1},
+        "diffuse": {"r": 1,"g": 1,"b": 1},
+        "specular": {"r": 1,"g": 1,"b": 1},
         "intensity": 15,
         "range": 15,
     }]

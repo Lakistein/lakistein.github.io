@@ -4,6 +4,7 @@
 /// <reference path="LensFlareSystem.ts" />
 /// <reference path="UploadManager.ts" />
 /// <reference path="MaterialManager.ts" />
+/// <reference path="TextCanvasManager.ts" />
 
 // things to download: 
 // Skyboxes with reflections
@@ -12,7 +13,7 @@
 var sceneMain: BABYLON.Scene;
 var uploadManager: UploadManager;
 var modelMeshes: BABYLON.AbstractMesh[] = [];
-window.addEventListener('DOMContentLoaded', function() {
+window.addEventListener('DOMContentLoaded', function () {
     var canvas = <HTMLCanvasElement>document.getElementById('renderCanvas');
     var engine = new BABYLON.Engine(canvas, true);
     var camera: BABYLON.ArcRotateCamera;
@@ -32,7 +33,7 @@ window.addEventListener('DOMContentLoaded', function() {
         var str = '[{"id":1,"backgroundColor":{"r":0,"g":0,"b":0},"skyboxURL":"./room.hdr","lights":[]}]';
         var envMng = new EnvironmentManager(str, scene);
 
-        // Canvases
+        //Canvases
         // var json: string = '[{"id":0,"text":"Red Plastic","description":"Scratch Resistant","width":0.25,"height":0.03,"position":{"x":0.5733,"y":1.0350,"z":-1.4110},"linePosition":{"x":0.008,"y":0.601,"z":-1.2},"offset":0,"anchorTextureURL":"./textures/anchors/Anchor_2.png"},{"id":1,"text":"Chrome","description":"Durable Metal","width":0.25,"height":0.03,"position":{"x":-2,"y":1,"z":0},"linePosition":{"x":-1.192,"y":0.7488,"z":-0.295},"offset":3,"anchorTextureURL":"./textures/anchors/Anchor_4.png"}]';
 
         // var textCanv = new TextCanvasManager(json, scene);
@@ -41,8 +42,21 @@ window.addEventListener('DOMContentLoaded', function() {
         var materialManager = new MaterialManager(materials, scene);
 
         uploadManager = new UploadManager(scene, envMng);
-        var modelStr = "model.babylon";
-        uploadManager.uploadModelFromServer(modelStr, "", scene, envMng);
+        var modelStr = "new-folder/model.babylon";
+
+        var strSplt = modelStr.split('/');
+
+        var mName = strSplt[strSplt.length - 1];
+        strSplt.pop();
+
+
+        var mPath = strSplt.join('/');
+        console.log(strSplt);
+        mPath += '/';
+        console.log(mName);
+        console.log(mPath);
+
+        uploadManager.uploadModelFromServer(mName, mPath, scene, envMng);
 
         var matComp = '[{"compNum":1,"matName":"Plastic"},{"compNum":2,"matName":"Brushed Metal"},{"compNum":3,"matName":"Flat Surface"},{"compNum":4,"matName":"Chrome"},{"compNum":5,"matName":"Plastic"},{"compNum":6,"matName":"Flat Surface"}]';
         var matJs = JSON.parse(matComp);
@@ -81,15 +95,41 @@ window.addEventListener('DOMContentLoaded', function() {
 
         return scene;
     }
-
+    var takeSC = false;
+    var num = 1;
     sceneMain = createScene();
     sceneMain.executeWhenReady(() => {
+        setTimeout(function () {
+            takeSC = true;
+            camera.alpha = 0;
+        }, 5000);
 
     });
-    engine.runRenderLoop(function() {
+    var w = document.documentElement.clientWidth;
+    var h = document.documentElement.clientHeight;
+    engine.runRenderLoop(function () {
         sceneMain.render();
+        if (takeSC) {
+            console.log(camera.alpha);
+
+            var s = "";
+            if (num < 10)
+                s += "0";
+            s += num;
+            BABYLON.Tools.CreateScreenshot(engine, camera, { width: w, height: h }, s);
+            camera.alpha = -num / 90 * 6.28319;
+            num++;
+
+           // debugger;
+
+            if (num == 91) {
+                num = 1;
+                takeSC = false;
+            }
+        }
+
     });
-    window.addEventListener('resize', function() {
+    window.addEventListener('resize', function () {
         engine.resize();
     });
 });
