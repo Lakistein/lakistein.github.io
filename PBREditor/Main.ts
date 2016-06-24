@@ -214,6 +214,8 @@ window.addEventListener('DOMContentLoaded', function() {
             var Flat_1_pbr = new BABYLON.PBRMaterial("Flat 1", scene);
             Flat_1_pbr.reflectivityColor = BABYLON.Color3.Black();
             Flat_1_pbr.albedoColor = BABYLON.Color3.Red();
+            Flat_1_pbr.reflectivityColor = BABYLON.Color3.White();
+            Flat_1_pbr.microSurface = 0;
             var Flat_1 = BABYLON.Mesh.CreateSphere("Flat 1", 100, 3, scene, true);
             Flat_1.position.addInPlace(new BABYLON.Vector3(-4, 0, -6));
             Flat_1.material = Flat_1_pbr;
@@ -227,6 +229,8 @@ window.addEventListener('DOMContentLoaded', function() {
             var Felt_1_pbr = new BABYLON.PBRMaterial("Felt 1", scene);
             Felt_1_pbr.reflectivityColor = BABYLON.Color3.Black();
             Felt_1_pbr.albedoColor = BABYLON.Color3.Red();
+            Felt_1_pbr.reflectivityColor = BABYLON.Color3.White();
+            Felt_1_pbr.microSurface = 0.1;
             var Felt_1 = BABYLON.Mesh.CreateSphere("Felt 1", 100, 3, scene, true);
             Felt_1.material = Felt_1_pbr;
             Felt_1.position.addInPlace(new BABYLON.Vector3(0, 0, -6));
@@ -241,6 +245,8 @@ window.addEventListener('DOMContentLoaded', function() {
             var Semigloss_1_pbr = new BABYLON.PBRMaterial("Semigloss 1", scene);
             Semigloss_1_pbr.reflectivityColor = BABYLON.Color3.Black();
             Semigloss_1_pbr.albedoColor = BABYLON.Color3.Red();
+            Semigloss_1_pbr.reflectivityColor = BABYLON.Color3.White();
+            Semigloss_1_pbr.microSurface = 0.2;
             var Semigloss_1 = BABYLON.Mesh.CreateSphere("Semigloss 1", 100, 3, scene, true);
             Semigloss_1.material = Semigloss_1_pbr;
             Semigloss_1.position.addInPlace(new BABYLON.Vector3(4, 0, -6));
@@ -255,6 +261,8 @@ window.addEventListener('DOMContentLoaded', function() {
             var Semigloss_2_pbr = new BABYLON.PBRMaterial("Semigloss 2", scene);
             Semigloss_2_pbr.reflectivityColor = BABYLON.Color3.Black();
             Semigloss_2_pbr.albedoColor = BABYLON.Color3.Red();
+            Semigloss_2_pbr.reflectivityColor = BABYLON.Color3.White();
+            Semigloss_2_pbr.microSurface = 0.3;
             var Semigloss_2 = BABYLON.Mesh.CreateSphere("Semigloss 2 ", 100, 3, scene, true);
             Semigloss_2.material = Semigloss_2_pbr;
             Semigloss_2.position.addInPlace(new BABYLON.Vector3(-4, 0, -2));
@@ -269,6 +277,8 @@ window.addEventListener('DOMContentLoaded', function() {
             var Specular_1_pbr = new BABYLON.PBRMaterial("Specular 1", scene);
             Specular_1_pbr.reflectivityColor = BABYLON.Color3.Black();
             Specular_1_pbr.albedoColor = BABYLON.Color3.Red();
+            Specular_1_pbr.reflectivityColor = BABYLON.Color3.White();
+            Specular_1_pbr.microSurface = 0.4;
             var Specular_1 = BABYLON.Mesh.CreateSphere("Specular 1", 100, 3, scene, true);
             Specular_1.material = Specular_1_pbr;
             Specular_1.position.addInPlace(new BABYLON.Vector3(0, 0, -2));
@@ -282,6 +292,8 @@ window.addEventListener('DOMContentLoaded', function() {
             var Specular_2_pbr = new BABYLON.PBRMaterial("Specular 2", scene);
             Specular_2_pbr.reflectivityColor = BABYLON.Color3.Black();
             Specular_2_pbr.albedoColor = BABYLON.Color3.Red();
+            Specular_2_pbr.reflectivityColor = BABYLON.Color3.White();
+            Specular_2_pbr.microSurface = 0.5;
             var Specular_2 = BABYLON.Mesh.CreateSphere("Specular 2", 100, 3, scene, true);
             Specular_2.material = Specular_2_pbr;
             Specular_2.position.addInPlace(new BABYLON.Vector3(4, 0, -2));
@@ -296,6 +308,8 @@ window.addEventListener('DOMContentLoaded', function() {
             var Specular_3_pbr = new BABYLON.PBRMaterial("Specular 3", scene);
             Specular_3_pbr.reflectivityColor = BABYLON.Color3.Black();
             Specular_3_pbr.albedoColor = BABYLON.Color3.Red();
+            Specular_3_pbr.reflectivityColor = BABYLON.Color3.White();
+            Specular_3_pbr.microSurface = 0.6;
             var Specular_3 = BABYLON.Mesh.CreateSphere("Specular 3", 100, 3, scene, true);
             Specular_3.material = Specular_3_pbr;
             Specular_3.position.addInPlace(new BABYLON.Vector3(-4, 0, 2));
@@ -310,6 +324,8 @@ window.addEventListener('DOMContentLoaded', function() {
             var Chrome_1_pbr = new BABYLON.PBRMaterial("Chrome 1", scene);
             Chrome_1_pbr.reflectivityColor = BABYLON.Color3.Black();
             Chrome_1_pbr.albedoColor = BABYLON.Color3.Red();
+            Chrome_1_pbr.reflectivityColor = BABYLON.Color3.White();
+            Chrome_1_pbr.microSurface = 0.7;
             var Chrome_1 = BABYLON.Mesh.CreateSphere("Chrome 1", 100, 3, scene, true);
             Chrome_1.material = Chrome_1_pbr;
             Chrome_1.position.addInPlace(new BABYLON.Vector3(0, 0, 2));
@@ -324,6 +340,8 @@ window.addEventListener('DOMContentLoaded', function() {
             var Chrome_2_pbr = new BABYLON.PBRMaterial("Chrome 2", scene);
             Chrome_2_pbr.reflectivityColor = BABYLON.Color3.Black();
             Chrome_2_pbr.albedoColor = BABYLON.Color3.Red();
+            Chrome_2_pbr.reflectivityColor = BABYLON.Color3.White();
+            Chrome_2_pbr.microSurface = 0.8;
             var Chrome_2 = BABYLON.Mesh.CreateSphere("Chrome 2", 100, 3, scene, true);
             Chrome_2.material = Chrome_2_pbr;
             Chrome_2.position.addInPlace(new BABYLON.Vector3(4, 0, 2));
@@ -339,6 +357,8 @@ window.addEventListener('DOMContentLoaded', function() {
             Chrome_3_pbr.reflectivityColor = BABYLON.Color3.Black();
             Chrome_3_pbr.albedoColor = BABYLON.Color3.Red();
             // Chrome 3, Glass 1, Glass 2
+            Chrome_3_pbr.reflectivityColor = BABYLON.Color3.White();
+            Chrome_3_pbr.microSurface = 0.9;
             var Chrome_3 = BABYLON.Mesh.CreateSphere("Chrome 3", 100, 3, scene, true);
             Chrome_3.material = Chrome_3_pbr;
             Chrome_3.position.addInPlace(new BABYLON.Vector3(-4, 0, 6));
@@ -353,6 +373,7 @@ window.addEventListener('DOMContentLoaded', function() {
             var Glass_1_pbr = new BABYLON.PBRMaterial("Glass 1", scene);
             Glass_1_pbr.reflectivityColor = BABYLON.Color3.Black();
             Glass_1_pbr.albedoColor = BABYLON.Color3.Red();
+            
             var Glass_1 = BABYLON.Mesh.CreateSphere("Glass 1", 100, 3, scene, true);
             Glass_1.material = Glass_1_pbr;
             Glass_1.position.addInPlace(new BABYLON.Vector3(0, 0, 6));
