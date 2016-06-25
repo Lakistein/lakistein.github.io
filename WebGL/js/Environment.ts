@@ -13,6 +13,12 @@ class Environment {
     groundTexture: BABYLON.Texture;
     groundShadow: BABYLON.Mesh;
     reflectiveMesh: BABYLON.Mesh;
+    hueT: number;
+    ligthnessT: number;
+    saturationT: number;
+    hueB: number;
+    ligthnessB: number;
+    saturationB: number;
 
     constructor(json: any, scene: BABYLON.Scene) {
         if (!json) return;
@@ -21,11 +27,17 @@ class Environment {
         this.groundTexture = null;
         this.groundMesh = <BABYLON.Mesh>scene.getMeshByName("groundPlane");
         var hdr = new BABYLON.HDRCubeTexture("/static/js/lib/room.hdr", scene);
-        this.reflectionTexture = hdr;
+        this.reflectionTexture = hdr.clone();
         this.skyboxTexture = hdr.clone();
-        this.groundShadow = <BABYLON.Mesh>scene.getMeshByName("GROUNDPLANE_STYLE_1");
+        this.groundShadow = <BABYLON.Mesh>scene.getMeshByName("Ground_Plane");
         this.backgroundMesh = <BABYLON.Mesh>scene.getMeshByName("background");
         this.reflectiveMesh = <BABYLON.Mesh>scene.getMeshByName("reflectionPlane");
+        this.saturationT = 1;
+        this.saturationB = 1;
+        this.ligthnessT = 0.5;
+        this.ligthnessB = 0.5;
+        this.hueT = 0;
+        this.hueB = 0;
         // this.rotateBackground = true;
         // for (var i = 0; i < json.lights.length; i++) {
         //     switch (json.lights[i].type) {
@@ -49,12 +61,12 @@ class Environment {
         //     this.lights[i].specular = new BABYLON.Color3(json.lights[i].specular.r, json.lights[i].specular.g, json.lights[i].specular.b);
         // }
 
-        scene.registerBeforeRender(function() {
+        scene.registerBeforeRender(function () {
             if (this.backgroundMesh == null)
                 this.backgroundMesh = scene.getMeshByName("background");
 
             if (this.backgroundMesh && scene.activeCamera) {
-                this.backgroundMesh.rotation.y = -((<BABYLON.ArcRotateCamera>scene.activeCamera).alpha) + -Math.PI / 2;
+              //  this.backgroundMesh.rotation.y = -((<BABYLON.ArcRotateCamera>scene.activeCamera).alpha) + -Math.PI / 2;
             }
         });
     }

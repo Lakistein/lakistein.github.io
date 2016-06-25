@@ -29,7 +29,7 @@ class LensFlareSystem {
 
         //var count = 0;
         var meshFound = new BABYLON.PickingInfo();
-        scene.registerBeforeRender(function() {
+        scene.registerBeforeRender(() => {
            // count++;
 
            // if (count > 5) {

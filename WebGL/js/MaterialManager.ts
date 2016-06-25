@@ -3,73 +3,33 @@
 
 class MaterialManager {
     materials: { [key: string]: Material; } = {};
+    currentComponentMaterial: { [key: string]: string; } = {};
 
     constructor(materials: string, scene: BABYLON.Scene) {
+        var self = this;
         var jsonMat = JSON.parse(materials);
-        var htmlElement = document.getElementById("materialBody");
-        /*for (var i = 0; i < jsonMat.length; i++) {
-            this.materials[jsonMat[i].name] = new Material(JSON.stringify(jsonMat[i]), scene);
-            //<img class="material" src=".\textures\models-textures\redplastic.jpg" alt="Plastic" draggable="true">
-            var span = document.createElement("span");
-            var img = document.createElement("img");
-            var txtP = document.createElement("span");
-            txtP.className = "materialName";
-            txtP.innerText = jsonMat[i].name;
-            img.src = "./textures/materials/" + jsonMat[i].name + ".jpg";
-            img.alt = jsonMat[i].name;
-            img.className = "material";
-            span.className = "material";
-            img.draggable = true;
-            if (i % 2 == 0 && i > 0)
-                htmlElement.appendChild(document.createElement("br"));
-            span.appendChild(img);
-            span.appendChild(txtP);
-            htmlElement.appendChild(span);
-        }*/
-
-        var file = document.getElementsByClassName('material');
-
-        var startdrag = (evt) => {
-            evt.dataTransfer.setData("text", evt.target.alt);
-        }
-        for (var i = 0; i < file.length; i++) {
-            (<HTMLElement>file[i]).addEventListener('dragstart', startdrag, false);
+        for (var i = 0; i < jsonMat.length; i++) {
+            self.materials[jsonMat[i].name] = new Material(JSON.stringify(jsonMat[i]), scene);
         }
 
-        var canvas = scene.getEngine().getRenderingCanvas();
-        var dragover = (evt) => {
-            evt.preventDefault();
-            var pickResult = scene.pick(evt.offsetX, evt.offsetY);
-            for (var i = 0; i < modelMeshes.length; i++) {
-                modelMeshes[i].renderOutline = false;
-            }
+        $('body').on('materialDropped', function (e) {
+            var pickResult = scene.pick(e.x, e.y);
 
             if (pickResult.hit) {
-                pickResult.pickedMesh.renderOutline = true;
-            }
-        }
-        var drop = (evt) => {
-            debugger;
-            evt.preventDefault();
-            var mat = this.cloneMaterial((<Material>this.materials[evt.dataTransfer.getData("text")]).pbr, scene);
-
-            var pickResult = scene.pick(evt.offsetX, evt.offsetY);
-            if (pickResult.hit) {
-                mat.albedoTexture = (<BABYLON.PBRMaterial>pickResult.pickedMesh.material).albedoTexture;
-                mat.ambientTexture = (<BABYLON.PBRMaterial>pickResult.pickedMesh.material).ambientTexture;
-                mat.reflectionTexture = (<BABYLON.PBRMaterial>pickResult.pickedMesh.material).reflectionTexture;
-                if (this.materials[evt.dataTransfer.getData("text")].isGlass)
-                    mat.refractionTexture = (<BABYLON.PBRMaterial>pickResult.pickedMesh.material).reflectionTexture;
+                var sourceMaterial = self.materials[e.name].pbr;// self.cloneMaterial((<Material>self.materials[e.name]).pbr, scene);
+                var targetMaterial = <BABYLON.PBRMaterial>scene.getMaterialByName(pickResult.pickedMesh.name);
+                self.copyMaterial(sourceMaterial, targetMaterial, scene);
+                // targetMaterial.albedoTexture = (<BABYLON.PBRMaterial>pickResult.pickedMesh.material).albedoTexture;
+                // targetMaterial.ambientTexture = (<BABYLON.PBRMaterial>pickResult.pickedMesh.material).ambientTexture;
+                // targetMaterial.reflectionTexture = (<BABYLON.PBRMaterial>pickResult.pickedMesh.material).reflectionTexture;
+                if (self.materials[e.name].isGlass)
+                    targetMaterial.refractionTexture = (<BABYLON.PBRMaterial>pickResult.pickedMesh.material).reflectionTexture;
                 else
-                    mat.refractionTexture = undefined;
-                // mat.emissiveColor = BABYLON.Color3.White();
-                pickResult.pickedMesh.material = mat;
-                pickResult.pickedMesh.renderOutline = false;
-                //displayMaterialValues(mat, scene);
+                    targetMaterial.refractionTexture = undefined;
+                pickResult.pickedMesh.material = targetMaterial;
+                self.currentComponentMaterial[pickResult.pickedMesh.name] = e.name;
             }
-        }
-        canvas.addEventListener('dragover', dragover, false);
-        canvas.addEventListener('drop', drop, false);
+        });
     }
 
     cloneMaterial(material: BABYLON.PBRMaterial, scene: BABYLON.Scene): BABYLON.PBRMaterial {
@@ -88,5 +48,54 @@ class MaterialManager {
         pbr.microSurface = material.microSurface;
         pbr.reflectivityColor = new BABYLON.Color3(material.reflectivityColor.r, material.reflectivityColor.g, material.reflectivityColor.b);
         return pbr;
+    }
+
+    public copyMaterial(sourceMaterial: BABYLON.PBRMaterial, targetMaterial: BABYLON.PBRMaterial, scene: BABYLON.Scene): void {
+        targetMaterial.albedoColor = BABYLON.Color3.White();
+        targetMaterial.indexOfRefraction = sourceMaterial.indexOfRefraction;
+        targetMaterial.alpha = sourceMaterial.alpha;
+        targetMaterial.directIntensity = sourceMaterial.directIntensity;
+        targetMaterial.emissiveIntensity = sourceMaterial.emissiveIntensity;
+        targetMaterial.environmentIntensity = sourceMaterial.environmentIntensity;
+        targetMaterial.specularIntensity = sourceMaterial.specularIntensity;
+        targetMaterial.overloadedShadowIntensity = sourceMaterial.overloadedShadowIntensity;
+        targetMaterial.overloadedShadeIntensity = sourceMaterial.overloadedShadeIntensity;
+        targetMaterial.cameraExposure = sourceMaterial.cameraExposure;
+        targetMaterial.cameraContrast = sourceMaterial.cameraContrast;
+        targetMaterial.microSurface = sourceMaterial.microSurface;
+        targetMaterial.reflectivityColor = new BABYLON.Color3(sourceMaterial.reflectivityColor.r, sourceMaterial.reflectivityColor.g, sourceMaterial.reflectivityColor.b);
+    }
+    //[{"compNum":1,"matName":"Plastic"},{"compNum":2,"matName":"Brushed Metal"}
+    public ToJson() {
+        var json = "[";
+        for (var i = 0; i < modelMeshes.length; i++) {
+            json += '"compNum":' + modelMeshes[i].name.substring(10, modelMeshes[i].name.length) + ',"matName":"' + this.currentComponentMaterial[modelMeshes[i].name] + "},";
+        }
+        json = json.substring(0, json.length - 1);
+        json += "]";
+    }
+
+    public newModelAdded(json: string, scene: BABYLON.Scene) {
+        var jsonMat = JSON.parse(json);
+        this.currentComponentMaterial = {};
+        for (var i = 0; i < modelMeshes.length; i++) {
+            for (var j = 0; j < jsonMat.length; j++) {
+                if ("Component_" + jsonMat[j].compNum == modelMeshes[i].name) {
+                    var sourceMaterial = this.materials[jsonMat.matName].pbr;
+                    var targetMaterial = <BABYLON.PBRMaterial>modelMeshes[i].material;
+                    this.copyMaterial(sourceMaterial, targetMaterial, scene);
+                    // targetMaterial.albedoTexture = (<BABYLON.PBRMaterial>pickResult.pickedMesh.material).albedoTexture;
+                    // targetMaterial.ambientTexture = (<BABYLON.PBRMaterial>pickResult.pickedMesh.material).ambientTexture;
+                    // targetMaterial.reflectionTexture = (<BABYLON.PBRMaterial>pickResult.pickedMesh.material).reflectionTexture;
+                    if (this.materials[jsonMat.matName].isGlass)
+                        targetMaterial.refractionTexture = (<BABYLON.PBRMaterial>modelMeshes[i].material).reflectionTexture;
+                    else
+                        targetMaterial.refractionTexture = undefined;
+                    modelMeshes[i].material = targetMaterial;
+                    this.currentComponentMaterial[modelMeshes[i].name] = sourceMaterial.name;
+                    break;
+                }
+            }
+        }
     }
 }

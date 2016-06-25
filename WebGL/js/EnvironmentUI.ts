@@ -9,13 +9,13 @@ class EnvironmentUI {
     constructor(environmentManager: EnvironmentManager, scene: BABYLON.Scene) {
         var self = this;
         this.environmentManager = environmentManager;
-        var environments = document.getElementsByClassName('environment');
-        var env = this.environmentManager;
-        for (var i = 0; i < environments.length; i++) {
-            environments.item(i).addEventListener('click', function () {
-                env.setEnvironment(this.getAttribute("id"), scene);
-            });
-        }
+        // var environments = document.getElementsByClassName('environment');
+        // var env = this.environmentManager;
+        // for (var i = 0; i < environments.length; i++) {
+        //     environments.item(i).addEventListener('click', function () {
+        //         env.setEnvironment(this.getAttribute("id"), scene);
+        //     });
+        // }
 
         $('body').on('editorPropertyChanged', function (e) {
             //console.log(e.name, e.value);
@@ -24,9 +24,11 @@ class EnvironmentUI {
                 case "show_ground_plane": self.environmentManager.turnGroundPlaneOffOn(e.value); break;
                 case "show_shadow": self.environmentManager.turnShadowOffOn(e.value); break;
                 case "show_reflective": self.environmentManager.turnReflectivePlaneOffOn(e.value); break;
-                case "gragient_top_hue": self.environmentManager.changeTopGradient(e.value); break;
-                case "gragient_bottom_hue": self.environmentManager.changeBottomGradient(e.value); break;
-                case "gragient_offset": self.environmentManager.changeGradientOffset(e.value); break;
+                case "gradient_top_hue": self.environmentManager.changeTopGradientHue(e.value); break;
+                case "gradient_top_lightness": self.environmentManager.changeTopGradientLightness(e.value); break;
+                case "gradient_bottom_hue": self.environmentManager.changeBottomGradientHue(e.value); break;
+                case "gradient_bottom_lightness": self.environmentManager.changeBottomGradientLightness(e.value); break;
+                case "gradient_offset": self.environmentManager.changeGradientOffset(e.value); break;
                 case "reflective_amount": self.environmentManager.changeReflectionAmount(e.value); break;
             }
         });

@@ -1,1 +1,1 @@
-tsc --out app.js main.ts -watch
+tsc --out app.js main.ts --removeComments -watch
