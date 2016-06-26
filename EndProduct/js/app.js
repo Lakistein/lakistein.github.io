@@ -1256,7 +1256,7 @@ window.addEventListener('DOMContentLoaded', function () {
         console.log(mName);
         console.log(mPath);
         uploadManager.uploadModelFromServer(mName, mPath, scene, envMng);
-        var matComp = '[{"compNum":1,"matName":"Chrome"},{"compNum":2,"matName":"Chrome"},{"compNum":3,"matName":"Chrome"},{"compNum":4,"matName":"Chrome"},{"compNum":5,"matName":"Chrome"},{"compNum":6,"matName":"Chrome"}]';
+        var matComp = '[{"compNum":1,"matName":"Plastic"},{"compNum":2,"matName":"Brushed Metal"},{"compNum":3,"matName":"Flat Surface"},{"compNum":4,"matName":"Chrome"},{"compNum":5,"matName":"Plastic"},{"compNum":6,"matName":"Flat Surface"}]';
         var matJs = JSON.parse(matComp);
         scene.executeWhenReady(function () {
             for (var i = 0; i < modelMeshes.length; i++) {
