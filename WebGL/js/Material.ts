@@ -4,6 +4,7 @@ class Material {
     name: string;
     pbr: BABYLON.PBRMaterial;
     isGlass: boolean;
+    id: string;
 
     constructor(json: string, scene: BABYLON.Scene) {
         var jsonMat = JSON.parse(json);

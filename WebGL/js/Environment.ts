@@ -10,8 +10,10 @@ class Environment {
     reflectionTexture: BABYLON.HDRCubeTexture;
 
     groundMesh: BABYLON.Mesh;
+    groundMeshScale: number;
     groundTexture: BABYLON.Texture;
     groundShadow: BABYLON.Mesh;
+    groundShadowEnabled: boolean;
     reflectiveMesh: BABYLON.Mesh;
     hueT: number;
     ligthnessT: number;
@@ -19,6 +21,7 @@ class Environment {
     hueB: number;
     ligthnessB: number;
     saturationB: number;
+    gradientOffset: number;
 
     constructor(json: any, scene: BABYLON.Scene) {
         if (!json) return;
@@ -38,6 +41,9 @@ class Environment {
         this.ligthnessB = 0.5;
         this.hueT = 0;
         this.hueB = 0;
+        this.gradientOffset = 0;
+        this.groundMeshScale = 1;
+        this.groundShadowEnabled = true;
         // this.rotateBackground = true;
         // for (var i = 0; i < json.lights.length; i++) {
         //     switch (json.lights[i].type) {
@@ -66,7 +72,7 @@ class Environment {
                 this.backgroundMesh = scene.getMeshByName("background");
 
             if (this.backgroundMesh && scene.activeCamera) {
-              //  this.backgroundMesh.rotation.y = -((<BABYLON.ArcRotateCamera>scene.activeCamera).alpha) + -Math.PI / 2;
+                this.backgroundMesh.rotation.y = -((<BABYLON.ArcRotateCamera>scene.activeCamera).alpha) + -Math.PI / 2;
             }
         });
     }

@@ -17,6 +17,7 @@ class MaterialManager {
 
             if (pickResult.hit) {
                 var sourceMaterial = self.materials[e.name].pbr;// self.cloneMaterial((<Material>self.materials[e.name]).pbr, scene);
+                self.materials[e.name].id = e.model.id;
                 var targetMaterial = <BABYLON.PBRMaterial>scene.getMaterialByName(pickResult.pickedMesh.name);
                 self.copyMaterial(sourceMaterial, targetMaterial, scene);
                 // targetMaterial.albedoTexture = (<BABYLON.PBRMaterial>pickResult.pickedMesh.material).albedoTexture;
@@ -28,6 +29,9 @@ class MaterialManager {
                     targetMaterial.refractionTexture = undefined;
                 pickResult.pickedMesh.material = targetMaterial;
                 self.currentComponentMaterial[pickResult.pickedMesh.name] = e.name;
+
+                console.log(self.ToJson());
+
             }
         });
     }
@@ -66,28 +70,36 @@ class MaterialManager {
         targetMaterial.reflectivityColor = new BABYLON.Color3(sourceMaterial.reflectivityColor.r, sourceMaterial.reflectivityColor.g, sourceMaterial.reflectivityColor.b);
     }
     //[{"compNum":1,"matName":"Plastic"},{"compNum":2,"matName":"Brushed Metal"}
-    public ToJson() {
+    public ToJson(): string {
         var json = "[";
         for (var i = 0; i < modelMeshes.length; i++) {
-            json += '"compNum":' + modelMeshes[i].name.substring(10, modelMeshes[i].name.length) + ',"matName":"' + this.currentComponentMaterial[modelMeshes[i].name] + "},";
+            var matName = "Matte Finish";
+            if (this.currentComponentMaterial[modelMeshes[i].name])
+                matName = this.currentComponentMaterial[modelMeshes[i].name];
+            json += '{"compNum":' + modelMeshes[i].name.substring(10, modelMeshes[i].name.length) + ',"id":"' + this.materials[matName].id + '"},';
         }
-        json = json.substring(0, json.length - 1);
+        if (modelMeshes.length > 0)
+            json = json.substring(0, json.length - 1);
         json += "]";
+        return json;
     }
 
     public newModelAdded(json: string, scene: BABYLON.Scene) {
+        if (!json || json == "")
+            return;
+
         var jsonMat = JSON.parse(json);
         this.currentComponentMaterial = {};
         for (var i = 0; i < modelMeshes.length; i++) {
             for (var j = 0; j < jsonMat.length; j++) {
                 if ("Component_" + jsonMat[j].compNum == modelMeshes[i].name) {
-                    var sourceMaterial = this.materials[jsonMat.matName].pbr;
+                    var sourceMaterial = this.materials[jsonMat[j].matName].pbr;
                     var targetMaterial = <BABYLON.PBRMaterial>modelMeshes[i].material;
                     this.copyMaterial(sourceMaterial, targetMaterial, scene);
                     // targetMaterial.albedoTexture = (<BABYLON.PBRMaterial>pickResult.pickedMesh.material).albedoTexture;
                     // targetMaterial.ambientTexture = (<BABYLON.PBRMaterial>pickResult.pickedMesh.material).ambientTexture;
                     // targetMaterial.reflectionTexture = (<BABYLON.PBRMaterial>pickResult.pickedMesh.material).reflectionTexture;
-                    if (this.materials[jsonMat.matName].isGlass)
+                    if (this.materials[jsonMat[j].matName].isGlass)
                         targetMaterial.refractionTexture = (<BABYLON.PBRMaterial>modelMeshes[i].material).reflectionTexture;
                     else
                         targetMaterial.refractionTexture = undefined;

@@ -6,6 +6,8 @@ class UploadManager {
     envMng: EnvironmentManager;
     path: string;
     uploading: boolean = false;
+    id: string;
+
     // materials: BABYLON.Material[] = [];
     constructor(scene: BABYLON.Scene, envMng: EnvironmentManager) {
         var self = this;
@@ -20,6 +22,7 @@ class UploadManager {
             console.log(e.tab, e.model, e.textures);
             var paths: string[] = e.model.split('/');
             paths.pop();
+            self.id = e.id;
             self.path = paths.join('/');
             self.path += "/";
             console.log(self.path);
@@ -112,6 +115,7 @@ class UploadManager {
                     newMeshes[i].renderOutline = false;
                     newMeshes[i].material = stdMat;
                     envManager.environments[envManager.currentEnvironment].groundShadow = <BABYLON.Mesh>newMeshes[i];
+                    envManager.environments[envManager.currentEnvironment].groundShadow.setEnabled(envManager.environments[envManager.currentEnvironment].groundShadowEnabled);
                     continue;
                 }
                 else if (newMeshes[i].name.indexOf("Component_") > -1) {
@@ -172,15 +176,17 @@ class UploadManager {
             for (var i = 0; i < scene.meshes.length; i++) {
                 console.log(scene.meshes[i].name);
             }
+            var js = '[{"compNum":1,"matName":"Matte Finish"}]';
+            materialManager.newModelAdded(js, scene);
             self.uploading = false;
         });
     }
 
-    applyNewMaterials(){
+    applyNewMaterials() {
 
     }
 
-    applyNewEnvironment(){
+    applyNewEnvironment() {
 
     }
 

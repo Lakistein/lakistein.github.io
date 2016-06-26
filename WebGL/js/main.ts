@@ -18,7 +18,6 @@ var lensFlareSystem: LensFlareSystem;
 var modelMeshes: BABYLON.AbstractMesh[] = new Array();
 
 var testSprite: Card;
-
 var canvas: HTMLCanvasElement;
 var engine: BABYLON.Engine;
 var camera: BABYLON.ArcRotateCamera;
@@ -46,8 +45,20 @@ function createScene(params: string) {
     lensFlareSystem = new LensFlareSystem(scene, null);
     materialManager = new MaterialManager(materials, scene);
     uploadManager = new UploadManager(scene, envMng);
+    scene.executeWhenReady(() => {
+        console.log(save());
 
+    });
     return scene;
+}
+
+function save(): string {
+    var json = "{";
+    json += '"id":"' + uploadManager.id + '",';
+    json += '"materials":' + materialManager.ToJson() + ',';
+    //json += '"environment":"' + envMng.toJson() + '",';
+    json += '"flares":' + lensFlareSystem.ToJSON() + "}";
+    return json;
 }
 
 function startApplication(params: string) {

@@ -18,10 +18,14 @@ var Environment = (function () {
         this.ligthnessB = 0.5;
         this.hueT = 0;
         this.hueB = 0;
+        this.gradientOffset = 0;
+        this.groundMeshScale = 1;
+        this.groundShadowEnabled = true;
         scene.registerBeforeRender(function () {
             if (this.backgroundMesh == null)
                 this.backgroundMesh = scene.getMeshByName("background");
             if (this.backgroundMesh && scene.activeCamera) {
+                this.backgroundMesh.rotation.y = -(scene.activeCamera.alpha) + -Math.PI / 2;
             }
         });
     }
@@ -48,10 +52,10 @@ var Environment = (function () {
     return Environment;
 }());
 var EnvironmentManager = (function () {
-    function EnvironmentManager(json, scene) {
+    function EnvironmentManager(jsonE, scene) {
         this.currentEnvironment = 0;
         this.environments = [];
-        var jsonEnv = JSON.parse(json);
+        var jsonEnv = JSON.parse(jsonE);
         this.loadEnvironment(scene, jsonEnv);
     }
     EnvironmentManager.prototype.loadEnvironment = function (scene, jsonEnv) {
@@ -63,12 +67,13 @@ var EnvironmentManager = (function () {
             for (var i = 0; i < environment.length; i++) {
                 switch (environment[i].name) {
                     case "background":
-                        var gradientMaterial = new BABYLON.GradientMaterial("grad", scene);
-                        gradientMaterial.topColor = BABYLON.Color3.Red();
-                        gradientMaterial.bottomColor = BABYLON.Color3.Blue();
-                        gradientMaterial.offset = 0.25;
-                        gradientMaterial.backFaceCulling = true;
-                        environment[i].material = gradientMaterial;
+                        BABYLON.Effect.ShadersStore.gradientVertexShader = "precision mediump float;attribute vec3 position;attribute vec3 normal;attribute vec2 uv;uniform mat4 worldViewProjection;varying vec4 vPosition;varying vec3 vNormal;varying vec2 vUv;void main(){vec4 p = vec4(position,1.);vPosition = p;vNormal = normal;vUv = uv;gl_Position = worldViewProjection * p;}";
+                        BABYLON.Effect.ShadersStore.gradientPixelShader = "precision mediump float;uniform mat4 worldView;varying vec4 vPosition;varying vec3 vNormal;uniform float offset;uniform vec3 topColor;uniform vec3 bottomColor;varying vec2 vUv;void main(void){float h = normalize(vPosition+offset).y;gl_FragColor = vec4(mix(bottomColor, topColor, vUv.y + offset),1);}";
+                        var shader = new BABYLON.ShaderMaterial("gradient", scene, "gradient", {});
+                        shader.setFloat("offset", 0);
+                        shader.setColor3("topColor", BABYLON.Color3.Red());
+                        shader.setColor3("bottomColor", BABYLON.Color3.Blue());
+                        environment[i].material = shader;
                         environment[i].isPickable = false;
                         break;
                     case "groundPlane":
@@ -88,7 +93,7 @@ var EnvironmentManager = (function () {
                         break;
                     case "reflectionPlane":
                         var mirrorMaterial = new BABYLON.StandardMaterial("mirrorMat", scene);
-                        mirrorMaterial.reflectionTexture = new BABYLON.MirrorTexture("mirrorTexture", 1024, scene);
+                        mirrorMaterial.reflectionTexture = new BABYLON.MirrorTexture("mirrorTexture", 2048, scene);
                         mirrorMaterial.reflectionTexture.mirrorPlane = new BABYLON.Plane(0, -1, 0, 0);
                         mirrorMaterial.reflectionTexture.hasAlpha = true;
                         mirrorMaterial.alpha = 0.1;
@@ -97,7 +102,7 @@ var EnvironmentManager = (function () {
                         mirrorMaterial.specularColor = new BABYLON.Color3(0.0, 0.0, 0.0);
                         mirrorMaterial.reflectionTexture.level = 1;
                         environment[i].material = mirrorMaterial;
-                        environment[i].scaling = new BABYLON.Vector3(250, 1, 250);
+                        environment[i].scaling = new BABYLON.Vector3(80, 1, 80);
                         environment[i].isPickable = false;
                         break;
                 }
@@ -112,7 +117,7 @@ var EnvironmentManager = (function () {
             for (var i = 0; i < 1; i++) {
                 _this.environments.push(new Environment(jsonEnv[i], scene));
             }
-            var hdrSkybox = BABYLON.Mesh.CreateBox("skybox", 100.0, scene);
+            var hdrSkybox = BABYLON.Mesh.CreateBox("skybox", 79.0, scene);
             var hdrSkyboxMaterial = scene.getMaterialByName("skyBoxMat");
             if (!hdrSkyboxMaterial)
                 hdrSkyboxMaterial = new BABYLON.PBRMaterial("skyBoxMat", scene);
@@ -124,7 +129,7 @@ var EnvironmentManager = (function () {
             hdrSkyboxMaterial.cameraContrast = 1.6;
             hdrSkyboxMaterial.sideOrientation = 0;
             hdrSkybox.material = hdrSkyboxMaterial;
-            hdrSkybox.infiniteDistance = true;
+            hdrSkybox.infiniteDistance = false;
             hdrSkybox.isPickable = false;
             _this.setEnvironment(_this.environments[0].id, scene);
             refl.renderList.push(scene.getMeshByName("skybox"));
@@ -154,6 +159,7 @@ var EnvironmentManager = (function () {
         this.environments[this.currentEnvironment].backgroundMesh.setEnabled(value);
     };
     EnvironmentManager.prototype.turnShadowOffOn = function (value) {
+        this.environments[this.currentEnvironment].groundShadowEnabled = value;
         this.environments[this.currentEnvironment].groundShadow.setEnabled(value);
     };
     EnvironmentManager.prototype.removeLights = function (scene) {
@@ -227,6 +233,7 @@ var EnvironmentManager = (function () {
         this.environments[this.currentEnvironment].backgroundMesh.material.setColor3("bottomColor", BABYLON.Color3.FromInts(ints[0], ints[1], ints[2]));
     };
     EnvironmentManager.prototype.changeGradientOffset = function (value) {
+        this.environments[this.currentEnvironment].gradientOffset = value;
         this.environments[this.currentEnvironment].backgroundMesh.material.setFloat("offset", value);
     };
     EnvironmentManager.prototype.updateGroundTexture = function (scene) {
@@ -235,6 +242,7 @@ var EnvironmentManager = (function () {
         this.environments[this.currentEnvironment].groundMesh.setEnabled(value);
     };
     EnvironmentManager.prototype.changeGroundPlaneSize = function (scale) {
+        this.environments[this.currentEnvironment].groundMeshScale = scale;
         this.environments[this.currentEnvironment].groundMesh.scaling = new BABYLON.Vector3(scale, scale, scale);
     };
     EnvironmentManager.prototype.turnReflectivePlaneOffOn = function (value) {
@@ -242,6 +250,48 @@ var EnvironmentManager = (function () {
     };
     EnvironmentManager.prototype.changeReflectionAmount = function (value) {
         this.environments[this.currentEnvironment].reflectiveMesh.material.alpha = value / 100;
+        console.log(this.toJson());
+    };
+    EnvironmentManager.prototype.environmentChanged = function (json, scene) {
+        if (!json || json == "")
+            return;
+        var jsEnv = JSON.parse(json);
+        this.environments[this.currentEnvironment].backgroundMesh.setEnabled(jsEnv.backOnOff);
+        this.environments[this.currentEnvironment].hueT = jsEnv.hueT;
+        this.changeTopGradientHue(this.environments[this.currentEnvironment].hueT.toString());
+        this.environments[this.currentEnvironment].ligthnessT = jsEnv.lightT;
+        this.changeTopGradientLightness(this.environments[this.currentEnvironment].ligthnessT.toString());
+        this.environments[this.currentEnvironment].hueB = jsEnv.hueB;
+        this.changeBottomGradientHue(this.environments[this.currentEnvironment].hueB.toString());
+        this.environments[this.currentEnvironment].ligthnessB = jsEnv.lightB;
+        this.changeBottomGradientLightness(this.environments[this.currentEnvironment].ligthnessB.toString());
+        this.environments[this.currentEnvironment].gradientOffset = jsEnv.gradOffset;
+        this.changeGradientOffset(this.environments[this.currentEnvironment].gradientOffset);
+        this.environments[this.currentEnvironment].groundMesh.setEnabled(jsEnv.groundPlaneOnOff);
+        this.environments[this.currentEnvironment].groundMeshScale = jsEnv.groundPlaneScale;
+        this.changeGroundPlaneSize(this.environments[this.currentEnvironment].groundMeshScale);
+        if (this.environments[this.currentEnvironment].groundShadow)
+            this.environments[this.currentEnvironment].groundShadow.setEnabled(jsEnv.shadowOnOff);
+        this.environments[this.currentEnvironment].groundShadowEnabled = jsEnv.shadowOnOff;
+        this.environments[this.currentEnvironment].reflectiveMesh.setEnabled(jsEnv.reflective);
+        this.environments[this.currentEnvironment].reflectiveMesh.material.alpha = jsEnv.reflectiveAmount;
+        this.changeReflectionAmount(this.environments[this.currentEnvironment].reflectiveMesh.material.alpha);
+    };
+    EnvironmentManager.prototype.toJson = function () {
+        var json = "{";
+        json += '"backOnOff":' + this.environments[this.currentEnvironment].backgroundMesh.isEnabled() + ",";
+        json += '"hueT":' + this.environments[this.currentEnvironment].hueT + ",";
+        json += '"lightT":' + this.environments[this.currentEnvironment].ligthnessT + ",";
+        json += '"hueB":' + this.environments[this.currentEnvironment].hueB + ",";
+        json += '"lightB":' + this.environments[this.currentEnvironment].ligthnessB + ",";
+        json += '"gradOffset":' + this.environments[this.currentEnvironment].gradientOffset + ",";
+        json += '"groundPlaneOnOff":' + this.environments[this.currentEnvironment].groundMesh.isEnabled() + ",";
+        json += '"groundPlaneScale":' + this.environments[this.currentEnvironment].groundMeshScale + ",";
+        json += '"shadowOnOff":' + this.environments[this.currentEnvironment].groundShadow.isEnabled() + ",";
+        json += '"reflective":' + this.environments[this.currentEnvironment].reflectiveMesh.isEnabled() + ",";
+        json += '"reflectiveAmount":' + this.environments[this.currentEnvironment].reflectiveMesh.material.alpha;
+        json += "}";
+        return json;
     };
     return EnvironmentManager;
 }());
@@ -876,12 +926,16 @@ var LensFlareSystem = (function () {
         this.hexaLensFlareSystem = [];
         this.MainLensFlareSystem = [];
         this.flareSizes = [];
+        this.ids = [];
         var self = this;
+        this.createFromJson(json, scene);
         $('body').on('lenseflareDropped', function (e) {
             var mesh = scene.pick(e.x, e.y);
             if (mesh && mesh.hit) {
+                self.ids.push(e.model.id);
                 self.createFlares(scene, mesh.pickedPoint, e.model.main_flare, e.model.hexigon_shape, e.model.band_1, e.model.band_2);
             }
+            console.log(self.ToJSON());
         });
         scene.registerBeforeRender(function () {
             if (_this.MainLensFlareSystem.length == 0)
@@ -979,12 +1033,29 @@ var LensFlareSystem = (function () {
         if (this.flareSizes.length > 0) {
             this.flareSizes.splice(index, 7);
         }
+        if (this.ids.length > 0) {
+            this.ids.splice(index, 7);
+        }
+    };
+    LensFlareSystem.prototype.createFromJson = function (json, scene) {
+        if (!json || json == "")
+            return;
+        var jsonF = JSON.parse(json);
+        for (var i = 0; i < jsonF.length; i++) {
+            this.ids.push(jsonF[i].id);
+            this.createFlares(scene, new BABYLON.Vector3(jsonF[i].pos.x, jsonF[i].pos.y, jsonF[i].pos.z), jsonF[i].fpMain, jsonF[i].fpHexa, jsonF[i].fpB_1, jsonF[i].fpB_2);
+        }
     };
     LensFlareSystem.prototype.ToJSON = function () {
-        return '{' +
-            '"pos":"' + this.mainLensEmitter[1].position +
-            '"pos":"' + this.mainLensEmitter[1].position +
-            '}';
+        var json = "[";
+        for (var i = 0; i < this.MainLensFlareSystem.length; i++) {
+            json += '{"pos":' + JSON.stringify(this.mainLensEmitter[i].getAbsolutePosition()) + ",";
+            json += '"id":' + this.ids[i] + '},';
+        }
+        if (this.MainLensFlareSystem.length > 0)
+            json = json.substring(0, json.length - 1);
+        json += "]";
+        return json;
     };
     return LensFlareSystem;
 }());
@@ -1001,6 +1072,7 @@ var UploadManager = (function () {
             console.log(e.tab, e.model, e.textures);
             var paths = e.model.split('/');
             paths.pop();
+            self.id = e.id;
             self.path = paths.join('/');
             self.path += "/";
             console.log(self.path);
@@ -1069,6 +1141,7 @@ var UploadManager = (function () {
                     newMeshes[i].renderOutline = false;
                     newMeshes[i].material = stdMat;
                     envManager.environments[envManager.currentEnvironment].groundShadow = newMeshes[i];
+                    envManager.environments[envManager.currentEnvironment].groundShadow.setEnabled(envManager.environments[envManager.currentEnvironment].groundShadowEnabled);
                     continue;
                 }
                 else if (newMeshes[i].name.indexOf("Component_") > -1) {
@@ -1116,6 +1189,8 @@ var UploadManager = (function () {
             for (var i = 0; i < scene.meshes.length; i++) {
                 console.log(scene.meshes[i].name);
             }
+            var js = '[{"compNum":1,"matName":"Matte Finish"}]';
+            materialManager.newModelAdded(js, scene);
             self.uploading = false;
         });
     };
@@ -1180,6 +1255,7 @@ var MaterialManager = (function () {
             var pickResult = scene.pick(e.x, e.y);
             if (pickResult.hit) {
                 var sourceMaterial = self.materials[e.name].pbr;
+                self.materials[e.name].id = e.model.id;
                 var targetMaterial = scene.getMaterialByName(pickResult.pickedMesh.name);
                 self.copyMaterial(sourceMaterial, targetMaterial, scene);
                 if (self.materials[e.name].isGlass)
@@ -1188,6 +1264,7 @@ var MaterialManager = (function () {
                     targetMaterial.refractionTexture = undefined;
                 pickResult.pickedMesh.material = targetMaterial;
                 self.currentComponentMaterial[pickResult.pickedMesh.name] = e.name;
+                console.log(self.ToJson());
             }
         });
     }
@@ -1226,21 +1303,28 @@ var MaterialManager = (function () {
     MaterialManager.prototype.ToJson = function () {
         var json = "[";
         for (var i = 0; i < modelMeshes.length; i++) {
-            json += '"compNum":' + modelMeshes[i].name.substring(10, modelMeshes[i].name.length) + ',"matName":"' + this.currentComponentMaterial[modelMeshes[i].name] + "},";
+            var matName = "Matte Finish";
+            if (this.currentComponentMaterial[modelMeshes[i].name])
+                matName = this.currentComponentMaterial[modelMeshes[i].name];
+            json += '{"compNum":' + modelMeshes[i].name.substring(10, modelMeshes[i].name.length) + ',"id":"' + this.materials[matName].id + '"},';
         }
-        json = json.substring(0, json.length - 1);
+        if (modelMeshes.length > 0)
+            json = json.substring(0, json.length - 1);
         json += "]";
+        return json;
     };
     MaterialManager.prototype.newModelAdded = function (json, scene) {
+        if (!json || json == "")
+            return;
         var jsonMat = JSON.parse(json);
         this.currentComponentMaterial = {};
         for (var i = 0; i < modelMeshes.length; i++) {
             for (var j = 0; j < jsonMat.length; j++) {
                 if ("Component_" + jsonMat[j].compNum == modelMeshes[i].name) {
-                    var sourceMaterial = this.materials[jsonMat.matName].pbr;
+                    var sourceMaterial = this.materials[jsonMat[j].matName].pbr;
                     var targetMaterial = modelMeshes[i].material;
                     this.copyMaterial(sourceMaterial, targetMaterial, scene);
-                    if (this.materials[jsonMat.matName].isGlass)
+                    if (this.materials[jsonMat[j].matName].isGlass)
                         targetMaterial.refractionTexture = modelMeshes[i].material.reflectionTexture;
                     else
                         targetMaterial.refractionTexture = undefined;
@@ -1314,7 +1398,17 @@ function createScene(params) {
     lensFlareSystem = new LensFlareSystem(scene, null);
     materialManager = new MaterialManager(materials, scene);
     uploadManager = new UploadManager(scene, envMng);
+    scene.executeWhenReady(function () {
+        console.log(save());
+    });
     return scene;
+}
+function save() {
+    var json = "{";
+    json += '"id":"' + uploadManager.id + '",';
+    json += '"materials":' + materialManager.ToJson() + ',';
+    json += '"flares":' + lensFlareSystem.ToJSON() + "}";
+    return json;
 }
 function startApplication(params) {
     canvas = document.getElementById("renderCanvas");

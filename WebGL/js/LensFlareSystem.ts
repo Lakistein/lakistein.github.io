@@ -6,16 +6,19 @@ class LensFlareSystem {
     hexaLensFlareSystem: BABYLON.LensFlareSystem[] = [];
     MainLensFlareSystem: BABYLON.LensFlareSystem[] = [];
     flareSizes: number[] = [];
+    ids: number[] = [];
     selectedLens: number;
 
     constructor(scene: BABYLON.Scene, json: string) {
         var self = this;
-
+        this.createFromJson(json, scene);
         $('body').on('lenseflareDropped', function (e) {
             var mesh = scene.pick(e.x, e.y);
             if (mesh && mesh.hit) {
+                self.ids.push(e.model.id);
                 self.createFlares(scene, mesh.pickedPoint, e.model.main_flare, e.model.hexigon_shape, e.model.band_1, e.model.band_2);
             }
+            console.log(self.ToJSON());
         });
 
         scene.registerBeforeRender(() => {
@@ -49,8 +52,8 @@ class LensFlareSystem {
             if (evt.button !== 0) {
                 var pos = new BABYLON.Vector2(scene.pointerX, scene.pointerY);
                 for (var i = 0; i < this.mainLensEmitter.length; i++) {
-                     var p = BABYLON.Vector3.Project(this.mainLensEmitter[i].position, BABYLON.Matrix.Identity(), scene.getTransformMatrix(), scene.activeCamera.viewport.toGlobal(scene.getEngine().getRenderWidth(), scene.getEngine().getRenderHeight()));
-                    if(BABYLON.Vector2.Distance(pos, new BABYLON.Vector2(p.x, p.y)) < 10){
+                    var p = BABYLON.Vector3.Project(this.mainLensEmitter[i].position, BABYLON.Matrix.Identity(), scene.getTransformMatrix(), scene.activeCamera.viewport.toGlobal(scene.getEngine().getRenderWidth(), scene.getEngine().getRenderHeight()));
+                    if (BABYLON.Vector2.Distance(pos, new BABYLON.Vector2(p.x, p.y)) < 10) {
                         this.selectedLens = i;
                     }
                 }
@@ -128,12 +131,37 @@ class LensFlareSystem {
         if (this.flareSizes.length > 0) {
             this.flareSizes.splice(index, 7);
         }
+
+        if (this.ids.length > 0) {
+            this.ids.splice(index, 7);
+        }
+    }
+
+    public createFromJson(json: string, scene: BABYLON.Scene) {
+        if (!json || json == "")
+            return;
+
+        var jsonF = JSON.parse(json);
+        for (var i = 0; i < jsonF.length; i++) {
+            this.ids.push(jsonF[i].id);
+            this.createFlares(scene, new BABYLON.Vector3(jsonF[i].pos.x, jsonF[i].pos.y, jsonF[i].pos.z), jsonF[i].fpMain, jsonF[i].fpHexa, jsonF[i].fpB_1, jsonF[i].fpB_2);
+        }
     }
 
     public ToJSON(): string {
-        return '{' + // FIX
-            '"pos":"' + this.mainLensEmitter[1].position +
-            '"pos":"' + this.mainLensEmitter[1].position +
-            '}';
+        var json = "[";
+        for (var i = 0; i < this.MainLensFlareSystem.length; i++) {
+            json += '{"pos":' + JSON.stringify(this.mainLensEmitter[i].getAbsolutePosition()) + ",";
+            // json += '"fpMain":"' + this.MainLensFlareSystem[i].lensFlares[0].texture.url + '",';
+            // json += '"fpHexa":"' + this.hexaLensFlareSystem[i].lensFlares[0].texture.url + '",';
+            // json += '"fpB_1":"' + this.hexaLensFlareSystem[i].lensFlares[5].texture.url + '",';
+            // json += '"fpB_2":"' + this.hexaLensFlareSystem[i].lensFlares[1].texture.url + '"},';
+            json += '"id":' + this.ids[i] + '},';
+        }
+        if (this.MainLensFlareSystem.length > 0)
+            json = json.substring(0, json.length - 1);
+        json += "]";
+
+        return json;
     }
 }

@@ -9,8 +9,8 @@ class EnvironmentManager {
     currentEnvironment: number = 0;
     environments: Environment[] = [];
 
-    constructor(json: string, scene: BABYLON.Scene) {
-        var jsonEnv = JSON.parse(json);
+    constructor(jsonE: string, scene: BABYLON.Scene) {
+        var jsonEnv = JSON.parse(jsonE);
         this.loadEnvironment(scene, jsonEnv);
     }
 
@@ -22,24 +22,23 @@ class EnvironmentManager {
             for (var i = 0; i < environment.length; i++) {
                 switch (environment[i].name) {
                     case "background":
-                        var gradientMaterial = new BABYLON.GradientMaterial("grad", scene);
-                        gradientMaterial.topColor = BABYLON.Color3.Red(); // Set the gradient top color
-                        gradientMaterial.bottomColor = BABYLON.Color3.Blue(); // Set the gradient bottom color
-                        gradientMaterial.offset = 0.25;
-                        gradientMaterial.backFaceCulling = true;
+                        // var gradientMaterial = new BABYLON.GradientMaterial("grad", scene);
+                        // gradientMaterial.topColor = BABYLON.Color3.Red(); // Set the gradient top color
+                        // gradientMaterial.bottomColor = BABYLON.Color3.Blue(); // Set the gradient bottom color
+                        // gradientMaterial.offset = 0.25;
+                        // gradientMaterial.backFaceCulling = true;
 
-                        environment[i].material = gradientMaterial;
-                        // BABYLON.Effect.ShadersStore.gradientVertexShader = "precision mediump float;attribute vec3 position;attribute vec3 normal;attribute vec2 uv;uniform mat4 worldViewProjection;varying vec4 vPosition;varying vec3 vNormal;varying vec2 vUv;void main(){vec4 p = vec4(position,1.);vPosition = p;vNormal = normal;vUv = uv;gl_Position = worldViewProjection * p;}";
+                        // environment[i].material = gradientMaterial;
+                        BABYLON.Effect.ShadersStore.gradientVertexShader = "precision mediump float;attribute vec3 position;attribute vec3 normal;attribute vec2 uv;uniform mat4 worldViewProjection;varying vec4 vPosition;varying vec3 vNormal;varying vec2 vUv;void main(){vec4 p = vec4(position,1.);vPosition = p;vNormal = normal;vUv = uv;gl_Position = worldViewProjection * p;}";
 
-                        // BABYLON.Effect.ShadersStore.gradientPixelShader = "precision mediump float;uniform mat4 worldView;varying vec4 vPosition;varying vec3 vNormal;uniform float offset;uniform vec3 topColor;uniform vec3 bottomColor;varying vec2 vUv;void main(void){float h = normalize(vPosition+offset).y;gl_FragColor = vec4(mix(bottomColor, topColor, vUv.y + offset),1);}";
+                        BABYLON.Effect.ShadersStore.gradientPixelShader = "precision mediump float;uniform mat4 worldView;varying vec4 vPosition;varying vec3 vNormal;uniform float offset;uniform vec3 topColor;uniform vec3 bottomColor;varying vec2 vUv;void main(void){float h = normalize(vPosition+offset).y;gl_FragColor = vec4(mix(bottomColor, topColor, vUv.y + offset),1);}";
 
-                        // var shader = new BABYLON.ShaderMaterial("gradient", scene, "gradient", {});
-                        // shader.setFloat("offset", 0);
-                        // shader.setColor3("topColor", BABYLON.Color3.Red());
-                        // shader.setColor3("bottomColor", BABYLON.Color3.Blue());
-                        //environment[i].material = shader;
+                        var shader = new BABYLON.ShaderMaterial("gradient", scene, "gradient", {});
+                        shader.setFloat("offset", 0);
+                        shader.setColor3("topColor", BABYLON.Color3.Red());
+                        shader.setColor3("bottomColor", BABYLON.Color3.Blue());
+                        environment[i].material = shader;
                         environment[i].isPickable = false;
-                        //hemilight.excludedMeshes.push(environment[i]);
                         break;
                     case "groundPlane":
 
@@ -62,7 +61,7 @@ class EnvironmentManager {
                         break;
                     case "reflectionPlane":
                         var mirrorMaterial = new BABYLON.StandardMaterial("mirrorMat", scene);
-                        mirrorMaterial.reflectionTexture = new BABYLON.MirrorTexture("mirrorTexture", 1024, scene);
+                        mirrorMaterial.reflectionTexture = new BABYLON.MirrorTexture("mirrorTexture", 2048, scene);
                         (<BABYLON.MirrorTexture>mirrorMaterial.reflectionTexture).mirrorPlane = new BABYLON.Plane(0, -1, 0, 0);
                         mirrorMaterial.reflectionTexture.hasAlpha = true;
                         mirrorMaterial.alpha = 0.1;
@@ -71,7 +70,7 @@ class EnvironmentManager {
                         mirrorMaterial.specularColor = new BABYLON.Color3(0.0, 0.0, 0.0);
                         mirrorMaterial.reflectionTexture.level = 1;
                         environment[i].material = mirrorMaterial;
-                        environment[i].scaling = new BABYLON.Vector3(250, 1, 250);
+                        environment[i].scaling = new BABYLON.Vector3(80, 1, 80);
                         environment[i].isPickable = false;
                         break;
                 }
@@ -90,7 +89,7 @@ class EnvironmentManager {
                 this.environments.push(new Environment(jsonEnv[i], scene));
             }
 
-            var hdrSkybox = BABYLON.Mesh.CreateBox("skybox", 100.0, scene);
+            var hdrSkybox = BABYLON.Mesh.CreateBox("skybox", 79.0, scene);
             var hdrSkyboxMaterial = <BABYLON.PBRMaterial>scene.getMaterialByName("skyBoxMat");
             if (!hdrSkyboxMaterial)
                 hdrSkyboxMaterial = new BABYLON.PBRMaterial("skyBoxMat", scene);
@@ -103,7 +102,7 @@ class EnvironmentManager {
             hdrSkyboxMaterial.sideOrientation = 0;
             //hdrSkyboxMaterial.disableLighting = true;
             hdrSkybox.material = hdrSkyboxMaterial;
-            hdrSkybox.infiniteDistance = true;
+            hdrSkybox.infiniteDistance = false;
             hdrSkybox.isPickable = false;
             this.setEnvironment(this.environments[0].id, scene);
 
@@ -147,6 +146,7 @@ class EnvironmentManager {
     }
 
     turnShadowOffOn(value: boolean) {
+        this.environments[this.currentEnvironment].groundShadowEnabled = value;
         this.environments[this.currentEnvironment].groundShadow.setEnabled(value);
     }
 
@@ -225,6 +225,7 @@ class EnvironmentManager {
     }
 
     changeGradientOffset(value: number) {
+        this.environments[this.currentEnvironment].gradientOffset = value;
         (<BABYLON.GradientMaterial>this.environments[this.currentEnvironment].backgroundMesh.material).setFloat("offset", value);
     }
 
@@ -257,6 +258,7 @@ class EnvironmentManager {
     }
 
     changeGroundPlaneSize(scale: number) {
+        this.environments[this.currentEnvironment].groundMeshScale = scale;
         this.environments[this.currentEnvironment].groundMesh.scaling = new BABYLON.Vector3(scale, scale, scale);
     }
 
@@ -266,5 +268,61 @@ class EnvironmentManager {
 
     changeReflectionAmount(value: number) {
         this.environments[this.currentEnvironment].reflectiveMesh.material.alpha = value / 100;
+        console.log(this.toJson());
+
+    }
+
+    environmentChanged(json: string, scene: BABYLON.Scene) {
+        if (!json || json == "")
+            return;
+
+        var jsEnv = JSON.parse(json);
+        this.environments[this.currentEnvironment].backgroundMesh.setEnabled(jsEnv.backOnOff);
+
+        this.environments[this.currentEnvironment].hueT = jsEnv.hueT;
+        this.changeTopGradientHue(this.environments[this.currentEnvironment].hueT.toString());
+
+        this.environments[this.currentEnvironment].ligthnessT = jsEnv.lightT;
+        this.changeTopGradientLightness(this.environments[this.currentEnvironment].ligthnessT.toString());
+
+        this.environments[this.currentEnvironment].hueB = jsEnv.hueB;
+        this.changeBottomGradientHue(this.environments[this.currentEnvironment].hueB.toString());
+
+        this.environments[this.currentEnvironment].ligthnessB = jsEnv.lightB;
+        this.changeBottomGradientLightness(this.environments[this.currentEnvironment].ligthnessB.toString());
+
+        this.environments[this.currentEnvironment].gradientOffset = jsEnv.gradOffset;
+        this.changeGradientOffset(this.environments[this.currentEnvironment].gradientOffset);
+
+        this.environments[this.currentEnvironment].groundMesh.setEnabled(jsEnv.groundPlaneOnOff);
+
+        this.environments[this.currentEnvironment].groundMeshScale = jsEnv.groundPlaneScale;
+        this.changeGroundPlaneSize(this.environments[this.currentEnvironment].groundMeshScale);
+
+        if (this.environments[this.currentEnvironment].groundShadow)
+            this.environments[this.currentEnvironment].groundShadow.setEnabled(jsEnv.shadowOnOff);
+        this.environments[this.currentEnvironment].groundShadowEnabled = jsEnv.shadowOnOff;
+
+        this.environments[this.currentEnvironment].reflectiveMesh.setEnabled(jsEnv.reflective);
+
+        this.environments[this.currentEnvironment].reflectiveMesh.material.alpha = jsEnv.reflectiveAmount;
+        this.changeReflectionAmount(this.environments[this.currentEnvironment].reflectiveMesh.material.alpha);
+    }
+
+    toJson(): string {
+        var json = "{";
+        json += '"backOnOff":' + this.environments[this.currentEnvironment].backgroundMesh.isEnabled() + ",";
+        json += '"hueT":' + this.environments[this.currentEnvironment].hueT + ",";
+        json += '"lightT":' + this.environments[this.currentEnvironment].ligthnessT + ",";
+        json += '"hueB":' + this.environments[this.currentEnvironment].hueB + ",";
+        json += '"lightB":' + this.environments[this.currentEnvironment].ligthnessB + ",";
+        json += '"gradOffset":' + this.environments[this.currentEnvironment].gradientOffset + ",";
+        json += '"groundPlaneOnOff":' + this.environments[this.currentEnvironment].groundMesh.isEnabled() + ",";
+        json += '"groundPlaneScale":' + this.environments[this.currentEnvironment].groundMeshScale + ",";
+        json += '"shadowOnOff":' + this.environments[this.currentEnvironment].groundShadow.isEnabled() + ",";
+        json += '"reflective":' + this.environments[this.currentEnvironment].reflectiveMesh.isEnabled() + ",";
+        json += '"reflectiveAmount":' + this.environments[this.currentEnvironment].reflectiveMesh.material.alpha;
+        json += "}";
+        return json;
     }
 } 
