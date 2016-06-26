@@ -100,8 +100,8 @@ window.addEventListener('DOMContentLoaded', function () {
     sceneMain = createScene();
     sceneMain.executeWhenReady(() => {
         setTimeout(function () {
-            takeSC = true;
-            camera.alpha = 0;
+           // takeSC = true;
+           // camera.alpha = 0;
         }, 5000);
 
     });
