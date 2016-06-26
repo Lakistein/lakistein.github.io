@@ -58,7 +58,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
         uploadManager.uploadModelFromServer(mName, mPath, scene, envMng);
 
-        var matComp = '[{"compNum":1,"matName":"Plastic"},{"compNum":2,"matName":"Brushed Metal"},{"compNum":3,"matName":"Flat Surface"},{"compNum":4,"matName":"Chrome"},{"compNum":5,"matName":"Plastic"},{"compNum":6,"matName":"Flat Surface"}]';
+        var matComp = '[{"compNum":1,"matName":"Chrome"},{"compNum":2,"matName":"Chrome"},{"compNum":3,"matName":"Chrome"},{"compNum":4,"matName":"Chrome"},{"compNum":5,"matName":"Chrome"},{"compNum":6,"matName":"Chrome"}]';
         var matJs = JSON.parse(matComp);
         scene.executeWhenReady(() => {
             for (var i = 0; i < modelMeshes.length; i++) {
@@ -120,7 +120,7 @@ window.addEventListener('DOMContentLoaded', function () {
             camera.alpha = -num / 90 * 6.28319;
             num++;
 
-           // debugger;
+            // debugger;
 
             if (num == 91) {
                 num = 1;
