@@ -67,7 +67,7 @@ var LensFlareSystem = (function () {
         });
     }
     return LensFlareSystem;
-}());
+})();
 /// <reference path="babylon.d.ts" />
 /// <reference path="babylon.pbrMaterial.d.ts" />
 // TODO: uradi simple interface
@@ -136,7 +136,7 @@ var Environment = (function () {
         return json;
     };
     return Environment;
-}());
+})();
 /*
 
 {
@@ -167,9 +167,8 @@ var EnvironmentManager = (function () {
         var _this = this;
         BABYLON.SceneLoader.ImportMesh("", "./", "Environment.babylon", scene, function (environment) {
             var hemilight = new BABYLON.HemisphericLight("hemilight", new BABYLON.Vector3(0, 1, 0), scene);
-            hemilight.range = 1000;
-            hemilight.intensity = 1;
-            hemilight.groundColor = BABYLON.Color3.White();
+            hemilight.range = 0.1;
+            hemilight.intensity = 0.7;
             for (var i = 0; i < environment.length; i++) {
                 switch (environment[i].name) {
                     case "background":
@@ -333,7 +332,7 @@ var EnvironmentManager = (function () {
         this.environments[this.currentEnvironment].reflectiveMesh.material.alpha = value;
     };
     return EnvironmentManager;
-}());
+})();
 /// <reference path="babylon.d.ts" />
 /// <reference path="EnvironmentManager.ts" />
 var UploadManager = (function () {
@@ -402,7 +401,7 @@ var UploadManager = (function () {
         });
     };
     return UploadManager;
-}());
+})();
 /// <reference path="babylon.d.ts"/>
 /// <reference path="babylon.pbrMaterial.d.ts" />
 var Material = (function () {
@@ -444,7 +443,7 @@ var Material = (function () {
             '}';
     };
     return Material;
-}());
+})();
 /// <reference path="babylon.d.ts" />
 /// <reference path="Material.ts" />
 var MaterialManager = (function () {
@@ -516,7 +515,7 @@ var MaterialManager = (function () {
         return this.cloneMaterial(this.materials[name].pbr, scene);
     };
     return MaterialManager;
-}());
+})();
 /// <reference path="babylon.d.ts" />
 var TextCanvas = (function () {
     function TextCanvas(jsonCanv, index, scene) {
@@ -883,7 +882,7 @@ var TextCanvas = (function () {
         this.descriptionMesh.parent = this.titleMesh;
     };
     return TextCanvas;
-}());
+})();
 /// <reference path="babylon.d.ts" />
 /// <reference path="TextCanvas.ts" />
 var TextCanvasManager = (function () {
@@ -1209,7 +1208,7 @@ var TextCanvasManager = (function () {
         mesh.rotation.x = -scene.activeCamera.beta + (Math.PI / 2);
     };
     return TextCanvasManager;
-}());
+})();
 /// <reference path="babylon.d.ts" />
 /// <reference path="babylon.pbrMaterial.d.ts" />
 /// <reference path="babylon.gradientMaterial.d.ts" />
@@ -1295,8 +1294,8 @@ window.addEventListener('DOMContentLoaded', function () {
     sceneMain = createScene();
     sceneMain.executeWhenReady(function () {
         setTimeout(function () {
-            takeSC = true;
-            camera.alpha = 0;
+          //  takeSC = true;
+          //  camera.alpha = 0;
         }, 5000);
     });
     var w = document.documentElement.clientWidth;
