@@ -100,8 +100,8 @@ window.addEventListener('DOMContentLoaded', function () {
     sceneMain = createScene();
     sceneMain.executeWhenReady(() => {
         setTimeout(function () {
-            // takeSC = true;
-            // camera.alpha = 0;
+         //   takeSC = true;
+          //  camera.alpha = 0;
         }, 5000);
 
     });
@@ -120,7 +120,7 @@ window.addEventListener('DOMContentLoaded', function () {
             camera.alpha = -num / 90 * 6.28319;
             num++;
 
-            // debugger;
+           // debugger;
 
             if (num == 91) {
                 num = 1;
