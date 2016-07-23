@@ -170,9 +170,8 @@ window.addEventListener('DOMContentLoaded', function () {
     }
     function createScene() {
         var scene = new BABYLON.Scene(engine);
-        var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 6, new BABYLON.Vector3(0, 0, 0), scene);
+        var camera = new BABYLON.FreeCamera("Camera", new BABYLON.Vector3(0, 0, 0), scene);
         camera.attachControl(canvas, false);
-        camera.wheelPrecision = 50;
         scene.activeCamera = camera;
         scene.clearColor = BABYLON.Color3.Gray();
         var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
@@ -194,12 +193,38 @@ window.addEventListener('DOMContentLoaded', function () {
             Page_pbr.albedoTexture = new BABYLON.Texture('Page1.png', scene);
             var Page = BABYLON.Mesh.CreatePlane("Glass 2", 3, scene, true);
             Page.material = Page_pbr;
-            Page.position.addInPlace(new BABYLON.Vector3(-4, 0, 10));
+            Page.position.addInPlace(new BABYLON.Vector3(-4, 0, 0));
             Page.rotate(new BABYLON.Vector3(1, 0, 0), 1.5708);
             displayMaterialValues(Page_pbr, scene);
             Page_pbr.reflectionTexture = hdrTexture;
             Page_pbr.refractionTexture = hdrTexture;
             spheres.push(Page);
+        }
+        {
+            var Wood_pbr = new BABYLON.PBRMaterial("Wood", scene);
+            Wood_pbr.reflectivityColor = BABYLON.Color3.Black();
+            Wood_pbr.albedoTexture = new BABYLON.Texture('Wood.jpg', scene);
+            var Wood = BABYLON.Mesh.CreatePlane("Glass 22", 3, scene, true);
+            Wood.material = Wood_pbr;
+            Wood.position.addInPlace(new BABYLON.Vector3(0, 0, 0));
+            Wood.rotate(new BABYLON.Vector3(1, 0, 0), 1.5708);
+            displayMaterialValues(Wood_pbr, scene);
+            Wood_pbr.reflectionTexture = hdrTexture;
+            Wood_pbr.refractionTexture = hdrTexture;
+            spheres.push(Wood);
+        }
+        {
+            var Fabric_pbr = new BABYLON.PBRMaterial("Page", scene);
+            Fabric_pbr.reflectivityColor = BABYLON.Color3.Black();
+            Fabric_pbr.albedoTexture = new BABYLON.Texture('Fabric.png', scene);
+            var Fabric = BABYLON.Mesh.CreatePlane("Glass 2", 3, scene, true);
+            Fabric.material = Fabric_pbr;
+            Fabric.position.addInPlace(new BABYLON.Vector3(4, 0, 0));
+            Fabric.rotate(new BABYLON.Vector3(1, 0, 0), 1.5708);
+            displayMaterialValues(Fabric_pbr, scene);
+            Fabric_pbr.reflectionTexture = hdrTexture;
+            Fabric_pbr.refractionTexture = hdrTexture;
+            spheres.push(Fabric);
         }
         var txtAre = document.getElementById("txt");
         var btn = document.getElementById("btn");
