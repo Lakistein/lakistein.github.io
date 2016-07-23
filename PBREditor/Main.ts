@@ -422,7 +422,7 @@ window.addEventListener('DOMContentLoaded', function () {
         {
             var Wood_pbr = new BABYLON.PBRMaterial("Wood", scene);
             Wood_pbr.reflectivityColor = BABYLON.Color3.Black();
-            Wood_pbr.albedoTexture = new BABYLON.Texture('Wood.jpg', scene);
+            Wood_pbr.albedoTexture = new BABYLON.Texture('wood.jpg', scene);
             var Wood = BABYLON.Mesh.CreatePlane("Glass 22", 3, scene, true);
             Wood.material = Wood_pbr;
             Wood.position.addInPlace(new BABYLON.Vector3(0, 0, 0));
@@ -436,7 +436,7 @@ window.addEventListener('DOMContentLoaded', function () {
         {
             var Fabric_pbr = new BABYLON.PBRMaterial("Page", scene);
             Fabric_pbr.reflectivityColor = BABYLON.Color3.Black();
-            Fabric_pbr.albedoTexture = new BABYLON.Texture('Fabric.png', scene);
+            Fabric_pbr.albedoTexture = new BABYLON.Texture('fabric.jpg', scene);
             var Fabric = BABYLON.Mesh.CreatePlane("Glass 2", 3, scene, true);
             Fabric.material = Fabric_pbr;
             Fabric.position.addInPlace(new BABYLON.Vector3(4, 0, 0));
