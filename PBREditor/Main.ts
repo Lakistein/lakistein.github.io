@@ -198,8 +198,9 @@ window.addEventListener('DOMContentLoaded', function () {
         scene.activeCamera = camera;
         scene.clearColor = BABYLON.Color3.Gray();
         // Light
-        var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
-        light.intensity = 1;
+        var hemilight = new BABYLON.HemisphericLight("hemilight", new BABYLON.Vector3(0, 1, 0), scene);
+        hemilight.range = 1;
+        hemilight.intensity = 2;
         // Environment Texture
         hdrTexture = new BABYLON.HDRCubeTexture("./room.hdr", scene, 16, false, true, false, true);//new BABYLON.CubeTexture("./cubemap/skybox", scene); 
 

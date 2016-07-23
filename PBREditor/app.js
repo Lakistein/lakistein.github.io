@@ -175,8 +175,9 @@ window.addEventListener('DOMContentLoaded', function () {
         camera.attachControl(canvas, false);
         scene.activeCamera = camera;
         scene.clearColor = BABYLON.Color3.Gray();
-        var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
-        light.intensity = 1;
+        var hemilight = new BABYLON.HemisphericLight("hemilight", new BABYLON.Vector3(0, 1, 0), scene);
+        hemilight.range = 1;
+        hemilight.intensity = 2;
         hdrTexture = new BABYLON.HDRCubeTexture("./room.hdr", scene, 16, false, true, false, true);
         var hdrSkybox = BABYLON.Mesh.CreateBox("hdrSkyBox", 1000.0, scene);
         var hdrSkyboxMaterial = new BABYLON.PBRMaterial("skyBox", scene);
