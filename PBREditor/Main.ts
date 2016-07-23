@@ -2,7 +2,7 @@
 /// <reference path="babylon.pbrMaterial.d.ts" />
 /// <reference path="datgui.js" />
 
-window.addEventListener('DOMContentLoaded', function() {
+window.addEventListener('DOMContentLoaded', function () {
     var canvas = <HTMLCanvasElement>document.getElementById('renderCanvas');
     var engine = new BABYLON.Engine(canvas, true);
     var gui = new dat.GUI();
@@ -38,7 +38,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
         return txt;
     }
-    
+
     function displayMaterialValues(material: BABYLON.PBRMaterial, scene: BABYLON.Scene) {
         var folder = gui.addFolder(material.name);
         var name = folder.add(material, "name").listen();
@@ -59,7 +59,7 @@ window.addEventListener('DOMContentLoaded', function() {
                 material.cameraContrast = jsonMat.cameraContrast;
                 material.microSurface = jsonMat.microSurface;
                 material.reflectivityColor = new BABYLON.Color3(jsonMat.reflectivityColor.r, jsonMat.reflectivityColor.g, jsonMat.reflectivityColor.b);
-            } 
+            }
         });
         folder.add(material, "indexOfRefraction", 0, 2).listen();
         folder.add(material, "alpha", 0, 1).listen();
@@ -73,114 +73,121 @@ window.addEventListener('DOMContentLoaded', function() {
         folder.add(material, "cameraContrast", 0, 2).listen();
         folder.add(material, "microSurface", 0, 1).listen();
         var color = folder.addColor(material, "albedoColor").listen();
-        color.onChange(function(value) {
+        color.onChange(function (value) {
             material.albedoColor = new BABYLON.Color3(value.r / 255, value.g / 255, value.b / 255);
         });
         folder.add(material.reflectivityColor, "r", 0, 1).listen();
         folder.add(material.reflectivityColor, "g", 0, 1).listen();
         folder.add(material.reflectivityColor, "b", 0, 1).listen();
-        var obj = { Generate_Json: function() {  var txt = '{' +
-            '"name":"' + material.name + '",' +
-            '"isGlass":"' + (material.refractionTexture ? "true" : "false") + '",' +
-            '"indexOfRefraction":' + material.indexOfRefraction.toPrecision(2) + ',' +
-            '"alpha":' + material.alpha.toPrecision(2) + ',' +
-            '"directIntensity":' + material.directIntensity.toPrecision(2) + ',' +
-            '"emissiveIntensity":' + material.emissiveIntensity.toPrecision(2) + ',' +
-            '"environmentIntensity":' + material.environmentIntensity.toPrecision(2) + ',' +
-            '"specularIntensity":' + material.specularIntensity.toPrecision(2) + ',' +
-            '"overloadedShadowIntensity":' + material.overloadedShadowIntensity.toPrecision(2) + ',' +
-            '"overloadedShadeIntensity":' + material.overloadedShadeIntensity.toPrecision(2) + ',' +
-            '"cameraExposure":' + material.cameraExposure.toPrecision(2) + ',' +
-            '"cameraContrast":' + material.cameraContrast.toPrecision(2) + ',' +
-            '"microSurface":' + material.microSurface.toPrecision(2) + ',' +
-            '"reflectivityColor":{"r":' + material.reflectivityColor.r.toPrecision(2) + ', "g":' + material.reflectivityColor.g.toPrecision(2) + ', "b":' + material.reflectivityColor.b.toPrecision(2) + '}' +
-            '}';
+        var obj = {
+            Generate_Json: function () {
+                var txt = '{' +
+                    '"name":"' + material.name + '",' +
+                    '"isGlass":"' + (material.refractionTexture ? "true" : "false") + '",' +
+                    '"indexOfRefraction":' + material.indexOfRefraction.toPrecision(2) + ',' +
+                    '"alpha":' + material.alpha.toPrecision(2) + ',' +
+                    '"directIntensity":' + material.directIntensity.toPrecision(2) + ',' +
+                    '"emissiveIntensity":' + material.emissiveIntensity.toPrecision(2) + ',' +
+                    '"environmentIntensity":' + material.environmentIntensity.toPrecision(2) + ',' +
+                    '"specularIntensity":' + material.specularIntensity.toPrecision(2) + ',' +
+                    '"overloadedShadowIntensity":' + material.overloadedShadowIntensity.toPrecision(2) + ',' +
+                    '"overloadedShadeIntensity":' + material.overloadedShadeIntensity.toPrecision(2) + ',' +
+                    '"cameraExposure":' + material.cameraExposure.toPrecision(2) + ',' +
+                    '"cameraContrast":' + material.cameraContrast.toPrecision(2) + ',' +
+                    '"microSurface":' + material.microSurface.toPrecision(2) + ',' +
+                    '"reflectivityColor":{"r":' + material.reflectivityColor.r.toPrecision(2) + ', "g":' + material.reflectivityColor.g.toPrecision(2) + ', "b":' + material.reflectivityColor.b.toPrecision(2) + '}' +
+                    '}';
 
 
-            var txtAre = document.getElementById("txt");
-            var btn = document.getElementById("btn");
-            txtAre.textContent = txt;
-        }  };
-
-        var obj2 = { Open_In_New_Scene: function(material2: BABYLON.PBRMaterial) {  
-            debugger;
-           var s = material2.getBindedMeshes()[0];
-           oldPos = s.position;
-           s.position = new BABYLON.Vector3(0,0,0);
-           currSphere = s;
-           scene.getMeshByName("hdrSkyBox").isVisible = false;
-           for (var i = 0; i < spheres.length; i++) {
-               if(spheres[i].name == s.name) continue;
-               
-                    spheres[i].isVisible = false;
-           }
-            var folder = gui2.__folders['Material'];
-            if (folder) {
-                folder.close();
-                gui2.__ul.removeChild(folder.domElement.parentNode);
-                delete gui2.__folders['Material'];
-                gui2.onResize();
+                var txtAre = document.getElementById("txt");
+                var btn = document.getElementById("btn");
+                txtAre.textContent = txt;
             }
+        };
 
-            var folder = gui2.addFolder('Material');
-
-            var name = folder.add(material2, "name").listen();
-            name.onFinishChange((value: string) => {
-                if (value.indexOf("{") > -1) {
-                    var jsonMat = JSON.parse(value);
-
-                    material2.name = jsonMat.name;
-                    material2.indexOfRefraction = jsonMat.indexOfRefraction;
-                    material2.alpha = jsonMat.alpha;
-                    material2.directIntensity = jsonMat.directIntensity;
-                    material2.emissiveIntensity = jsonMat.emissiveIntensity;
-                    material2.environmentIntensity = jsonMat.environmentIntensity;
-                    material2.specularIntensity = jsonMat.specularIntensity;
-                    material2.overloadedShadowIntensity = jsonMat.overloadedShadowIntensity;
-                    material2.overloadedShadeIntensity = jsonMat.overloadedShadeIntensity;
-                    material2.cameraExposure = jsonMat.cameraExposure;
-                    material2.cameraContrast = jsonMat.cameraContrast;
-                    material2.microSurface = jsonMat.microSurface;
-                    material2.reflectivityColor = new BABYLON.Color3(jsonMat.reflectivityColor.r, jsonMat.reflectivityColor.g, jsonMat.reflectivityColor.b);
-                }
-            });
-            folder.add(material2, "indexOfRefraction", 0, 2).listen();
-            folder.add(material2, "alpha", 0, 1).listen();
-            folder.add(material2, "directIntensity", 0, 2).listen();
-            folder.add(material2, "emissiveIntensity", 0, 2).listen();
-            folder.add(material2, "environmentIntensity", 0, 2).listen();
-            folder.add(material2, "specularIntensity", 0, 2).listen();
-            folder.add(material2, "overloadedShadowIntensity", 0, 2).listen();
-            folder.add(material2, "overloadedShadeIntensity", 0, 2).listen();
-            folder.add(material2, "cameraExposure", 0, 2).listen();
-            folder.add(material2, "cameraContrast", 0, 2).listen();
-            folder.add(material2, "microSurface", 0, 1).listen();
-            var color = folder.addColor(material2, "albedoColor").listen();
-            color.onChange(function(value) {
-
-                material2.albedoColor = new BABYLON.Color3(value.r / 255, value.g / 255, value.b / 255);
-                console.log(material2.albedoColor);
-
-            });
-            folder.add(material2.reflectivityColor, "r", 0, 1).listen();
-            folder.add(material2.reflectivityColor, "g", 0, 1).listen();
-            folder.add(material2.reflectivityColor, "b", 0, 1).listen();
-        
-            var obj3 = { Back: function() {
-                currSphere.position = oldPos;
-           scene.getMeshByName("hdrSkyBox").isVisible = true;
-
+        var obj2 = {
+            Open_In_New_Scene: function (material2: BABYLON.PBRMaterial) {
+                debugger;
+                var s = material2.getBindedMeshes()[0];
+                oldPos = s.position;
+                s.position = new BABYLON.Vector3(0, 0, 0);
+                currSphere = s;
+                scene.getMeshByName("hdrSkyBox").isVisible = false;
                 for (var i = 0; i < spheres.length; i++) {
-                    spheres[i].isVisible = true;
+                    if (spheres[i].name == s.name) continue;
+
+                    spheres[i].isVisible = false;
                 }
-            }};
-            folder.add(obj3, 'Back');
-            folder.add(obj, 'Generate_Json');
-        }};
+                var folder = gui2.__folders['Material'];
+                if (folder) {
+                    folder.close();
+                    gui2.__ul.removeChild(folder.domElement.parentNode);
+                    delete gui2.__folders['Material'];
+                    gui2.onResize();
+                }
+
+                var folder = gui2.addFolder('Material');
+
+                var name = folder.add(material2, "name").listen();
+                name.onFinishChange((value: string) => {
+                    if (value.indexOf("{") > -1) {
+                        var jsonMat = JSON.parse(value);
+
+                        material2.name = jsonMat.name;
+                        material2.indexOfRefraction = jsonMat.indexOfRefraction;
+                        material2.alpha = jsonMat.alpha;
+                        material2.directIntensity = jsonMat.directIntensity;
+                        material2.emissiveIntensity = jsonMat.emissiveIntensity;
+                        material2.environmentIntensity = jsonMat.environmentIntensity;
+                        material2.specularIntensity = jsonMat.specularIntensity;
+                        material2.overloadedShadowIntensity = jsonMat.overloadedShadowIntensity;
+                        material2.overloadedShadeIntensity = jsonMat.overloadedShadeIntensity;
+                        material2.cameraExposure = jsonMat.cameraExposure;
+                        material2.cameraContrast = jsonMat.cameraContrast;
+                        material2.microSurface = jsonMat.microSurface;
+                        material2.reflectivityColor = new BABYLON.Color3(jsonMat.reflectivityColor.r, jsonMat.reflectivityColor.g, jsonMat.reflectivityColor.b);
+                    }
+                });
+                folder.add(material2, "indexOfRefraction", 0, 2).listen();
+                folder.add(material2, "alpha", 0, 1).listen();
+                folder.add(material2, "directIntensity", 0, 2).listen();
+                folder.add(material2, "emissiveIntensity", 0, 2).listen();
+                folder.add(material2, "environmentIntensity", 0, 2).listen();
+                folder.add(material2, "specularIntensity", 0, 2).listen();
+                folder.add(material2, "overloadedShadowIntensity", 0, 2).listen();
+                folder.add(material2, "overloadedShadeIntensity", 0, 2).listen();
+                folder.add(material2, "cameraExposure", 0, 2).listen();
+                folder.add(material2, "cameraContrast", 0, 2).listen();
+                folder.add(material2, "microSurface", 0, 1).listen();
+                var color = folder.addColor(material2, "albedoColor").listen();
+                color.onChange(function (value) {
+
+                    material2.albedoColor = new BABYLON.Color3(value.r / 255, value.g / 255, value.b / 255);
+                    console.log(material2.albedoColor);
+
+                });
+                folder.add(material2.reflectivityColor, "r", 0, 1).listen();
+                folder.add(material2.reflectivityColor, "g", 0, 1).listen();
+                folder.add(material2.reflectivityColor, "b", 0, 1).listen();
+
+                var obj3 = {
+                    Back: function () {
+                        currSphere.position = oldPos;
+                        scene.getMeshByName("hdrSkyBox").isVisible = true;
+
+                        for (var i = 0; i < spheres.length; i++) {
+                            spheres[i].isVisible = true;
+                        }
+                    }
+                };
+                folder.add(obj3, 'Back');
+                folder.add(obj, 'Generate_Json');
+            }
+        };
 
         folder.add(obj, 'Generate_Json');
-        folder.add({Open_In_New_Scene : obj2.Open_In_New_Scene.bind(this, material)},'Open_In_New_Scene');
-        
+        folder.add({ Open_In_New_Scene: obj2.Open_In_New_Scene.bind(this, material) }, 'Open_In_New_Scene');
+
     }
 
     function createScene() {
@@ -373,7 +380,7 @@ window.addEventListener('DOMContentLoaded', function() {
             var Glass_1_pbr = new BABYLON.PBRMaterial("Glass 1", scene);
             Glass_1_pbr.reflectivityColor = BABYLON.Color3.Black();
             Glass_1_pbr.albedoColor = BABYLON.Color3.Red();
-            
+
             var Glass_1 = BABYLON.Mesh.CreateSphere("Glass 1", 100, 3, scene, true);
             Glass_1.material = Glass_1_pbr;
             Glass_1.position.addInPlace(new BABYLON.Vector3(0, 0, 6));
@@ -398,6 +405,19 @@ window.addEventListener('DOMContentLoaded', function() {
             spheres.push(Glass_2);
 
         }
+
+        {
+            var Page_pbr = new BABYLON.PBRMaterial("Page", scene);
+            Page_pbr.reflectivityColor = BABYLON.Color3.Black();
+            Page_pbr.albedoTexture = new BABYLON.Texture('Page1.png', scene);
+            var Page = BABYLON.Mesh.CreatePlane("Glass 2", 1, scene, true);
+            Page.material = Page_pbr;
+            Page.position.addInPlace(new BABYLON.Vector3(4, 0, 6));
+            displayMaterialValues(Page_pbr, scene);
+            Page_pbr.reflectionTexture = hdrTexture;
+            Page_pbr.refractionTexture = hdrTexture;
+            spheres.push(Page);
+        }
         var txtAre = document.getElementById("txt");
         var btn = document.getElementById("btn");
         btn.onclick = (ev) => {
@@ -417,11 +437,11 @@ window.addEventListener('DOMContentLoaded', function() {
     };
     var scene = createScene();
 
-    engine.runRenderLoop(function() {
+    engine.runRenderLoop(function () {
         scene.render();
     });
 
-    window.addEventListener('resize', function() {
+    window.addEventListener('resize', function () {
         engine.resize();
     });
 });

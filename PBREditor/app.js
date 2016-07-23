@@ -70,7 +70,8 @@ window.addEventListener('DOMContentLoaded', function () {
         folder.add(material.reflectivityColor, "r", 0, 1).listen();
         folder.add(material.reflectivityColor, "g", 0, 1).listen();
         folder.add(material.reflectivityColor, "b", 0, 1).listen();
-        var obj = { Generate_Json: function () {
+        var obj = {
+            Generate_Json: function () {
                 var txt = '{' +
                     '"name":"' + material.name + '",' +
                     '"isGlass":"' + (material.refractionTexture ? "true" : "false") + '",' +
@@ -90,8 +91,10 @@ window.addEventListener('DOMContentLoaded', function () {
                 var txtAre = document.getElementById("txt");
                 var btn = document.getElementById("btn");
                 txtAre.textContent = txt;
-            } };
-        var obj2 = { Open_In_New_Scene: function (material2) {
+            }
+        };
+        var obj2 = {
+            Open_In_New_Scene: function (material2) {
                 debugger;
                 var s = material2.getBindedMeshes()[0];
                 oldPos = s.position;
@@ -149,16 +152,19 @@ window.addEventListener('DOMContentLoaded', function () {
                 folder.add(material2.reflectivityColor, "r", 0, 1).listen();
                 folder.add(material2.reflectivityColor, "g", 0, 1).listen();
                 folder.add(material2.reflectivityColor, "b", 0, 1).listen();
-                var obj3 = { Back: function () {
+                var obj3 = {
+                    Back: function () {
                         currSphere.position = oldPos;
                         scene.getMeshByName("hdrSkyBox").isVisible = true;
                         for (var i = 0; i < spheres.length; i++) {
                             spheres[i].isVisible = true;
                         }
-                    } };
+                    }
+                };
                 folder.add(obj3, 'Back');
                 folder.add(obj, 'Generate_Json');
-            } };
+            }
+        };
         folder.add(obj, 'Generate_Json');
         folder.add({ Open_In_New_Scene: obj2.Open_In_New_Scene.bind(this, material) }, 'Open_In_New_Scene');
     }
@@ -335,6 +341,18 @@ window.addEventListener('DOMContentLoaded', function () {
             Glass_2_pbr.reflectionTexture = hdrTexture;
             Glass_2_pbr.refractionTexture = hdrTexture;
             spheres.push(Glass_2);
+        }
+        {
+            var Page_pbr = new BABYLON.PBRMaterial("Page", scene);
+            Page_pbr.reflectivityColor = BABYLON.Color3.Black();
+            Page_pbr.albedoTexture = new BABYLON.Texture('Page1.png', scene);
+            var Page = BABYLON.Mesh.CreatePlane("Glass 2", 1, scene, true);
+            Page.material = Page_pbr;
+            Page.position.addInPlace(new BABYLON.Vector3(4, 0, 6));
+            displayMaterialValues(Page_pbr, scene);
+            Page_pbr.reflectionTexture = hdrTexture;
+            Page_pbr.refractionTexture = hdrTexture;
+            spheres.push(Page);
         }
         var txtAre = document.getElementById("txt");
         var btn = document.getElementById("btn");
