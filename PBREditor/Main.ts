@@ -412,7 +412,7 @@ window.addEventListener('DOMContentLoaded', function () {
             Page_pbr.albedoTexture = new BABYLON.Texture('Page1.png', scene);
             var Page = BABYLON.Mesh.CreatePlane("Glass 2", 1, scene, true);
             Page.material = Page_pbr;
-            Page.position.addInPlace(new BABYLON.Vector3(4, 0, 6));
+            Page.position.addInPlace(new BABYLON.Vector3(-4, 0, 10));
             displayMaterialValues(Page_pbr, scene);
             Page_pbr.reflectionTexture = hdrTexture;
             Page_pbr.refractionTexture = hdrTexture;
