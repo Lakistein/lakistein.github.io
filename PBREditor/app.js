@@ -195,7 +195,7 @@ window.addEventListener('DOMContentLoaded', function () {
             var Page = BABYLON.Mesh.CreatePlane("Glass 2", 3, scene, true);
             Page.material = Page_pbr;
             Page.position.addInPlace(new BABYLON.Vector3(-4, 0, 10));
-            Page.rotate(new BABYLON.Vector3(0, 0, 1), 90);
+            Page.rotate(new BABYLON.Vector3(1, 0, 0), 1.5708);
             displayMaterialValues(Page_pbr, scene);
             Page_pbr.reflectionTexture = hdrTexture;
             Page_pbr.refractionTexture = hdrTexture;
