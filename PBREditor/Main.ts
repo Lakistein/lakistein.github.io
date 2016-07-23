@@ -192,7 +192,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
     function createScene() {
         var scene = new BABYLON.Scene(engine);
-        var camera = new BABYLON.FreeCamera("Camera", new BABYLON.Vector3(0, 0, 0), scene);
+        var camera = new BABYLON.FreeCamera("Camera", new BABYLON.Vector3(0, 10, 0), scene);
         camera.attachControl(canvas, false);
         scene.activeCamera = camera;
         scene.clearColor = BABYLON.Color3.Gray();
