@@ -240,7 +240,7 @@ window.addEventListener('DOMContentLoaded', function () {
         {
             var Sphere_Pbr = new BABYLON.PBRMaterial("SphereMat", scene);
             Sphere_Pbr.reflectivityColor = BABYLON.Color3.Black();
-            var Sphere = BABYLON.Mesh.CreateSphere("Sphere", 3, 6, scene, true);
+            var Sphere = BABYLON.Mesh.CreateSphere("Sphere", 100, 6, scene, true);
             Sphere.material = Sphere_Pbr;
             Sphere.position.addInPlace(new BABYLON.Vector3(8, 0, 0));
             displayMaterialValues(Sphere_Pbr, scene);
