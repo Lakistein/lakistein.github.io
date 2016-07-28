@@ -246,7 +246,6 @@ window.addEventListener('DOMContentLoaded', function () {
             Sphere.position.addInPlace(new BABYLON.Vector3(8, 0, 0));
             displayMaterialValues(Sphere_Pbr, scene);
             Sphere_Pbr.reflectionTexture = hdrTexture.clone();
-            Sphere_Pbr.refractionTexture = hdrTexture;
             meshes.push(Sphere);
         }
 
@@ -258,7 +257,6 @@ window.addEventListener('DOMContentLoaded', function () {
             Cube.position.addInPlace(new BABYLON.Vector3(0, 0, 0));
             displayMaterialValues(Cube_pbr, scene);
             Cube_pbr.reflectionTexture = hdrTexture.clone();
-            Cube_pbr.refractionTexture = hdrTexture;
             meshes.push(Cube);
         }
 
@@ -271,7 +269,6 @@ window.addEventListener('DOMContentLoaded', function () {
             Plane.rotate(new BABYLON.Vector3(1, 0, 0), 1.5708);
             displayMaterialValues(PLane_pbr, scene);
             PLane_pbr.reflectionTexture = hdrTexture.clone();
-            PLane_pbr.refractionTexture = hdrTexture;
             meshes.push(Plane);
         }
         var txtAre = document.getElementById("txt");
