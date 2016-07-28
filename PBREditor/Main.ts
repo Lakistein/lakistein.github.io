@@ -223,7 +223,7 @@ window.addEventListener('DOMContentLoaded', function () {
         hemilight.range = 1;
         hemilight.intensity = 2;
         // Environment Texture
-        hdrTexture = new BABYLON.HDRCubeTexture("./room.hdr", scene, 16, false, true, false, true);//new BABYLON.CubeTexture("./cubemap/skybox", scene); 
+        hdrTexture = new BABYLON.CubeTexture("./skybox/skybox", scene);
         // Skybox
         var hdrSkybox = BABYLON.Mesh.CreateBox("hdrSkyBox", 1000.0, scene);
         var hdrSkyboxMaterial = new BABYLON.PBRMaterial("skyBox", scene);
