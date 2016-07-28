@@ -230,10 +230,9 @@ window.addEventListener('DOMContentLoaded', function () {
         hdrSkyboxMaterial.backFaceCulling = false;
         hdrSkyboxMaterial.reflectionTexture = hdrTexture.clone();
         hdrSkyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-        hdrSkyboxMaterial.microSurface = 0.85;
+        hdrSkyboxMaterial.microSurface = .99;
         hdrSkyboxMaterial.cameraExposure = 0.6;
         hdrSkyboxMaterial.cameraContrast = 1.6;
-        hdrSkyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
 
         //hdrSkyboxMaterial.disableLighting = true;
         hdrSkybox.material = hdrSkyboxMaterial;
