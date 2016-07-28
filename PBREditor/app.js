@@ -3,7 +3,6 @@ window.addEventListener('DOMContentLoaded', function () {
     var engine = new BABYLON.Engine(canvas, true);
     var gui = new dat.GUI();
     var hdrTexture;
-    var gui2 = new dat.GUI();
     var oldPos;
     var meshes = [];
     var currSphere;
@@ -146,7 +145,7 @@ window.addEventListener('DOMContentLoaded', function () {
                 folder.add(material2, "microSurface", 0, 1).listen();
                 var color = folder.addColor(material2, "albedoColor").listen();
                 color.onChange(function (value) {
-                    material2.albedoColor = new BABYLON.Color3(value.r / 255, value.g / 255, value.b / 255);
+                    material2.albedoColor = new BABYLON.Color3(value.r / 255.0, value.g / 255.0, value.b / 255.0);
                     console.log(material2.albedoColor);
                 });
                 folder.add(material2.reflectivityColor, "r", 0, 1).listen();
@@ -208,35 +207,27 @@ window.addEventListener('DOMContentLoaded', function () {
         hdrSkyboxMaterial.cameraContrast = 1.6;
         hdrSkybox.material = hdrSkyboxMaterial;
         hdrSkybox.infiniteDistance = true;
+        var meshMaterial = new BABYLON.PBRMaterial("mat", scene);
+        meshMaterial.reflectivityColor = BABYLON.Color3.Black();
+        displayMaterialValues(meshMaterial, scene);
+        meshMaterial.reflectionTexture = hdrTexture.clone();
         {
-            var Sphere_Pbr = new BABYLON.PBRMaterial("SphereMat", scene);
-            Sphere_Pbr.reflectivityColor = BABYLON.Color3.Black();
             var Sphere = BABYLON.Mesh.CreateSphere("Sphere", 100, 6, scene, true);
-            Sphere.material = Sphere_Pbr;
+            Sphere.material = meshMaterial;
             Sphere.position.addInPlace(new BABYLON.Vector3(8, 0, 0));
-            displayMaterialValues(Sphere_Pbr, scene);
-            Sphere_Pbr.reflectionTexture = hdrTexture.clone();
             meshes.push(Sphere);
         }
         {
-            var Cube_pbr = new BABYLON.PBRMaterial("Cube_pbr", scene);
-            Cube_pbr.reflectivityColor = BABYLON.Color3.Black();
             var Cube = BABYLON.Mesh.CreateBox("Cube", 6, scene, true);
-            Cube.material = Cube_pbr;
+            Cube.material = meshMaterial;
             Cube.position.addInPlace(new BABYLON.Vector3(0, 0, 0));
-            displayMaterialValues(Cube_pbr, scene);
-            Cube_pbr.reflectionTexture = hdrTexture.clone();
             meshes.push(Cube);
         }
         {
-            var PLane_pbr = new BABYLON.PBRMaterial("Plane pbr", scene);
-            PLane_pbr.reflectivityColor = BABYLON.Color3.Black();
             var Plane = BABYLON.Mesh.CreatePlane("Plane", 6, scene, true);
-            Plane.material = PLane_pbr;
+            Plane.material = meshMaterial;
             Plane.position.addInPlace(new BABYLON.Vector3(-8, 0, 0));
             Plane.rotate(new BABYLON.Vector3(1, 0, 0), 1.5708);
-            displayMaterialValues(PLane_pbr, scene);
-            PLane_pbr.reflectionTexture = hdrTexture.clone();
             meshes.push(Plane);
         }
         var txtAre = document.getElementById("txt");
