@@ -5,7 +5,7 @@ window.addEventListener('DOMContentLoaded', function () {
     var hdrTexture;
     var gui2 = new dat.GUI();
     var oldPos;
-    var spheres = [];
+    var meshes = [];
     var currSphere;
     function generateJson(pbr, display) {
         var txt = '{' +
@@ -101,10 +101,10 @@ window.addEventListener('DOMContentLoaded', function () {
                 s.position = new BABYLON.Vector3(0, 0, 0);
                 currSphere = s;
                 scene.getMeshByName("hdrSkyBox").isVisible = false;
-                for (var i = 0; i < spheres.length; i++) {
-                    if (spheres[i].name == s.name)
+                for (var i = 0; i < meshes.length; i++) {
+                    if (meshes[i].name == s.name)
                         continue;
-                    spheres[i].isVisible = false;
+                    meshes[i].isVisible = false;
                 }
                 var folder = gui2.__folders['Material'];
                 if (folder) {
@@ -156,8 +156,8 @@ window.addEventListener('DOMContentLoaded', function () {
                     Back: function () {
                         currSphere.position = oldPos;
                         scene.getMeshByName("hdrSkyBox").isVisible = true;
-                        for (var i = 0; i < spheres.length; i++) {
-                            spheres[i].isVisible = true;
+                        for (var i = 0; i < meshes.length; i++) {
+                            meshes[i].isVisible = true;
                         }
                     }
                 };
@@ -168,9 +168,28 @@ window.addEventListener('DOMContentLoaded', function () {
         folder.add(obj, 'Generate_Json');
         folder.add({ Open_In_New_Scene: obj2.Open_In_New_Scene.bind(this, material) }, 'Open_In_New_Scene');
     }
+    function updateTexture(scene) {
+        var file = document.querySelector('#groundImg').files[0];
+        var reader = new FileReader();
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+        else {
+            this.environments[this.currentEnvironment].groundTexture = null;
+        }
+        reader.onloadend = function () {
+            console.log(file.name);
+            for (var i = 0; i < meshes.length; i++) {
+                var mesh = meshes[i];
+                if (mesh.material.albedoTexture)
+                    mesh.material.albedoTexture.dispose();
+                mesh.material.albedoTexture = BABYLON.Texture.CreateFromBase64String(reader.result, file.name, scene);
+            }
+        };
+    }
     function createScene() {
         var scene = new BABYLON.Scene(engine);
-        var camera = new BABYLON.FreeCamera("Camera", new BABYLON.Vector3(0, 30, 0), scene);
+        var camera = new BABYLON.FreeCamera("Camera", new BABYLON.Vector3(0, 30, 30), scene);
         camera.setTarget(BABYLON.Vector3.Zero());
         camera.attachControl(canvas, false);
         scene.activeCamera = camera;
@@ -190,43 +209,38 @@ window.addEventListener('DOMContentLoaded', function () {
         hdrSkybox.material = hdrSkyboxMaterial;
         hdrSkybox.infiniteDistance = true;
         {
-            var Page_pbr = new BABYLON.PBRMaterial("Page", scene);
-            Page_pbr.reflectivityColor = BABYLON.Color3.Black();
-            Page_pbr.albedoTexture = new BABYLON.Texture('Page1.png', scene);
-            var Page = BABYLON.Mesh.CreatePlane("Page 2", 3, scene, true);
-            Page.material = Page_pbr;
-            Page.position.addInPlace(new BABYLON.Vector3(-4, 0, 0));
-            Page.rotate(new BABYLON.Vector3(1, 0, 0), 1.5708);
-            displayMaterialValues(Page_pbr, scene);
-            Page_pbr.reflectionTexture = hdrTexture;
-            Page_pbr.refractionTexture = hdrTexture;
-            spheres.push(Page);
+            var Sphere_Pbr = new BABYLON.PBRMaterial("SphereMat", scene);
+            Sphere_Pbr.reflectivityColor = BABYLON.Color3.Black();
+            var Sphere = BABYLON.Mesh.CreateSphere("Sphere", 3, 6, scene, true);
+            Sphere.material = Sphere_Pbr;
+            Sphere.position.addInPlace(new BABYLON.Vector3(8, 0, 0));
+            displayMaterialValues(Sphere_Pbr, scene);
+            Sphere_Pbr.reflectionTexture = hdrTexture;
+            Sphere_Pbr.refractionTexture = hdrTexture;
+            meshes.push(Sphere);
         }
         {
-            var Wood_pbr = new BABYLON.PBRMaterial("Wood", scene);
-            Wood_pbr.reflectivityColor = BABYLON.Color3.Black();
-            Wood_pbr.albedoTexture = new BABYLON.Texture('wood.jpg', scene);
-            var Wood = BABYLON.Mesh.CreatePlane("wood 22", 3, scene, true);
-            Wood.material = Wood_pbr;
-            Wood.position.addInPlace(new BABYLON.Vector3(0, 0, 0));
-            Wood.rotate(new BABYLON.Vector3(1, 0, 0), 1.5708);
-            displayMaterialValues(Wood_pbr, scene);
-            Wood_pbr.reflectionTexture = hdrTexture;
-            Wood_pbr.refractionTexture = hdrTexture;
-            spheres.push(Wood);
+            var Cube_pbr = new BABYLON.PBRMaterial("Cube_pbr", scene);
+            Cube_pbr.reflectivityColor = BABYLON.Color3.Black();
+            var Cube = BABYLON.Mesh.CreateBox("Cube", 6, scene, true);
+            Cube.material = Cube_pbr;
+            Cube.position.addInPlace(new BABYLON.Vector3(0, 0, 0));
+            displayMaterialValues(Cube_pbr, scene);
+            Cube_pbr.reflectionTexture = hdrTexture;
+            Cube_pbr.refractionTexture = hdrTexture;
+            meshes.push(Cube);
         }
         {
-            var Fabric_pbr = new BABYLON.PBRMaterial("fabric", scene);
-            Fabric_pbr.reflectivityColor = BABYLON.Color3.Black();
-            Fabric_pbr.albedoTexture = new BABYLON.Texture('fabric.jpg', scene);
-            var Fabric = BABYLON.Mesh.CreatePlane("fabric 2", 3, scene, true);
-            Fabric.material = Fabric_pbr;
-            Fabric.position.addInPlace(new BABYLON.Vector3(4, 0, 0));
-            Fabric.rotate(new BABYLON.Vector3(1, 0, 0), 1.5708);
-            displayMaterialValues(Fabric_pbr, scene);
-            Fabric_pbr.reflectionTexture = hdrTexture;
-            Fabric_pbr.refractionTexture = hdrTexture;
-            spheres.push(Fabric);
+            var PLane_pbr = new BABYLON.PBRMaterial("Plane pbr", scene);
+            PLane_pbr.reflectivityColor = BABYLON.Color3.Black();
+            var Plane = BABYLON.Mesh.CreatePlane("Plane", 6, scene, true);
+            Plane.material = PLane_pbr;
+            Plane.position.addInPlace(new BABYLON.Vector3(-8, 0, 0));
+            Plane.rotate(new BABYLON.Vector3(1, 0, 0), 1.5708);
+            displayMaterialValues(PLane_pbr, scene);
+            PLane_pbr.reflectionTexture = hdrTexture;
+            PLane_pbr.refractionTexture = hdrTexture;
+            meshes.push(Plane);
         }
         var txtAre = document.getElementById("txt");
         var btn = document.getElementById("btn");
@@ -246,6 +260,7 @@ window.addEventListener('DOMContentLoaded', function () {
     }
     ;
     var scene = createScene();
+    document.getElementById("groundImg").onchange = function (e) { return updateTexture(scene); };
     engine.runRenderLoop(function () {
         scene.render();
     });

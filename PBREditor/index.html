@@ -5,6 +5,7 @@
     <script src="./babylon.js"></script>
     <script src="./babylon.pbrMaterial.min.js"></script>
     <script src="./datgui.js"></script>
+    <script src="./app.js"></script>
 
     <style>
         html,
@@ -23,16 +24,22 @@
             touch-action: none;
         }
         
+        #groundImg {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+        
         #btn {
             position: absolute;
             left: 10px;
-            top: 200px;
+            top: 50px;
         }
         
         #txt {
             position: absolute;
             left: 10px;
-            top: 10px;
+            top: 100px;
         }
     </style>
 
@@ -40,8 +47,8 @@
 
 <body>
     <canvas id="renderCanvas"></canvas>
-    <script src="./app.js"></script>
-    <input type="button" id="btn" value="Generate Json">
+    <input id="groundImg" type="file" value="Ground Plane"  />
+    <input type="button" id="btn" value="Generate Json" />
     <textarea name="" id="txt" cols="30" rows="10"></textarea>
 </body>
 
