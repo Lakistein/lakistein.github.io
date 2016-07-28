@@ -197,7 +197,7 @@ window.addEventListener('DOMContentLoaded', function () {
         var hemilight = new BABYLON.HemisphericLight("hemilight", new BABYLON.Vector3(0, 1, 0), scene);
         hemilight.range = 1;
         hemilight.intensity = 2;
-        hdrTexture = new BABYLON.HDRCubeTexture("./room.hdr", scene, 16, false, true, false, true);
+        hdrTexture = new BABYLON.CubeTexture("./skybox/skybox", scene);
         var hdrSkybox = BABYLON.Mesh.CreateBox("hdrSkyBox", 1000.0, scene);
         var hdrSkyboxMaterial = new BABYLON.PBRMaterial("skyBox", scene);
         hdrSkyboxMaterial.backFaceCulling = false;
@@ -206,6 +206,7 @@ window.addEventListener('DOMContentLoaded', function () {
         hdrSkyboxMaterial.microSurface = 0.85;
         hdrSkyboxMaterial.cameraExposure = 0.6;
         hdrSkyboxMaterial.cameraContrast = 1.6;
+        hdrSkyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
         hdrSkybox.material = hdrSkyboxMaterial;
         hdrSkybox.infiniteDistance = true;
         {
@@ -215,7 +216,7 @@ window.addEventListener('DOMContentLoaded', function () {
             Sphere.material = Sphere_Pbr;
             Sphere.position.addInPlace(new BABYLON.Vector3(8, 0, 0));
             displayMaterialValues(Sphere_Pbr, scene);
-            Sphere_Pbr.reflectionTexture = hdrTexture;
+            Sphere_Pbr.reflectionTexture = hdrTexture.clone();
             Sphere_Pbr.refractionTexture = hdrTexture;
             meshes.push(Sphere);
         }
@@ -226,7 +227,7 @@ window.addEventListener('DOMContentLoaded', function () {
             Cube.material = Cube_pbr;
             Cube.position.addInPlace(new BABYLON.Vector3(0, 0, 0));
             displayMaterialValues(Cube_pbr, scene);
-            Cube_pbr.reflectionTexture = hdrTexture;
+            Cube_pbr.reflectionTexture = hdrTexture.clone();
             Cube_pbr.refractionTexture = hdrTexture;
             meshes.push(Cube);
         }
@@ -238,7 +239,7 @@ window.addEventListener('DOMContentLoaded', function () {
             Plane.position.addInPlace(new BABYLON.Vector3(-8, 0, 0));
             Plane.rotate(new BABYLON.Vector3(1, 0, 0), 1.5708);
             displayMaterialValues(PLane_pbr, scene);
-            PLane_pbr.reflectionTexture = hdrTexture;
+            PLane_pbr.reflectionTexture = hdrTexture.clone();
             PLane_pbr.refractionTexture = hdrTexture;
             meshes.push(Plane);
         }
