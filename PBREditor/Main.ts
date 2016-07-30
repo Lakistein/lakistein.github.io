@@ -49,6 +49,7 @@ window.addEventListener('DOMContentLoaded', function () {
                 material.indexOfRefraction = jsonMat.indexOfRefraction;
                 material.alpha = jsonMat.alpha;
                 material.directIntensity = jsonMat.directIntensity;
+                material.emissiveColor = jsonMat.emissiveColor;
                 material.emissiveIntensity = jsonMat.emissiveIntensity;
                 material.environmentIntensity = jsonMat.environmentIntensity;
                 material.specularIntensity = jsonMat.specularIntensity;
@@ -63,6 +64,10 @@ window.addEventListener('DOMContentLoaded', function () {
         folder.add(material, "indexOfRefraction", 0, 2).listen();
         folder.add(material, "alpha", 0, 1).listen();
         folder.add(material, "directIntensity", 0, 2).listen();
+        var emissive = folder.addColor(material, "emissiveColor").listen();
+        color.onChange(function (value) {
+            material.emissiveColor = new BABYLON.Color3(value.r / 255.0, value.g / 255.0, value.b / 255.0);
+        });
         folder.add(material, "emissiveIntensity", 0, 2).listen();
         folder.add(material, "environmentIntensity", 0, 2).listen();
         folder.add(material, "specularIntensity", 0, 2).listen();
@@ -86,6 +91,7 @@ window.addEventListener('DOMContentLoaded', function () {
                     '"indexOfRefraction":' + material.indexOfRefraction.toPrecision(2) + ',' +
                     '"alpha":' + material.alpha.toPrecision(2) + ',' +
                     '"directIntensity":' + material.directIntensity.toPrecision(2) + ',' +
+                    '"emissiveColor":' + JSON.stringify(material.emissiveColor) + ',' +
                     '"emissiveIntensity":' + material.emissiveIntensity.toPrecision(2) + ',' +
                     '"environmentIntensity":' + material.environmentIntensity.toPrecision(2) + ',' +
                     '"specularIntensity":' + material.specularIntensity.toPrecision(2) + ',' +
