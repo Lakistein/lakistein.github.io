@@ -65,7 +65,7 @@ window.addEventListener('DOMContentLoaded', function () {
         folder.add(material, "alpha", 0, 1).listen();
         folder.add(material, "directIntensity", 0, 2).listen();
         var emissive = folder.addColor(material, "emissiveColor").listen();
-        color.onChange(function (value) {
+        emissive.onChange(function (value) {
             material.emissiveColor = new BABYLON.Color3(value.r / 255.0, value.g / 255.0, value.b / 255.0);
         });
         folder.add(material, "emissiveIntensity", 0, 2).listen();
