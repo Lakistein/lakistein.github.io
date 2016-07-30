@@ -128,7 +128,7 @@ window.addEventListener('DOMContentLoaded', function () {
         scene.clearColor = BABYLON.Color3.Gray();
         var hemilight = new BABYLON.HemisphericLight("hemilight", new BABYLON.Vector3(0, 1, 0), scene);
         hemilight.range = 1;
-        hemilight.intensity = 2;
+        hemilight.intensity = 1;
         hdrTexture = new BABYLON.CubeTexture("./skybox/skybox", scene);
         var hdrSkybox = BABYLON.Mesh.CreateBox("hdrSkyBox", 1000.0, scene);
         var hdrSkyboxMaterial = new BABYLON.PBRMaterial("skyBox", scene);

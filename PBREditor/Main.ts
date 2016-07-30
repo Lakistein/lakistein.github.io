@@ -225,7 +225,7 @@ window.addEventListener('DOMContentLoaded', function () {
         // Light
         var hemilight = new BABYLON.HemisphericLight("hemilight", new BABYLON.Vector3(0, 1, 0), scene);
         hemilight.range = 1;
-        hemilight.intensity = 2;
+        hemilight.intensity = 1;
         // Environment Texture
         hdrTexture = new BABYLON.CubeTexture("./skybox/skybox", scene);
         // Skybox
