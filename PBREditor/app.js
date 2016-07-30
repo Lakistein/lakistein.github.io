@@ -82,7 +82,6 @@ window.addEventListener('DOMContentLoaded', function () {
                     '"indexOfRefraction":' + material.indexOfRefraction.toPrecision(2) + ',' +
                     '"alpha":' + material.alpha.toPrecision(2) + ',' +
                     '"directIntensity":' + material.directIntensity.toPrecision(2) + ',' +
-                    '"emissiveColor":' + JSON.stringify(material.emissiveColor) + ',' +
                     '"emissiveIntensity":' + material.emissiveIntensity.toPrecision(2) + ',' +
                     '"environmentIntensity":' + material.environmentIntensity.toPrecision(2) + ',' +
                     '"specularIntensity":' + material.specularIntensity.toPrecision(2) + ',' +
