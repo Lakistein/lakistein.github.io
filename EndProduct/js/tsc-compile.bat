@@ -1,1 +1,0 @@
-tsc --out app.js main.ts -watch
