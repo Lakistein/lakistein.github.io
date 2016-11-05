@@ -1,0 +1,116 @@
+	Exporter version: 4.4.2, Blender version: 2.77 (sub 0)
+========= Conversion from Blender to Babylon.js =========
+	Scene settings used:
+		selected layers only:  false
+		flat shading entire scene:  false
+		inline textures:  false
+		texture directory:  /Users/jonvarner/Desktop/CG/CG-Projects/Brilliant Planner/Uploaded Files/
+	Python World class constructor completed
+	WARNING: No active camera has been assigned, or is not in a currently selected Blender layer
+	processing begun of skeleton:  skeleton_2, id:  0
+		processing begun of bone:  skelton_2, index:  0
+		processing begun of bone:  skeleton_2K, index:  1
+		processing begun of bone:  skeleton_2J, index:  2
+		processing begun of bone:  skeleton_2I, index:  3
+		processing begun of bone:  skeleton_2H, index:  4
+		processing begun of bone:  skeleton_2G, index:  5
+		processing begun of bone:  skeleton_2F, index:  6
+		processing begun of bone:  skeleton_2E, index:  7
+		processing begun of bone:  skeleton_2D, index:  8
+		processing begun of bone:  skeleton_2C, index:  9
+		processing begun of bone:  skeleton_2B, index:  10
+		processing begun of bone:  skeleton_2A, index:  11
+		processing action Armature.001|Take 001|BaseLayer
+	processing begun of skeleton:  skeleton_1, id:  1
+		processing begun of bone:  skelton_1, index:  0
+		processing begun of bone:  skeleton_1AC, index:  1
+		processing begun of bone:  skeleton_1AB, index:  2
+		processing begun of bone:  skeleton_1AA, index:  3
+		processing begun of bone:  skeleton_1AA.001, index:  4
+		processing begun of bone:  skeleton_1Z, index:  5
+		processing begun of bone:  skeleton_1Y, index:  6
+		processing begun of bone:  skeleton_1X, index:  7
+		processing begun of bone:  skeleton_1W, index:  8
+		processing begun of bone:  skeleton_1V, index:  9
+		processing begun of bone:  skeleton_1U, index:  10
+		processing begun of bone:  skeleton_1T, index:  11
+		processing begun of bone:  skeleton_1S, index:  12
+		processing begun of bone:  skeleton_1R, index:  13
+		processing begun of bone:  skeleton_1Q, index:  14
+		processing begun of bone:  skeleton_1P, index:  15
+		processing begun of bone:  skeleton_1O, index:  16
+		processing begun of bone:  skeleton_1N, index:  17
+		processing begun of bone:  skeleton_1M, index:  18
+		processing begun of bone:  skeleton_1J2, index:  19
+		processing begun of bone:  skeleton_1K, index:  20
+		processing begun of bone:  skeleton_1J, index:  21
+		processing begun of bone:  skeleton_1I, index:  22
+		processing begun of bone:  skeleton_1H, index:  23
+		processing begun of bone:  skeleton_1G, index:  24
+		processing begun of bone:  skeleton_1F, index:  25
+		processing begun of bone:  skeleton_1E, index:  26
+		processing begun of bone:  skeleton_1D, index:  27
+		processing begun of bone:  skeleton_1C, index:  28
+		processing begun of bone:  skeleton_1B, index:  29
+		processing begun of bone:  skeleton_1A, index:  30
+		processing action Armature|Take 001|BaseLayer
+	processing begun of node:  Camera_Pivot
+	processing begun of mesh:  Component_2
+		processing begun of Standard material:  Component_2_Sub_0
+			Diffuse texture found "file68"
+				Image texture found, type:  diffuseTexture, mapped using: "Diffuse"
+	WARNING: Error encountered processing image file:  , Error:  '/Users/jonvarner/Desktop/CG/CG-Projects/Brilliant Planner/Project Files/../Uploaded Files/page-1.png' and '/Users/jonvarner/Desktop/CG/CG-Projects/Brilliant Planner/Uploaded Files/page-1.png' are the same file
+		num positions      :  992
+		num normals        :  992
+		num uvs            :  1984
+		num uvs2           :  1984
+		num colors         :  0
+		num indices        :  5232
+		Skeleton stats:  
+			Total Influencers:  3386
+			Avg # of influencers per vertex:  3.4133
+			Highest # of influencers observed:  4, num vertices with this:  694
+			exported as 4 influencers
+			num skeletonWeights and skeletonIndices:  3968
+	processing begun of mesh:  Component_1
+		processing begun of Standard material:  Component_1_Sub_0
+			Diffuse texture found "file71"
+				Image texture found, type:  diffuseTexture, mapped using: "Diffuse"
+	WARNING: Error encountered processing image file:  , Error:  '/Users/jonvarner/Desktop/CG/CG-Projects/Brilliant Planner/Project Files/../Uploaded Files/Tab_Texture.jpg' and '/Users/jonvarner/Desktop/CG/CG-Projects/Brilliant Planner/Uploaded Files/Tab_Texture.jpg' are the same file
+		processing begun of Standard material:  Component_1_Sub_4
+			Diffuse texture found "tabs_book_file66"
+				Image texture found, type:  diffuseTexture, mapped using: "Diffuse"
+	WARNING: Error encountered processing image file:  , Error:  [Errno 2] No such file or directory: '/Users/jonvarner/Desktop/CG/CG-Projects/Brilliant Planner/Project Files/Cover_4.jpg'
+		processing begun of Standard material:  Component_1_Sub_3
+			Diffuse texture found "file71"
+				Image texture found, type:  diffuseTexture, mapped using: "Diffuse"
+	WARNING: Error encountered processing image file:  , Error:  '/Users/jonvarner/Desktop/CG/CG-Projects/Brilliant Planner/Project Files/../Uploaded Files/Tab_Texture.jpg' and '/Users/jonvarner/Desktop/CG/CG-Projects/Brilliant Planner/Uploaded Files/Tab_Texture.jpg' are the same file
+		processing begun of Standard material:  Component_1_Sub_2
+			Diffuse texture found "file69"
+				Image texture found, type:  diffuseTexture, mapped using: "Diffuse"
+	WARNING: Error encountered processing image file:  , Error:  '/Users/jonvarner/Desktop/CG/CG-Projects/Brilliant Planner/Project Files/../Uploaded Files/page-3.png' and '/Users/jonvarner/Desktop/CG/CG-Projects/Brilliant Planner/Uploaded Files/page-3.png' are the same file
+		processing begun of Standard material:  Component_1_Sub_1
+			Diffuse texture found "file70"
+				Image texture found, type:  diffuseTexture, mapped using: "Diffuse"
+	WARNING: Error encountered processing image file:  , Error:  '/Users/jonvarner/Desktop/CG/CG-Projects/Brilliant Planner/Project Files/../Uploaded Files/page-1.png' and '/Users/jonvarner/Desktop/CG/CG-Projects/Brilliant Planner/Uploaded Files/page-1.png' are the same file
+		processing begun of Standard material:  Component_1_Sub_5
+			Diffuse texture found "file71"
+				Image texture found, type:  diffuseTexture, mapped using: "Diffuse"
+	WARNING: Error encountered processing image file:  , Error:  '/Users/jonvarner/Desktop/CG/CG-Projects/Brilliant Planner/Project Files/../Uploaded Files/Tab_Texture.jpg' and '/Users/jonvarner/Desktop/CG/CG-Projects/Brilliant Planner/Uploaded Files/Tab_Texture.jpg' are the same file
+		processing begun of multimaterial:  model.Multimaterial#0
+		num positions      :  30768
+		num normals        :  30768
+		num uvs            :  61536
+		num uvs2           :  61536
+		num colors         :  0
+		num indices        :  65304
+		Skeleton stats:  
+			Total Influencers:  30769
+			Avg # of influencers per vertex:  1
+			Highest # of influencers observed:  2, num vertices with this:  1
+			exported as 2 influencers
+			num skeletonWeights and skeletonIndices:  123072
+========= Writing of scene file started =========
+========= Writing of scene file completed =========
+========= end of processing =========
+elapsed time:  0 min, 7.3246 secs
