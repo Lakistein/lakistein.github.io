@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "CrmData": {
+      "type": "object",
+      "properties": {
+        "Personal": {
+          "type": "object",
+          "properties": {
+            "Prefix": {
+              "type": "string"
+            },
+            "FirstName": {
+              "type": "string"
+            },
+            "LastName": {
+              "type": "string"
+            },
+            "DOB": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "Prefix",
+            "FirstName",
+            "LastName",
+            "DOB"
+          ]
+        },
+        "Contact": {
+          "type": "object",
+          "properties": {
+            "AddressList": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string"
+                  },
+                  "AddressLine1": {
+                    "type": "string"
+                  },
+                  "City": {
+                    "type": "string"
+                  },
+                  "State": {
+                    "type": "string"
+                  },
+                  "PostalCode": {
+                    "type": "string"
+                  },
+                  "Country": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "type",
+                  "AddressLine1",
+                  "City",
+                  "State",
+                  "PostalCode",
+                  "Country"
+                ]
+              }
+            }
+          },
+          "required": [
+            "AddressList"
+          ]
+        }
+      },
+      "required": [
+        "Personal",
+        "Contact"
+      ]
+    }
+  },
+  "required": [
+    "CrmData"
+  ]
+}
